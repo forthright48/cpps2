@@ -1,0 +1,23 @@
+{
+  "extends": ["google"],
+  "parserOptions": {
+    "ecmaVersion": 8,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "rules": {
+    "new-cap": ["error", {
+      "capIsNewExceptions": ["Router", "ObjectId"]
+      }],
+    "require-jsdoc": "off",
+    "max-len": "off",
+    "no-undef": "error"
+  }
+}
