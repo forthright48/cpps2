@@ -1,0 +1,43 @@
+version: '2'
+
+services:
+  redis:
+    image: redis
+    networks:
+      - ntw
+    volumes:
+      - redis_db:/data
+  db:
+    image: mongo:3.4
+    networks:
+      - ntw
+    volumes:
+      - db:/root/volumes/cpps_db
+      - db_data:/data/db
+    restart: always
+  app:
+    build: .
+    image: cpps
+    depends_on:
+      - db
+      - redis
+    ports:
+      - "${PORT}:8002"
+      - "3050:3050"
+    networks:
+      - ntw
+    volumes:
+      - app:/home/volumes/cpps_app
+      - logs:/home/src/logs
+      - ./:/root/src/
+    command: tail -f /dev/null
+
+networks:
+  ntw:
+
+volumes:
+  db_data:
+  db:
+  app:
+  logs:
+  redis_db:
