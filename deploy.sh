@@ -61,7 +61,7 @@ elif [[ $TYPE = "dev" ]] ; then
   sleep 5s
   docker cp server/secret.js cpps2_app_1:/home/src/server/
   docker exec -itd cpps2_app_1 /bin/bash -c "cd /root/src && node server/node_modules/queue/worker.js"
-  docker exec -it cpps2_app_1 /bin/bash -c "cd /root/src && yarn install && nodemon server/index.js"
+  docker exec -it cpps2_app_1 /bin/bash -c "cd /root/src && yarn install && cd server && nodemon index.js"
 elif [[ $TYPE = "mongo" ]] ; then
   docker exec -it cpps2_db_1 mongo
 elif [[ $TYPE = "mongo-express" ]] ; then

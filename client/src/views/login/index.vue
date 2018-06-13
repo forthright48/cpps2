@@ -1,6 +1,6 @@
 <template lang="pug">
   .login-container
-    el-form.login-form(autoComplete="on" :modal="loginForm" :rules="loginRules" ref="loginForm" label-position="left")
+    el-form.login-form(autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left")
       h3.title CPPS Login
 
       el-form-item(prop="username")

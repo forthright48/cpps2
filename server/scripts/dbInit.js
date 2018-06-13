@@ -12,26 +12,26 @@ const readline = require('readline');
 const _ = require('lodash');
 const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout
+  output: process.stdout,
 });
 
 mongoose.Promise = global.Promise;
 
-function warning (){
-  _.times(5, function(){
-    console.log("***Warning*** Creating root account");
-  })
+function warning() {
+  _.times(5, function() {
+    console.log('***Warning*** Creating root account');
+  });
 }
 
-function handleError(err){
+function handleError(err) {
   console.log(err);
   process.exit();
 }
 
-async main() {
+async function main() {
   try {
-    const promise = await mongoose.connect(dburl, {
-      useMongoClient: true
+    await mongoose.connect(dburl, {
+      useMongoClient: true,
     });
 
     console.log('Successfully connected to database');
@@ -39,7 +39,7 @@ async main() {
     require('../models/userModel');
     const User = mongoose.model('User');
 
-    require('../models/gateModel')
+    require('../models/gateModel');
     const Gate = mongoose.model('Gate');
 
     const root = await Gate.findOne({_id: '000000000000000000000000'}).exec();
@@ -49,14 +49,14 @@ async main() {
         type: 'folder',
         ancestor: [],
         ind: 0,
-        title: 'Root'
+        title: 'Root',
       });
       await newRoot.save();
     }
 
     warning();
     const email = await new Promise(function(resolve, reject) {
-      rl.question('Enter email for admin: ', function(email){
+      rl.question('Enter email for admin: ', function(email) {
         return resolve(email);
       });
     });
@@ -64,19 +64,20 @@ async main() {
     const password = await new Promise(function(resolve, reject) {
       rl.question('Enter password for admin: ', function(password) {
         return resolve(password);
-      })
+      });
     });
 
     const pass = User.createHash(password);
     const user = new User({
       email,
       password: pass,
-      status: 'root',
-      verified: 'true'
+      roles: ['root'],
+      emailVerified: true,
     });
     await user.save();
-
   } catch (err) {
     handleError(err);
   }
 }
+
+main();
