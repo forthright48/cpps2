@@ -30,6 +30,9 @@ require('./api/public/auth.js').addRouter(app);
 
 /* Error Handling */
 app.use('/api/', function(err, req, res, next) {
+  if (process.env.NODE_ENV === 'dev') {
+    console.log(err);
+  }
   if ( err.status ) {
     return res.status(err.status).json({
       status: err.status,

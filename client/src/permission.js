@@ -1,11 +1,11 @@
 import router from './router'
 import store from './store'
-import NProgress from 'nprogress' // Progress 进度条
-import 'nprogress/nprogress.css'// Progress 进度条样式
+import NProgress from 'nprogress' // Progress bar
+import 'nprogress/nprogress.css'// Progress bar
 import { Message } from 'element-ui'
-import { getToken } from '@/utils/auth' // 验权
+import { getToken } from '@/utils/auth' // Logged In?
 
-const whiteList = ['/login'] // 不重定向白名单
+const whiteList = ['/login', '/register'] // Do not redirect
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
@@ -14,7 +14,7 @@ router.beforeEach((to, from, next) => {
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
       if (store.getters.roles.length === 0) {
-        store.dispatch('GetInfo').then(res => { // 拉取用户信息
+        store.dispatch('GetInfo').then(res => { // Pull user information
           next()
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {

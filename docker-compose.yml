@@ -31,6 +31,8 @@ services:
       - logs:/home/src/logs
       - ./:/root/src/
     command: tail -f /dev/null
+    environment:
+      - NODE_ENV
 
 networks:
   ntw:

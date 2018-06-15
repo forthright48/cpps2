@@ -39,7 +39,7 @@ async function postLogin(req, res, next) {
       });
     }
 
-    if (! await user.comparePassword(password)) {
+    if (await user.comparePassword(password)) {
       req.session.login = true;
       req.session.emailVerified = user.emailVerified;
       if (!user.emailVerified) req.session.emailVerificationValue = user.emailVerificationValue;
@@ -70,10 +70,15 @@ async function postRegister(req, res, next) {
   //   });
   // }
 
+  // TODO: Validate user input
+
+  const username = req.body.username;
   const email = User.normalizeEmail(req.body.email);
-  const password = User.createHash(req.body.password);
+  const password = await User.createHash(req.body.password);
+
 
   const user = new User({
+    _id: username,
     email,
     password,
     emailVerificationValue: _.random(100000, 999999),
@@ -81,27 +86,26 @@ async function postRegister(req, res, next) {
 
   try {
     await user.save();
-    req.session.login = true;
-    req.session.emailVerified = false;
-    req.session.emailVerificationValue = user.emailVerificationValue;
-    req.session.email = email;
-    req.session.status = user.status;
-    req.session.userId = user._id;
-
-    console.log(`User verification value: ${user.emailVerificationValue}`);
   } catch (err) {
     if (err.code === 11000) {
       return next({
         status: 400,
-        message: 'Email address already exists',
+        message: `${err.message.includes('email')?'Email address': 'Username'} already exists`,
+        error: err,
       });
     } else {
       return next({
         status: 500,
         message: `An error occured while creating user. Error code: ${err.code}`,
+        error: err,
       });
     }
   }
+
+  return res.status(201).json({
+     status: 201,
+     message: 'Successfully Registered. Try logging in.',
+   });
 
   // try {
   //   await sendEmailVerification(user.email, user.emailVerificationValue);

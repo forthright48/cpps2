@@ -1,30 +1,37 @@
 <template lang="pug">
   .login-container
     el-form.login-form(autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left")
-      h3.title CPPS Login
+      h3.title CPPS Register
 
       el-form-item(prop="username")
         span.svg-container.svg-container_login
           svg-icon(icon-class="user")
         el-input(name="username" type="text" v-model="loginForm.username" autoComplete="on" placeholder="username")
 
+      el-form-item(prop="email")
+        span.svg-container
+          svg-icon(icon-class="email")
+        el-input(name="email" type="email" v-model="loginForm.email" autoComplete="on" placeholder="email")
+
       el-form-item(prop="password")
         span.svg-container
           svg-icon(icon-class="password")
-        el-input(name="password" :type="pwdType" @keyup.enter.native="handleLogin" v-model="loginForm.password" autoComplete="on" placeholder="password")
+        el-input(name="password" :type="pwdType" @keyup.enter.native="handleRegister" v-model="loginForm.password" autoComplete="on" placeholder="password")
         span.show-pwd(@click="showPwd")
           svg-icon(icon-class="eye")
 
       el-form-item
-        el-button(type="primary" style="width:100%" :loading="loading" @click.native.prevent="handleLogin") Login
+        el-button(type="primary" style="width:100%" :loading="loading" @click.native.prevent="handleRegister") Register
 
       .tips
-        span(style="margin-right:20px;") username: admin
-        span password: admin
+        el-row
+          el-col(:span="12")
+            router-link(to="/login") Login
+          el-col.text-right(:span="12") Forgot Password?
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+import { isvalidUsername, validateEmail } from '@/utils/validate'
 
 export default {
   name: 'login',
@@ -43,13 +50,23 @@ export default {
         callback()
       }
     }
+
+    const validateEmailRule = (rule, value, callback) => {
+      if (!validateEmail(value)) {
+        callback(new Error('Please enter correct email address.'))
+      } else {
+        callback()
+      }
+    }
     return {
       loginForm: {
         username: '',
+        email: '',
         password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        email: [{ required: true, trigger: 'blur', validator: validateEmailRule }],
         password: [{ required: true, trigger: 'blur', validator: validatePass }]
       },
       loading: false,
@@ -64,14 +81,15 @@ export default {
         this.pwdType = 'password'
       }
     },
-    handleLogin() {
+    handleRegister() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then(() => {
+          this.$store.dispatch('Register', this.loginForm).then((response) => {
             this.loading = false
-            this.$router.push({ path: '/' })
-          }).catch(() => {
+            this.$router.push({ path: '/login' })
+            this.$notify.success({ message: response.message })
+          }).catch((err) => {
             this.loading = false
           })
         } else {
