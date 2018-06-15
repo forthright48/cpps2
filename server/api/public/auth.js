@@ -18,9 +18,18 @@ module.exports = {
 
 async function postLogin(req, res, next) {
   if ( req.session && req.session.login ) {
+    if (req.session._id === req.body.username) {
+      return res.status(200).json({
+        status: 200,
+        message: 'Already logged in.',
+        data: {
+          token: 'randomtoken',
+        },
+      });
+    }
     return next({
       status: 400,
-      message: 'Someone is already logged in.',
+      message: 'Someone else is already logged in.',
     });
   }
 
@@ -44,7 +53,7 @@ async function postLogin(req, res, next) {
       req.session.emailVerified = user.emailVerified;
       if (!user.emailVerified) req.session.emailVerificationValue = user.emailVerificationValue;
       req.session.email = user.email;
-      req.session.roles = new Set(user.roles);
+      req.session.roles = user.roles;
       req.session._id = user._id;
 
       return res.status(200).json({
@@ -82,6 +91,7 @@ async function postRegister(req, res, next) {
     email,
     password,
     emailVerificationValue: _.random(100000, 999999),
+    roles: ['user'],
   });
 
   try {

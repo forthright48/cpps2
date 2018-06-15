@@ -89,7 +89,7 @@ export default {
             this.loading = false
             this.$router.push({ path: '/login' })
             this.$notify.success({ message: response.message })
-          }).catch((err) => {
+          }).catch(() => {
             this.loading = false
           })
         } else {

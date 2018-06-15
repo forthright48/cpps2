@@ -58,9 +58,10 @@ service.interceptors.response.use(
   },
   error => {
     console.log('err' + error)// for debug
+    console.error(error)
     const data = error.response.data
     Message({
-      message: `Error ${data.status}: ${data.message}`,
+      message: data.status ? `Error ${data.status}: ${data.message}` : error.message,
       type: 'error',
       duration: 5 * 1000
     })

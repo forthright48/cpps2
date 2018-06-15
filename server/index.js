@@ -27,6 +27,8 @@ app.use(morgan('dev'));
 
 require('./api/public/auth.js').addRouter(app);
 
+require('./api/v1/users.js').addRouter(app);
+
 
 /* Error Handling */
 app.use('/api/', function(err, req, res, next) {
