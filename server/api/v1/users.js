@@ -34,7 +34,7 @@ function getInfo(req, res, next) {
   return res.status(200).json({
     status: 200,
     data: {
-      username: s._id,
+      username: s.username,
       roles: s.roles,
       email: s.email,
     },

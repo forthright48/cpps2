@@ -30,9 +30,7 @@ function handleError(err) {
 
 async function main() {
   try {
-    await mongoose.connect(dburl, {
-      useMongoClient: true,
-    });
+    await mongoose.connect(dburl);
 
     console.log('Successfully connected to database');
 

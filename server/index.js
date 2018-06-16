@@ -19,6 +19,7 @@ config.session.init(app);
 
 /* Models*/
 require('./models/userModel.js');
+require('./models/gateModel.js');
 
 /* Middlewares */
 app.use(morgan('dev'));

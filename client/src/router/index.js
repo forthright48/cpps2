@@ -73,6 +73,28 @@ export const constantRouterMap = [
     ]
   },
 
+  {
+    path: '/gateway',
+    component: Layout,
+    children: [
+      {
+        path: 'folder/000000000000000000000000',
+        name: 'gateway-root',
+        component: () => import('@/views/gateway/index'),
+        meta: { title: 'Gateway', icon: 'example' },
+        props: { folderId: '000000000000000000000000' }
+      },
+      {
+        path: 'folder/:folderId',
+        name: 'gateway',
+        component: () => import('@/views/gateway/index'),
+        meta: { title: 'Gateway', icon: 'example' },
+        props: true,
+        hidden: true
+      }
+    ]
+  },
+
   { path: '*', redirect: '/404', hidden: true }
 ]
 

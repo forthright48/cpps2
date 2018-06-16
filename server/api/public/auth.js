@@ -18,12 +18,12 @@ module.exports = {
 
 async function postLogin(req, res, next) {
   if ( req.session && req.session.login ) {
-    if (req.session._id === req.body.username) {
+    if (req.session.username === req.body.username) {
       return res.status(200).json({
         status: 200,
         message: 'Already logged in.',
         data: {
-          token: 'randomtoken',
+          token: req.session.username,
         },
       });
     }
@@ -54,11 +54,14 @@ async function postLogin(req, res, next) {
       if (!user.emailVerified) req.session.emailVerificationValue = user.emailVerificationValue;
       req.session.email = user.email;
       req.session.roles = user.roles;
-      req.session._id = user._id;
+      req.session.username = user._id;
 
       return res.status(200).json({
         status: 200,
         message: 'Successfully logged in',
+        data: {
+          token: req.session.username,
+        },
       });
     } else {
       return next({
