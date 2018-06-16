@@ -13,8 +13,7 @@
       template(v-else)
         el-form-item(label="Platform")
           el-select(v-model="addItem.platform")
-            el-option(label="Problem" value="problem")
-            el-option(label="Folder" value="folder")
+            el-option(v-for="oj in ojInfo" :key="oj.name" :label="oj.displayName" :value="oj.name")
         el-form-item(label="Problem Id")
           el-input(v-model="addItem.pid" placeholder="PID")
 
@@ -26,6 +25,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { GetOjInfo } from '@/store/actions'
 
 export default {
   name: 'gateway',
@@ -45,8 +45,14 @@ export default {
     ...mapGetters([
       'username',
       'email',
-      'roles'
+      'roles',
+      'ojInfo'
     ])
+  },
+  async created() {
+    if (Object.keys(this.ojInfo).length === 0) {
+      await this.$store.dispatch(GetOjInfo)
+    }
   },
   methods: {
     onSubmit() {
