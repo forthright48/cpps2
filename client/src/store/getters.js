@@ -5,6 +5,7 @@ const getters = {
   username: state => state.user.username,
   roles: state => state.user.roles,
   email: state => state.user.email,
-  ojInfo: state => state.ojInfo.ojInfo
+  ojInfo: state => state.ojInfo.ojInfo,
+  gatewayItems: state => state.gateway.itemList
 }
 export default getters

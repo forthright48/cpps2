@@ -1,4 +1,5 @@
 import { getOjInfo } from '@/api/ojInfo'
+import { normalizeVuexArray } from '@/utils'
 
 const ojInfo = {
   state: {
@@ -12,16 +13,12 @@ const ojInfo = {
   },
 
   actions: {
-    // 登录
     async GetOjInfo({ commit }) {
       try {
         const response = await getOjInfo()
         const data = response.data
         // Normalize data
-        const obj = {}
-        data.forEach((value, key, arr) => {
-          obj[value.name] = value
-        })
+        const obj = normalizeVuexArray(data, 'name')
         commit('SET_OJINFO', obj)
         return data
       } catch (err) {

@@ -30,6 +30,7 @@ require('./api/public/auth.js').addRouter(app);
 
 require('./api/v1/users.js').addRouter(app);
 require('./api/v1/ojInfo.js').addRouter(app);
+require('./api/v1/gateway.js').addRouter(app);
 
 
 /* Error Handling */
@@ -37,16 +38,14 @@ app.use('/api/', function(err, req, res, next) {
   if (process.env.NODE_ENV === 'dev') {
     console.log(err);
   }
-  if ( err.status ) {
-    return res.status(err.status).json({
-      status: err.status,
-      message: err.message,
-    });
+  const status = err.status || 500;
+  if ( status == 500 ) {
+    logger.error(err.stack);
   }
-  logger.error(err.stack);
-  return res.status(500).json({
-    status: 500,
+  return res.status(status).json({
+    status,
     message: err.message,
+    error: process.env.NODE_ENV === 'dev'? err : undefined,
   });
 });
 

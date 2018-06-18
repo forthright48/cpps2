@@ -1,6 +1,7 @@
 <template lang="pug">
   .app-container.text-center
     h1 Gateway
+    h2 {{folderId}}
 
     el-form(inline=true :model="addItem")
       el-form-item(label="Type")
@@ -17,23 +18,24 @@
         el-form-item(label="Problem Id")
           el-input(v-model="addItem.pid" placeholder="PID")
 
-
       el-form-item
-        el-button(type="primary" @click="onSubmit") Insert
+        el-button(type="primary" @click="onSubmit" :loading="loading") Insert
 
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { GetOjInfo } from '@/store/actions'
+import { GetOjInfo, GatewayAddItems } from '@/store/actions'
 
 export default {
   name: 'gateway',
   props: ['folderId'],
   data() {
     return {
+      loading: false,
       itemList: [],
       addItem: {
+        parentId: this.folderId,
         type: 'problem',
         title: '',
         platform: '',
@@ -43,10 +45,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'username',
-      'email',
-      'roles',
-      'ojInfo'
+      'ojInfo',
+      'gatewayItems'
     ])
   },
   async created() {
@@ -55,8 +55,13 @@ export default {
     }
   },
   methods: {
-    onSubmit() {
-      this.$alert('Submit!')
+    async onSubmit() {
+      try {
+        this.loading = true
+        await this.$store.dispatch(GatewayAddItems, this.addItem)
+      } finally {
+        this.loading = false
+      }
     }
   }
 }

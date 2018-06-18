@@ -100,4 +100,6 @@ schema.pre('save', function(next, req) {
   return next();
 });
 
+schema.index({platform: 1, pid: 1}, {unique: true, sparse: true});
+
 mongoose.model('Gate', schema);

@@ -17,7 +17,7 @@ router.post('/gateway', postAddItem);
 
 module.exports = {
   addRouter(app) {
-    app.use('/gateway', router);
+    app.use('/api/v1', router);
   },
 };
 
@@ -77,7 +77,6 @@ async function postAddItem(req, res, next) {
   const item = {...req.body};
   item.lastUpdatedBy = req.session.username;
   item.createdBy = req.session.username;
-  item.parentId = req.params.parentId;
 
   if (item.type === 'folder') {
     delete item.body;
@@ -94,7 +93,7 @@ async function postAddItem(req, res, next) {
     if (!x) {
       return next({
         status: 400,
-        message: `BADPARENTID: Parent Id note found ${item.parentId}.`,
+        message: `BADPARENTID: Parent Id not found ${item.parentId}.`,
       });
     }
     item.ancestor = x.ancestor.concat(item.parentId);
@@ -105,33 +104,19 @@ async function postAddItem(req, res, next) {
 
     // Ready to save our item
     const itemModel = new Gate(item);
-    // Need to ensure uniquensess of problem
-    if (itemModel.type.toString() === 'problem') {
-      const oldDoc = await Gate.findOneAndUpdate({
-        platform: itemModel.platform,
-        pid: itemModel.pid,
-      }, {
-        $setOnInsert: itemModel, // Sets only if upsert inserts a new document
-      }, {
-        upsert: true,
-        fields: '_id',
-      }).exec();
-
-      if (oldDoc) {
-        return next({
-          status: 400,
-          message: 'DUPPID Problem already exists.',
-        });
-      }
-    } else {
-      await itemModel.save();
-    }
-
+    const data = await itemModel.save();
     return res.status(201).json({
       status: 201,
-      message: 'Problem successfully inserted.',
+      message: 'Item inserted successfully.',
+      data,
     });
   } catch (err) {
+    if (err.code === 11000 && err.message.includes('platform_1_pid_1')) {
+      return next({
+        status: 400,
+        message: 'DUPPID Problem already exists.',
+      });
+    }
     return next(err);
   }
 }
