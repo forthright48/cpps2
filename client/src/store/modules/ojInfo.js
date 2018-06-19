@@ -1,5 +1,4 @@
 import { getOjInfo } from '@/api/ojInfo'
-import { normalizeVuexArray } from '@/utils'
 
 const ojInfo = {
   state: {

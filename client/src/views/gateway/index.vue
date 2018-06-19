@@ -16,17 +16,23 @@
           el-select(v-model="addItem.platform")
             el-option(v-for="oj in ojInfo" :key="oj.name" :label="oj.displayName" :value="oj.name")
         el-form-item(label="Problem Id")
-          el-input(v-model="addItem.pid" placeholder="PID")
+          el-input(v-model="addItem.pid" placeholder="PID" @keyup.enter.native="showPreview")
 
       el-form-item
-        el-button(type="primary" @click="onSubmit" :loading="loading") Insert
+        el-button(type="primary" @click="showPreview" :loading="loading") Insert
 
 
       el-dialog(
         title="Problem Preview"
-        :visible="problemPreview"
+        :visible.sync="problemPreview"
+        v-loading="loading"
       )
-        span This is a message
+        el-table(:data="previewItem" :show-header="false")
+          el-table-column(prop="key")
+          el-table-column(prop="value")
+
+        .footer(slot="footer")
+          el-button(@click="problemPreview=false;") Cancel
 </template>
 
 <script>
@@ -54,7 +60,14 @@ export default {
     ...mapGetters([
       'ojInfo',
       'gatewayItems'
-    ])
+    ]),
+    previewItem() {
+      const { title, platform, pid } = this.addItem
+      return [
+        { key: 'platform', value: platform },
+        { key: 'pid', value: pid },
+        { key: 'title', value: title }]
+    }
   },
   async created() {
     if (Object.keys(this.ojInfo).length === 0) {
@@ -62,6 +75,10 @@ export default {
     }
   },
   methods: {
+    showPreview() {
+      this.loading = true
+      this.problemPreview = true
+    },
     async onSubmit() {
       try {
         this.loading = true
