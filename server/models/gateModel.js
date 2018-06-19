@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const {ojnamesOnly} = require('./ojInfo');
+const validator = require('validator');
 
 function removeNullOrBlank(data) {
   if (data === null || data === '') return undefined;
@@ -16,19 +18,25 @@ const schema = new mongoose.Schema({
   // For children query
   parentId: {
     type: mongoose.Schema.ObjectId,
+    ref: 'Gate',
     set: removeNullOrBlank,
   },
   // For subtree query
-  ancestor: [mongoose.Schema.ObjectId],
+  ancestor: [{
+    type: mongoose.Schema.ObjectId,
+    ref: 'Gate',
+  }],
   // To reorder items inside same folder
   ind: {
     type: Number,
     set: removeNullOrBlank,
+    required: true,
   },
   title: {
     type: String,
     set: removeNullOrBlank,
     trim: true,
+    required: true,
   },
   // Contains text body or hint body
   body: {
@@ -39,6 +47,7 @@ const schema = new mongoose.Schema({
   platform: {
     type: String,
     set: removeNullOrBlank,
+    enum: ojnamesOnly,
   },
   pid: {
     type: String,
@@ -50,6 +59,7 @@ const schema = new mongoose.Schema({
     type: String,
     set: removeNullOrBlank,
     trim: true,
+    validate: validator.isURL,
   },
   // Stores the userID who solved the problem
   doneList: [{

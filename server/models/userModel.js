@@ -6,8 +6,8 @@ const bcrypt = require('bcryptjs');
 const userSchema = new mongoose.Schema({
   _id: { // Username
     type: String,
-    // TODO: Validate
     maxlength: 256,
+    // validate: /^[A-Za-z_0-9.]+$/g,
   },
   password: {
     type: String,
@@ -19,10 +19,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    validate: {
-      validator: validator.isEmail,
-      message: 'Email not valid',
-    },
+    // validate: validator.isEmail,
     maxlength: 256,
     trim: true,
     lowercase: true,

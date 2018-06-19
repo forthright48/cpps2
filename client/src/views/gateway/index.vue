@@ -21,6 +21,12 @@
       el-form-item
         el-button(type="primary" @click="onSubmit" :loading="loading") Insert
 
+
+      el-dialog(
+        title="Problem Preview"
+        :visible="problemPreview"
+      )
+        span This is a message
 </template>
 
 <script>
@@ -33,6 +39,7 @@ export default {
   data() {
     return {
       loading: false,
+      problemPreview: false,
       itemList: [],
       addItem: {
         parentId: this.folderId,

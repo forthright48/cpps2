@@ -17,9 +17,7 @@ const ojInfo = {
       try {
         const response = await getOjInfo()
         const data = response.data
-        // Normalize data
-        const obj = normalizeVuexArray(data, 'name')
-        commit('SET_OJINFO', obj)
+        commit('SET_OJINFO', data)
         return data
       } catch (err) {
         throw err

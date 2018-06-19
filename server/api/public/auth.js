@@ -5,6 +5,7 @@ const User = require('mongoose').model('User');
 // const allowSignUp = require('middlewares').allowSignUp;
 // const mailer = require('mailer').mailer;
 const _ = require('lodash');
+const validator = require('validator');
 
 router.post('/users/login', postLogin);
 // router.post('/users/register', [recaptcha.middleware.verify, allowSignUp], postRegister);
@@ -85,7 +86,28 @@ async function postRegister(req, res, next) {
   // TODO: Validate user input
 
   const username = req.body.username;
+  const usernameRegex = /^[A-Za-z_0-9.]+$/g;
+  if ( !usernameRegex.test(username) ) {
+    return next({
+      status: 400,
+      message: `INVALIDPARAM Username: ${username} failed regex ${usernameRegex}.`,
+    });
+  }
+
+  if (validator.isEmail(req.body.email) === false) {
+    return next({
+      status: 400,
+      message: `INVALIDPARAM Email: ${email} is invalid.`,
+    });
+  }
+
   const email = User.normalizeEmail(req.body.email);
+  if (req.body.password.length < 6) {
+    return next({
+      status: 400,
+      message: `INVALIDPARAM Password length is less than 6.`,
+    });
+  }
   const password = await User.createHash(req.body.password);
 
 
