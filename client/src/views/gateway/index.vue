@@ -1,7 +1,6 @@
 <template lang="pug">
   .app-container.text-center
     h1 Gateway
-    h2 {{folderId}}
 
     el-form(inline=true :model="addItem")
       el-form-item(label="Type")
@@ -13,8 +12,8 @@
           el-input(v-model="addItem.title" placeholder="Name")
       template(v-else)
         el-form-item(label="Platform")
-          el-select(v-model="addItem.platform")
-            el-option(v-for="oj in ojInfo" :key="oj.name" :label="oj.displayName" :value="oj.name")
+          el-select(v-model="addItem.platform" :filterable="true")
+            el-option(v-for="oj in ojInfo" :key="oj.name" :label="`${oj.displayName} (${oj.name})`" :value="oj.name")
         el-form-item(label="Problem Id")
           el-input(v-model="addItem.pid" placeholder="PID" @keyup.enter.native="showPreview")
 
@@ -27,17 +26,13 @@
         :visible.sync="problemPreview"
         v-loading="loading"
       )
-        el-table(:data="previewItem" :show-header="false")
-          el-table-column(prop="key")
-          el-table-column(prop="value")
-
-        .footer(slot="footer")
-          el-button(@click="problemPreview=false;") Cancel
+        a(:href="addItem.link" target="_blank") {{addItem.platform}} {{addItem.pid}} - {{addItem.title}}
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { GetOjInfo, GatewayAddItems } from '@/store/actions'
+import { getProblemInfo } from '@/api/problemBank'
 
 export default {
   name: 'gateway',
@@ -52,7 +47,9 @@ export default {
         type: 'problem',
         title: '',
         platform: '',
-        pid: ''
+        displayName: '',
+        pid: '',
+        link: ''
       }
     }
   },
@@ -60,14 +57,7 @@ export default {
     ...mapGetters([
       'ojInfo',
       'gatewayItems'
-    ]),
-    previewItem() {
-      const { title, platform, pid } = this.addItem
-      return [
-        { key: 'platform', value: platform },
-        { key: 'pid', value: pid },
-        { key: 'title', value: title }]
-    }
+    ])
   },
   async created() {
     if (Object.keys(this.ojInfo).length === 0) {
@@ -75,9 +65,34 @@ export default {
     }
   },
   methods: {
-    showPreview() {
-      this.loading = true
-      this.problemPreview = true
+    async showPreview() {
+      try {
+        this.loading = true
+        // Fetch problem details
+
+        // Validate user input
+        const ojInfo = this.ojInfo
+        const { platform, pid } = this.addItem
+        if (ojInfo[platform] === undefined) {
+          return this.$alert('Please select a platform', 'Validation Error in Platform Field')
+        }
+
+        const format = ojInfo[platform].format
+        const regex = new RegExp(format, 'g')
+        if (regex.test(pid) === false) {
+          return this.$alert(`Problem Id did not match regex ${format}`, 'Validation Error in Problem Id field')
+        }
+
+        const problemInfo = await getProblemInfo(platform, pid)
+
+        this.addItem.title = problemInfo.data.title
+        this.addItem.link = problemInfo.data.link
+        this.addItem.displayName = this.ojInfo[platform].displayName
+
+        this.problemPreview = true
+      } finally {
+        this.loading = false
+      }
     },
     async onSubmit() {
       try {

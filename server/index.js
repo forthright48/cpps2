@@ -20,6 +20,7 @@ config.session.init(app);
 /* Models*/
 require('./models/userModel.js');
 require('./models/gateModel.js');
+require('./models/problemBankModel.js');
 
 /* Middlewares */
 app.use(morgan('dev'));
@@ -31,7 +32,7 @@ require('./api/public/auth.js').addRouter(app);
 require('./api/v1/users.js').addRouter(app);
 require('./api/v1/ojInfo.js').addRouter(app);
 require('./api/v1/gateway.js').addRouter(app);
-
+require('./api/v1/problemBank.js').addRouter(app);
 
 /* Error Handling */
 app.use('/api/', function(err, req, res, next) {

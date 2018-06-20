@@ -4,7 +4,7 @@ const ojscraper = require('ojscraper');
 
 const router = express.Router();
 
-router.get('/problembank/:platform/:problemId', getProblem);
+router.get('/problemBank/:platform/:problemId', getProblem);
 
 module.exports = {
   addRouter(app) {
