@@ -9,7 +9,7 @@ const gateway = {
 
   mutations: {
     SET_GATEWAY_ITEMS: (state, items) => {
-      state.items = items
+      state.itemList = items
     }
   },
 

@@ -27,6 +27,11 @@
         v-loading="loading"
       )
         a(:href="addItem.link" target="_blank") {{addItem.platform}} {{addItem.pid}} - {{addItem.title}}
+
+        span(slot="footer")
+          el-button(@click="problemPreview=false") Cancel
+          el-button(type="primary" @click="onSubmit") Confirm
+  </span>
 </template>
 
 <script>
@@ -44,6 +49,7 @@ export default {
       itemList: [],
       addItem: {
         parentId: this.folderId,
+        ind: 0,
         type: 'problem',
         title: '',
         platform: '',
@@ -100,6 +106,7 @@ export default {
         await this.$store.dispatch(GatewayAddItems, this.addItem)
       } finally {
         this.loading = false
+        this.problemPreview = false
       }
     }
   }

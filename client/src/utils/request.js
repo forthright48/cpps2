@@ -3,10 +3,11 @@ import { Message, MessageBox } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 
+const timeout = 10000
 // Create axios instance
 const service = axios.create({
   baseURL: process.env.BASE_API, // Api base_url
-  timeout: 5000, // Request timeout
+  timeout: timeout, // Request timeout
   withCredentials: true,
   credentials: 'same-origin'
 })
@@ -65,12 +66,18 @@ service.interceptors.response.use(
     }
   },
   error => {
-    const data = error.response.data
-    if (data.error) {
-      console.error(data.error)
+    let message
+    if (error.code === 'ECONNABORTED') {
+      message = `Request timed out at ${timeout} ms.`
+    } else {
+      const data = error.response.data
+      if (data.error) {
+        console.error(data.error)
+      }
+      message = data.status ? `Error ${data.status}: ${data.message}` : error.message
     }
     Message({
-      message: data.status ? `Error ${data.status}: ${data.message}` : error.message,
+      message: message,
       type: 'error',
       showClose: true,
       duration: 10 * 1000
