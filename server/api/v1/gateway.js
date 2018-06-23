@@ -174,7 +174,6 @@ async function getProblemItemStats(item, session) {
   }
 }
 
-
 async function getItems(req, res, next) {
   const {parentId} = req.query;
 
