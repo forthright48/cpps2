@@ -1,4 +1,4 @@
-import { addItem } from '@/api/gateway'
+import { addItem, getItems } from '@/api/gateway'
 // import { normalizeVuexArray } from '@/api/utils'
 
 // Imagine I am looking into a folder
@@ -22,6 +22,15 @@ const gateway = {
         const newItemList = { ...state.itemList }
         newItemList[data._id] = data
         commit('SET_GATEWAY_ITEMS', newItemList)
+      } catch (err) {
+        throw err
+      }
+    },
+    async GatewayGetItems({ commit, state }, folderId) {
+      try {
+        const response = await getItems(folderId)
+        const data = response.data
+        commit('SET_GATEWAY_ITEMS', data)
       } catch (err) {
         throw err
       }

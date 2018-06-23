@@ -7,3 +7,10 @@ export function addItem(form) {
     data: form
   })
 }
+
+export function getItems(folderId) {
+  return request({
+    url: `/api/v1/gateway?parentId=${folderId}`,
+    method: 'get'
+  })
+}
