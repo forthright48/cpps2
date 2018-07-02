@@ -12,6 +12,10 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 
+.vertical-middle {
+  vertical-align: middle;
+}
+
 /**
  * Font Awesome Configuration
  */

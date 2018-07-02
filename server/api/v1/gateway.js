@@ -147,7 +147,7 @@ async function getFolderItemStats(item, session) {
       : -1;
 
 
-    const [totalCount, userCount] = Promise.all([totalCountPromise, userCountPromise]);
+    const [totalCount, userCount] = await Promise.all([totalCountPromise, userCountPromise]);
     return {...item._doc, totalCount, userCount};
   } catch (err) {
     throw err;

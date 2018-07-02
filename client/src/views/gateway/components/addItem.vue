@@ -6,17 +6,17 @@
         el-option(label="Folder" value="folder")
     template(v-if="addItem.type==='folder'")
       el-form-item(label="Title")
-        el-input(v-model="addItem.title" placeholder="Name")
+        el-input(v-model="addItem.title" placeholder="Name" @keyup.enter.native="onSubmit")
+      el-form-item
+        el-button( type="primary" @click="onSubmit" :loading="loading") Insert
     template(v-else)
       el-form-item(label="Platform")
         el-select(v-model="addItem.platform" :filterable="true")
           el-option(v-for="oj in ojInfo" :key="oj.name" :label="`${oj.displayName} (${oj.name})`" :value="oj.name")
       el-form-item(label="Problem Id")
         el-input(v-model="addItem.pid" placeholder="PID" @keyup.enter.native="showPreview")
-
-    el-form-item
-      el-button(type="primary" @click="showPreview" :loading="loading") Insert
-
+      el-form-item
+        el-button( type="primary" @click="showPreview" :loading="loading") Insert
 
     el-dialog(
       title="Problem Preview"
