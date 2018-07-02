@@ -6,6 +6,7 @@ const getters = {
   roles: state => state.user.roles,
   email: state => state.user.email,
   ojInfo: state => state.ojInfo.ojInfo,
-  gatewayItems: state => state.gateway.itemList
+  gatewayItems: state => state.gateway.itemList,
+  gatewayRoot: state => state.gateway.root
 }
 export default getters

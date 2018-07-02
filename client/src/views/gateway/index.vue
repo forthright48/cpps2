@@ -1,6 +1,11 @@
 <template lang="pug">
   .app-container
-    h1.text-center Gateway
+    el-row(type="flex" align="middle")
+      el-col(:span="2")
+        router-link(:to="gatewayRoot.parentId")
+          fa-icon.ml-2(name="level-up" scale="2")
+      el-col(:span="22")
+        h1.text-center Gateway
     AddItem.text-center(:folderId="folderId")
 
     el-table(
@@ -40,7 +45,8 @@ export default {
   computed: {
     ...mapGetters([
       'token',
-      'gatewayItems'
+      'gatewayItems',
+      'gatewayRoot'
     ]),
     gatewayItemsArray() {
       return Object.values(this.gatewayItems).map((item, index) => {
@@ -62,14 +68,21 @@ export default {
       })
     }
   },
-  async created() {
-    try {
-      await this.$store.dispatch(GatewayInit, this.folderId)
-    } finally {
-      this.loading = false
-    }
+  watch: {
+    '$route': 'initiateFolder'
   },
-  methods: {}
+  async created() {
+    await this.initiateFolder()
+  },
+  methods: {
+    async initiateFolder() {
+      try {
+        await this.$store.dispatch(GatewayInit, this.folderId)
+      } finally {
+        this.loading = false
+      }
+    }
+  }
 }
 </script>
 
