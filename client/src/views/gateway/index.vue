@@ -2,7 +2,7 @@
   .app-container
     el-row(type="flex" align="middle")
       el-col(:span="2")
-        router-link(:to="gatewayRoot.parentId")
+        router-link(v-if="gatewayRoot.parentId" :to="gatewayRoot.parentId")
           fa-icon.ml-2(name="level-up" scale="2")
       el-col(:span="22")
         h1.text-center Gateway

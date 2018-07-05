@@ -10,7 +10,7 @@ export function addItem(form) {
 
 export function getFolder(folderId) {
   return request({
-    url: `/api/v1/gateway?parentId=${folderId}`,
+    url: `/api/v1/gateway?parentId=${folderId}&childStat=true`,
     method: 'get'
   })
 }
@@ -18,6 +18,13 @@ export function getFolder(folderId) {
 export function getItem(itemId) {
   return request({
     url: `/api/v1/gateway/${itemId}`,
+    method: 'get'
+  })
+}
+
+export function getFolderMapping() {
+  return request({
+    url: `/api/v1/gateway?type=folder`,
     method: 'get'
   })
 }

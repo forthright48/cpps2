@@ -175,28 +175,29 @@ async function getProblemItemStats(item, session) {
 }
 
 async function getItems(req, res, next) {
-  const {parentId} = req.query;
-
-  if (!parentId) {
-    return next({
-      status: 400,
-      message: 'BADPARAM ParentId not defined',
-    });
-  }
+  const query = {};
+  if (req.query.parentId) query.parentId = req.query.parentId;
+  if (req.query.type) query.type = req.query.type;
 
   try {
     // Need all items whose parent is parentId.
-    const children = await Gate.find({parentId}).exec();
+    const children = await Gate.find(query).exec();
 
-    const childrenStatsPromise = children.map((item)=>{
-      return getItemStats(item, req.session);
-    });
-    const childrenWithStats = await Promise.all(childrenStatsPromise);
-
-    return res.status(200).json({
-      status: 200,
-      data: childrenWithStats,
-    });
+    if (req.query.childStat === 'true') {
+      const childrenStatsPromise = children.map((item)=>{
+        return getItemStats(item, req.session);
+      });
+      const childrenWithStats = await Promise.all(childrenStatsPromise);
+      return res.status(200).json({
+        status: 200,
+        data: childrenWithStats,
+      });
+    } else {
+      return res.status(200).json({
+        status: 200,
+        data: children,
+      });
+    }
   } catch (err) {
     return next(err);
   }
