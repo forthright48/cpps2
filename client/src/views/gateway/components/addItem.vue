@@ -54,6 +54,11 @@ export default {
       }
     }
   },
+  watch: {
+    folderId: function() {
+      this.addItem.parentId = this.folderId
+    }
+  },
   computed: {
     ...mapGetters([
       'ojInfo'

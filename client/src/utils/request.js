@@ -37,7 +37,8 @@ service.interceptors.response.use(
       Message({
         message: res.message,
         type: 'error',
-        duration: 5 * 1000
+        duration: 5 * 1000,
+        showClose: true
       })
 
       // 50008:Illegal token; 50012:Other clients logged in;  50014:Token expired;
@@ -59,7 +60,8 @@ service.interceptors.response.use(
         Message({
           type: 'success',
           message: response.data.message,
-          duration: 10 * 1000
+          duration: 10 * 1000,
+          showClose: true
         })
       }
       return response.data

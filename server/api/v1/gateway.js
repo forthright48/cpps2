@@ -98,10 +98,12 @@ async function postAddItem(req, res, next) {
     // Ready to save our item
     const itemModel = new Gate(item);
     const data = await itemModel.save();
+
+    const dataWithStats = await getItemStats(data, req.session);
     return res.status(201).json({
       status: 201,
       message: 'Item inserted successfully.',
-      data,
+      data: dataWithStats,
     });
   } catch (err) {
     if (err.code === 11000 && err.message.includes('platform_1_pid_1')) {
