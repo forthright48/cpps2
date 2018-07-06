@@ -25,11 +25,15 @@
         template(slot-scope="scope")
           fa-icon(:name="scope.row.statIcon")
           span.ml-1 {{scope.row.stat}}
+      el-table-column(label="Admin" align="center" width="140")
+        template(slot-scope="scope")
+          el-button(size="mini" round type="danger" @click="handleDeleteItem(scope.$index, scope.row)")
+            fa-icon.vertical-middle(name="trash")
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { GatewayInit } from '@/store/actions'
+import { GatewayInit, GatewayDeleteItem } from '@/store/actions'
 import { AddItem } from './components'
 
 export default {
@@ -78,6 +82,14 @@ export default {
     async initiateFolder() {
       try {
         await this.$store.dispatch(GatewayInit, this.folderId)
+      } finally {
+        this.loading = false
+      }
+    },
+    async handleDeleteItem(index, row) {
+      try {
+        this.loading = true
+        await this.$store.dispatch(GatewayDeleteItem, row._id)
       } finally {
         this.loading = false
       }

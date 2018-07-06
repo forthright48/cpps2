@@ -1,5 +1,6 @@
 module.exports = {
   GetOjInfo: 'GetOjInfo',
   GatewayAddItems: 'GatewayAddItems',
-  GatewayInit: 'GatewayInit'
+  GatewayInit: 'GatewayInit',
+  GatewayDeleteItem: 'GatewayDeleteItem'
 }

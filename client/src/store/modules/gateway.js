@@ -1,5 +1,11 @@
-import { addItem, getItem, getFolder, getFolderMapping } from '@/api/gateway'
-// import { normalizeVuexArray } from '@/utils'
+import {
+  addItem,
+  getItem,
+  getFolder,
+  getFolderMapping,
+  deleteItem
+} from '@/api/gateway'
+import { normalizeVuexArray } from '@/utils'
 
 const root = '000000000000000000000000'
 
@@ -30,18 +36,6 @@ const gateway = {
   },
 
   actions: {
-    async GatewayAddItems({ commit, state }, form) {
-      try {
-        const response = await addItem(form)
-        const data = response.data
-
-        const newItemList = { ...state.itemList }
-        newItemList[data._id] = data
-        commit('SET_GATEWAY_ITEMS', newItemList)
-      } catch (err) {
-        throw err
-      }
-    },
     async GatewayInit({ commit, state }, folderId) {
       try {
         // Get Folder Info
@@ -52,7 +46,7 @@ const gateway = {
           getItemsPromise, getRootPromise
         ])
 
-        commit('SET_GATEWAY_ITEMS', getItemsResponse.data)
+        commit('SET_GATEWAY_ITEMS', normalizeVuexArray(getItemsResponse.data, '_id'))
         commit('SET_GATEWAY_ROOT', getRootResponse.data)
 
         // Set Gateway breadCrumb
@@ -77,6 +71,28 @@ const gateway = {
           }
         })
         commit('SET_GATEWAY_BREADCRUMB', breadCrumb)
+      } catch (err) {
+        throw err
+      }
+    },
+    async GatewayAddItems({ commit, state }, form) {
+      try {
+        const response = await addItem(form)
+        const data = response.data
+
+        const newItemList = { ...state.itemList }
+        newItemList[data._id] = data
+        commit('SET_GATEWAY_ITEMS', newItemList)
+      } catch (err) {
+        throw err
+      }
+    },
+    async GatewayDeleteItem({ commit, state }, id) {
+      try {
+        await deleteItem(id)
+        const newItemList = { ...state.itemList }
+        delete newItemList[id]
+        commit('SET_GATEWAY_ITEMS', newItemList)
       } catch (err) {
         throw err
       }

@@ -28,3 +28,10 @@ export function getFolderMapping() {
     method: 'get'
   })
 }
+
+export function deleteItem(id) {
+  return request({
+    url: `api/v1/gateway/${id}`,
+    method: 'delete'
+  })
+}

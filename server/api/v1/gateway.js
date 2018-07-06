@@ -7,7 +7,9 @@ const router = express.Router();
 
 router.post('/gateway', postAddItem);
 router.get('/gateway', getItems);
+
 router.get('/gateway/:_id', getItem);
+router.delete('/gateway/:_id', deleteItem);
 
 module.exports = {
   addRouter(app) {
@@ -206,13 +208,36 @@ async function getItems(req, res, next) {
 }
 
 async function getItem(req, res, next) {
-  const _id = req.params;
+  const {_id} = req.params;
 
   try {
     const item = await Gate.findOne({_id}).exec();
     return res.status(200).json({
       status: 200,
       data: item,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function deleteItem(req, res, next) {
+  const {_id} = req.params;
+
+  try {
+    // Check if the item is folder. If folders have item in them, they cannot be
+    // deleted.
+    const count = await Gate.count({parentId: _id}).exec();
+    if (count > 0) {
+      return next({
+        status: 400,
+        message: `Cannot delete folder: ${_id} with ${count} item(s) inside it.`,
+      });
+    }
+
+    await Gate.deleteOne({_id}).exec();
+    return res.status(201).json({
+      status: 201,
     });
   } catch (err) {
     return next(err);
