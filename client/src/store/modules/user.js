@@ -16,8 +16,8 @@ const user = {
     SET_USERNAME: (state, username) => {
       state.username = username
     },
-    SET_EMAIL: (state, name) => {
-      state.name = name
+    SET_EMAIL: (state, email) => {
+      state.email = email
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles

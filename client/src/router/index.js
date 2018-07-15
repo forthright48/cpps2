@@ -37,7 +37,6 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index')
     }]
   },
-
   {
     path: '/example',
     component: Layout,
@@ -59,7 +58,6 @@ export const constantRouterMap = [
       }
     ]
   },
-
   {
     path: '/form',
     component: Layout,
@@ -72,7 +70,6 @@ export const constantRouterMap = [
       }
     ]
   },
-
   {
     path: '/gateway',
     component: Layout,
@@ -94,7 +91,19 @@ export const constantRouterMap = [
       }
     ]
   },
-
+  {
+    path: '/user',
+    component: Layout,
+    children: [
+      {
+        path: 'profile/:username',
+        name: 'profile',
+        component: () => import('@/views/users/index'),
+        meta: { title: 'Profile', icon: 'user' },
+        props: true
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

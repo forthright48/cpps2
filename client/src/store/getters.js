@@ -8,6 +8,7 @@ const getters = {
   ojInfo: state => state.ojInfo.ojInfo,
   gatewayItems: state => state.gateway.itemList,
   gatewayRoot: state => state.gateway.root,
-  gatewayBreadcrumb: state => state.gateway.gatewayBreadcrumb
+  gatewayBreadcrumb: state => state.gateway.gatewayBreadcrumb,
+  user: state => state.user
 }
 export default getters
