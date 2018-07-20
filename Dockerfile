@@ -24,7 +24,7 @@ RUN dpkg -i dumb-init_*.deb
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
-ADD . .
+COPY . .
 
 EXPOSE 8002
 EXPOSE 3050

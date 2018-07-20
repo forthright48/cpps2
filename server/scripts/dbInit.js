@@ -53,6 +53,13 @@ async function main() {
     }
 
     warning();
+
+    const username = await new Promise(function(resolve, reject) {
+      rl.question('Enter username for admin: ', function(username) {
+        return resolve(username);
+      });
+    });
+
     const email = await new Promise(function(resolve, reject) {
       rl.question('Enter email for admin: ', function(email) {
         return resolve(email);
@@ -65,14 +72,17 @@ async function main() {
       });
     });
 
-    const pass = User.createHash(password);
+    const pass = await User.createHash(password);
     const user = new User({
+      _id: username,
       email,
       password: pass,
-      roles: ['root'],
+      roles: ['root', 'user'],
       emailVerified: true,
     });
     await user.save();
+
+    console.log('Done');
   } catch (err) {
     handleError(err);
   }

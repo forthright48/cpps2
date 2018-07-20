@@ -73,7 +73,7 @@ elif [[ $TYPE = "mongo-express" ]] ; then
       -e ME_CONFIG_OPTIONS_EDITORTHEME="ambiance" \
       mongo-express
 elif [[ $TYPE = "init" ]] ; then
-  docker exec -it cpps2_app_1 node server/scripts/dbInit.js
+  docker exec -it cpps2_app_1 node /root/src/server/scripts/dbInit.js
 elif [[ $TYPE = "mongo-backup" ]]; then
   # Create backup and copy it out from docker
   # Run this from root folder
