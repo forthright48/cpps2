@@ -1,16 +1,19 @@
 <template lang="pug">
   .app-container
-    el-row(type="flex" align="middle")
+    el-row(type="flex" justify="center")
       el-col
         h1.text-center User Profile
-
-    ul.blockList
-      li
-        span {{user.email}}
-      li
-        span {{user.username}}
-      li
-        span {{user.roles.join(",")}}
+        el-table(:data="getUserFields" align="center")
+          el-table-column
+            template(slot-scope="scope")
+              fa-icon.vertical-middle(:name="scope.row.icon")
+              span.ml-2 {{scope.row.feature}}
+          el-table-column(align="center")
+            template(slot-scope="scope")
+              template(v-if="scope.row.feature=='Password'")
+                el-button(size="mini" type="primary" round) Update Password
+              template(v-else)
+                span {{scope.row.value}}
 </template>
 
 <script>
@@ -23,26 +26,29 @@ export default {
     ...mapGetters([
       'token',
       'user'
-    ])
+    ]),
+    getUserFields() {
+      return [{
+        feature: 'Email',
+        icon: 'envelope',
+        value: this.user.email
+      }, {
+        feature: 'Username',
+        icon: 'user',
+        value: this.user.username
+      }, {
+        feature: 'Roles',
+        icon: 'users',
+        value: this.user.roles.join(', ')
+      }, {
+        feature: 'Password',
+        icon: 'key'
+      }]
+    }
   }
 }
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-ul.blockList {
-  list-style: none;
-}
-ul.blockList li {
-  display:block;
-  text-decoration:none;
-  line-height:30px;
-  border: 1px solid #CCCCCC;
-  border-top: 0px;
-  padding-left:10px;
-}
-ul.blockList li:first-child  {
-  border-top-style:solid;
-  border-top-width:1px;
-  border-top-color:#CCCCCC;
-}
+
 </style>

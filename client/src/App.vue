@@ -16,6 +16,19 @@ export default {
   vertical-align: middle;
 }
 
+.mr-1 {
+  margin-right: 0.25em;
+}
+.mr-2 {
+  margin-right: 0.5em;
+}
+.ml-1 {
+  margin-left: 0.25em;
+}
+.ml-2 {
+  margin-left: 0.5em;
+}
+
 /**
  * Font Awesome Configuration
  */
