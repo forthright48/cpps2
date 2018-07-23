@@ -5,7 +5,7 @@ const User = require('mongoose').model('User');
 // const Gate = require('mongoose').model('Gate');
 // const ojnames = require(path.join(rootPath, 'models/ojnames'));
 // const ojnamesOnly = ojnames.data.map((x)=>x.name);
-const logger = require('logger');
+// const logger = require('logger');
 // const queue = require('queue');
 
 // router.get('/users/username-userId/:username', getUserIdFromUsername );
@@ -13,7 +13,7 @@ const logger = require('logger');
 
 router.get('/users/info', getInfo);
 router.post('/users/logout', logout);
-// router.get('/users/:username', getUser );
+router.get('/user/:username', getUser );
 // router.get('/users/:username/root-stats', rootStats);
 // router.put('/users/:username/sync-solve-count', syncSolveCount);
 //
@@ -74,32 +74,33 @@ function logout(req, res, next) {
 //   }
 // }
 //
-// async function getUser(req, res, next) {
-//   try {
-//     const {username} = req.params;
-//     const {select} = req.query;
-//
-//     const user = await User.findOne({username}).select(select).exec();
-//
-//     if (!user) {
-//       const err = new Error('No such user');
-//       err.status = 400;
-//       throw err;
-//     }
-//
-//     // Remove sensitive information
-//     user.email = undefined;
-//     user.password = undefined;
-//
-//     return res.status(200).json({
-//       status: 200,
-//       data: user,
-//     });
-//   } catch (err) {
-//     return next(err);
-//   }
-// }
-//
+async function getUser(req, res, next) {
+  try {
+    const {username} = req.params;
+    const {select} = req.query;
+
+    const user = await User.findOne({_id: username}).select(select).exec();
+
+    if (!user) {
+      return next({
+        status: 400,
+        message: `BADPARAM: No such user with username: ${username}.`,
+      });
+    }
+
+    // Remove sensitive information
+    user.email = undefined;
+    user.password = undefined;
+
+    return res.status(200).json({
+      status: 200,
+      data: user,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
 // async function whoSolvedIt(req, res, next) {
 //   try {
 //     const {problemList, classId} = req.query;
