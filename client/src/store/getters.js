@@ -9,6 +9,7 @@ const getters = {
   gatewayItems: state => state.gateway.itemList,
   gatewayRoot: state => state.gateway.root,
   gatewayBreadcrumb: state => state.gateway.gatewayBreadcrumb,
-  user: state => state.user
+  user: state => state.user,
+  profile: state => state.profile
 }
 export default getters
