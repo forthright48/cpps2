@@ -2,12 +2,16 @@ import { getUser } from '@/api/user'
 
 const profile = {
   state: {
-    profile: {}
+    username: '',
+    roles: [],
+    ojStats: []
   },
 
   mutations: {
     SET_PROFILE: (state, profile) => {
-      state.ojInfo = profile
+      state.username = profile._id
+      state.roles = profile.roles
+      state.ojStats = profile.ojStats
     }
   },
 

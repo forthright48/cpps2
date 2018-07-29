@@ -1,5 +1,5 @@
 <template lang="pug">
-  .app-container
+  .app-container(v-loading="loading")
     el-row(type="flex" justify="center")
       el-col
         UserProfile
@@ -12,9 +12,32 @@
 
 <script>
 import { UserProfile, SolveCount } from './components'
+import { FetchProfile } from '@/store/actions'
 
 export default {
-  components: { UserProfile, SolveCount }
+  components: { UserProfile, SolveCount },
+  props: ['username'],
+  data() {
+    return {
+      loading: true
+    }
+  },
+  watch: {
+    '$route': 'initiateUser'
+  },
+  async created() {
+    await this.initiateUser()
+  },
+  methods: {
+    async initiateUser() {
+      try {
+        console.log('disptach profile')
+        await this.$store.dispatch(FetchProfile, this.username)
+      } finally {
+        this.loading = false
+      }
+    }
+  }
 }
 </script>
 

@@ -29,7 +29,6 @@ export default {
     if (Object.keys(this.ojInfo).length === 0) {
       await this.$store.dispatch(GetOjInfo)
     }
-    console.log(this.ojInfo)
   }
 }
 </script>

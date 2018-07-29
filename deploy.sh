@@ -38,9 +38,10 @@ if [[ ! -f server/secret.js ]] ; then
   exit 0
 fi
 
+docker rmi $(docker images -f "dangling=true" -q)
+
 if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker-compose down
-  docker rmi $(docker images -f "dangling=true" -q)
   git pull origin
   if [[ $TYPE = "prod" ]] ; then
     git checkout master
@@ -55,7 +56,6 @@ if [[ $TYPE = "prod" || $TYPE = "beta" ]] ; then
   docker exec -itd cpps2_app_1 forever start server/node_modules/queue/worker.js
 elif [[ $TYPE = "dev" ]] ; then
   docker-compose down
-  docker rmi $(docker images -f "dangling=true" -q)
   docker-compose build
   docker-compose up &
   sleep 5s
@@ -95,7 +95,6 @@ elif [[ $TYPE = "worker" ]] ; then
   docker exec -it cpps2_app_1 /bin/bash -c "cd /root/src && node server/node_modules/queue/worker.js"
 elif [[ $TYPE = "stop" ]] ; then
   docker-compose down
-  docker rmi $(docker images -f "dangling=true" -q)
 else
     echo -e "${BOLD}Unknown Type${OFF}: $TYPE"
 fi

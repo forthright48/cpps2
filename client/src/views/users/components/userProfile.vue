@@ -18,24 +18,24 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  props: ['username'],
   computed: {
     ...mapGetters([
-      'user'
+      'user',
+      'profile'
     ]),
     getUserFields() {
       return [{
         feature: 'Email',
         icon: 'envelope',
-        value: this.user.email
+        value: this.profile.email
       }, {
         feature: 'Username',
         icon: 'user',
-        value: this.user.username
+        value: this.profile.username
       }, {
         feature: 'Roles',
         icon: 'users',
-        value: this.user.roles.join(', ')
+        value: this.profile.roles.join(', ')
       }, {
         feature: 'Password',
         icon: 'key'
