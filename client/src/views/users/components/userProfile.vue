@@ -21,27 +21,33 @@ export default {
   computed: {
     ...mapGetters([
       'user',
-      'profile'
+      'profile',
     ]),
     getUserFields() {
-      return [{
+      const ret = [{
         feature: 'Email',
         icon: 'envelope',
-        value: this.profile.email
+        value: this.user.email,
       }, {
         feature: 'Username',
         icon: 'user',
-        value: this.profile.username
+        value: this.profile.username,
+        public: true,
       }, {
         feature: 'Roles',
         icon: 'users',
-        value: this.profile.roles.join(', ')
+        value: this.profile.roles.join(', '),
+        public: true,
       }, {
         feature: 'Password',
-        icon: 'key'
-      }]
-    }
-  }
+        icon: 'key',
+      } ]
+      return this.isOwner ? ret : ret.filter((x) => x.public)
+    },
+    isOwner() {
+      return this.user.username === this.profile.username
+    },
+  },
 }
 </script>
 

@@ -14,22 +14,23 @@ export default {
   props: ['username'],
   computed: {
     ...mapGetters([
-      'ojInfo'
+      'ojInfo',
+      'profile',
     ]),
     getSolveCount() {
       return Object.keys(this.ojInfo).map((oj, ind) => {
         return {
           index: ind,
-          oj
+          oj,
         }
       })
-    }
+    },
   },
   async created() {
     if (Object.keys(this.ojInfo).length === 0) {
       await this.$store.dispatch(GetOjInfo)
     }
-  }
+  },
 }
 </script>
 

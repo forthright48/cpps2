@@ -13,31 +13,39 @@
 <script>
 import { UserProfile, SolveCount } from './components'
 import { FetchProfile } from '@/store/actions'
+import { mapGetters } from 'vuex'
 
 export default {
   components: { UserProfile, SolveCount },
   props: ['username'],
   data() {
     return {
-      loading: true
+      loading: true,
     }
   },
+  computed: {
+    ...mapGetters([
+      'user',
+    ]),
+  },
   watch: {
-    '$route': 'initiateUser'
+    '$route': 'initiateUser',
   },
   async created() {
     await this.initiateUser()
   },
   methods: {
     async initiateUser() {
+      if (this.username === ':username') {
+        return this.$router.push(`/user/profile/${this.user.username}`)
+      }
       try {
-        console.log('disptach profile')
         await this.$store.dispatch(FetchProfile, this.username)
       } finally {
         this.loading = false
       }
-    }
-  }
+    },
+  },
 }
 </script>
 
