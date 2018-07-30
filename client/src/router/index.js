@@ -34,8 +34,8 @@ export const constantRouterMap = [
     hidden: true,
     children: [{
       path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
-    }]
+      component: () => import('@/views/dashboard/index'),
+    }],
   },
   {
     path: '/example',
@@ -48,15 +48,15 @@ export const constantRouterMap = [
         path: 'table',
         name: 'Table',
         component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        meta: { title: 'Table', icon: 'table' },
       },
       {
         path: 'tree',
         name: 'Tree',
         component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
+        meta: { title: 'Tree', icon: 'tree' },
+      },
+    ],
   },
   {
     path: '/form',
@@ -66,9 +66,9 @@ export const constantRouterMap = [
         path: 'index',
         name: 'Form',
         component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
+        meta: { title: 'Form', icon: 'form' },
+      },
+    ],
   },
   {
     path: '/gateway',
@@ -79,7 +79,7 @@ export const constantRouterMap = [
         name: 'gateway-root',
         component: () => import('@/views/gateway/index'),
         meta: { title: 'Gateway', icon: 'example' },
-        props: { folderId: '000000000000000000000000' }
+        props: { folderId: '000000000000000000000000' },
       },
       {
         path: 'folder/:folderId',
@@ -87,9 +87,9 @@ export const constantRouterMap = [
         component: () => import('@/views/gateway/index'),
         meta: { title: 'Gateway', icon: 'example' },
         props: true,
-        hidden: true
-      }
-    ]
+        hidden: true,
+      },
+    ],
   },
   {
     path: '/user',
@@ -100,15 +100,15 @@ export const constantRouterMap = [
         name: 'profile',
         component: () => import('@/views/users/index'),
         meta: { title: 'Profile', icon: 'user' },
-        props: true
-      }
-    ]
+        props: true,
+      },
+    ],
   },
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true },
 ]
 
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRouterMap
+  routes: constantRouterMap,
 })

@@ -15,9 +15,9 @@ const store = new Vuex.Store({
     user,
     ojInfo,
     gateway,
-    profile
+    profile,
   },
-  getters
+  getters,
 })
 
 export default store

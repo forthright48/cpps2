@@ -6,7 +6,7 @@ const user = {
     token: getToken(),
     username: '',
     email: '',
-    roles: []
+    roles: [],
   },
 
   mutations: {
@@ -21,7 +21,7 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
-    }
+    },
   },
 
   actions: {
@@ -90,8 +90,8 @@ const user = {
         removeToken()
         resolve()
       })
-    }
-  }
+    },
+  },
 }
 
 export default user

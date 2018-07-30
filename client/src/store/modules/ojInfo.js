@@ -2,13 +2,13 @@ import { getOjInfo } from '@/api/ojInfo'
 
 const ojInfo = {
   state: {
-    ojInfo: {}
+    ojInfo: {},
   },
 
   mutations: {
     SET_OJINFO: (state, ojInfo) => {
       state.ojInfo = ojInfo
-    }
+    },
   },
 
   actions: {
@@ -21,8 +21,8 @@ const ojInfo = {
       } catch (err) {
         throw err
       }
-    }
-  }
+    },
+  },
 }
 
 export default ojInfo

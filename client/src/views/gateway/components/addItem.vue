@@ -50,19 +50,19 @@ export default {
         platform: '',
         displayName: '',
         pid: '',
-        link: ''
-      }
+        link: '',
+      },
     }
   },
   watch: {
     folderId: function() {
       this.addItem.parentId = this.folderId
-    }
+    },
   },
   computed: {
     ...mapGetters([
-      'ojInfo'
-    ])
+      'ojInfo',
+    ]),
   },
   async created() {
     if (Object.keys(this.ojInfo).length === 0) {
@@ -107,7 +107,7 @@ export default {
         this.loading = false
         this.problemPreview = false
       }
-    }
-  }
+    },
+  },
 }
 </script>

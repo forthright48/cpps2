@@ -6,8 +6,8 @@ export function login(username, password) {
     method: 'post',
     data: {
       username,
-      password
-    }
+      password,
+    },
   })
 }
 
@@ -18,8 +18,8 @@ export function register(username, email, password) {
     data: {
       username,
       email,
-      password
-    }
+      password,
+    },
   })
 }
 
@@ -27,13 +27,13 @@ export function getInfo(token) {
   return request({
     url: '/api/v1/users/info',
     method: 'get',
-    params: { token }
+    params: { token },
   })
 }
 
 export function logout() {
   return request({
     url: '/api/v1/users/logout',
-    method: 'post'
+    method: 'post',
   })
 }

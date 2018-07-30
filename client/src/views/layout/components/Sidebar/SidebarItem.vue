@@ -37,12 +37,12 @@ export default {
   name: 'SidebarItem',
   props: {
     routes: {
-      type: Array
+      type: Array,
     },
     isNest: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   methods: {
     hasOneShowingChildren(children) {
@@ -53,7 +53,7 @@ export default {
         return true
       }
       return false
-    }
-  }
+    },
+  },
 }
 </script>

@@ -3,7 +3,7 @@ import {
   getItem,
   getFolder,
   getFolderMapping,
-  deleteItem
+  deleteItem,
 } from '@/api/gateway'
 import { normalizeVuexArray } from '@/utils'
 
@@ -17,7 +17,7 @@ const gateway = {
     itemList: {},
     // Folder Id to Name mapping for breadcrumb
     folderMapping: {},
-    gatewayBreadcrumb: []
+    gatewayBreadcrumb: [],
   },
 
   mutations: {
@@ -32,7 +32,7 @@ const gateway = {
     },
     SET_GATEWAY_BREADCRUMB: (state, item) => {
       state.gatewayBreadcrumb = item
-    }
+    },
   },
 
   actions: {
@@ -43,7 +43,7 @@ const gateway = {
         const getRootPromise = getItem(folderId)
 
         const [getItemsResponse, getRootResponse] = await Promise.all([
-          getItemsPromise, getRootPromise
+          getItemsPromise, getRootPromise,
         ])
 
         commit('SET_GATEWAY_ITEMS', normalizeVuexArray(getItemsResponse.data, '_id'))
@@ -66,8 +66,8 @@ const gateway = {
           return {
             path: `/gateway/folder/${folderId}`,
             meta: {
-              title: state.folderMapping[folderId]
-            }
+              title: state.folderMapping[folderId],
+            },
           }
         })
         commit('SET_GATEWAY_BREADCRUMB', breadCrumb)
@@ -96,8 +96,8 @@ const gateway = {
       } catch (err) {
         throw err
       }
-    }
-  }
+    },
+  },
 }
 
 export default gateway

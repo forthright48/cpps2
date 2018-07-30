@@ -14,9 +14,9 @@ export default {
     ...mapGetters([
       'username',
       'email',
-      'roles'
-    ])
-  }
+      'roles',
+    ]),
+  },
 }
 </script>
 

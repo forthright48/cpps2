@@ -15,7 +15,7 @@ import { mapGetters } from 'vuex'
 export default {
   computed: {
     ...mapGetters([
-      'gatewayBreadcrumb'
+      'gatewayBreadcrumb',
     ]),
     levelListUpgraded() {
       const second = this.levelList[1]
@@ -25,20 +25,20 @@ export default {
         return gatewayBreadcrumb
       }
       return this.levelList
-    }
+    },
   },
   created() {
     this.getBreadcrumb()
   },
   data() {
     return {
-      levelList: null
+      levelList: null,
     }
   },
   watch: {
     $route() {
       this.getBreadcrumb()
-    }
+    },
   },
   methods: {
     getBreadcrumb() {
@@ -48,8 +48,8 @@ export default {
         matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
       }
       this.levelList = matched
-    }
-  }
+    },
+  },
 }
 </script>
 

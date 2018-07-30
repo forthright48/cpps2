@@ -48,14 +48,14 @@ export default {
     return {
       loginForm: {
         username: '',
-        password: ''
+        password: '',
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }]
+        password: [{ required: true, trigger: 'blur', validator: validatePass }],
       },
       loading: false,
-      pwdType: 'password'
+      pwdType: 'password',
     }
   },
   methods: {
@@ -81,8 +81,8 @@ export default {
           return false
         }
       })
-    }
-  }
+    },
+  },
 }
 </script>
 

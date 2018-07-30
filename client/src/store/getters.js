@@ -10,6 +10,6 @@ const getters = {
   gatewayRoot: state => state.gateway.root,
   gatewayBreadcrumb: state => state.gateway.gatewayBreadcrumb,
   user: state => state.user,
-  profile: state => state.profile
+  profile: state => state.profile,
 }
 export default getters

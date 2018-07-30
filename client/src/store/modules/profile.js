@@ -4,7 +4,7 @@ const profile = {
   state: {
     username: '',
     roles: [],
-    ojStats: []
+    ojStats: [],
   },
 
   mutations: {
@@ -12,7 +12,7 @@ const profile = {
       state.username = profile._id
       state.roles = profile.roles
       state.ojStats = profile.ojStats
-    }
+    },
   },
 
   actions: {
@@ -25,8 +25,8 @@ const profile = {
       } catch (err) {
         throw err
       }
-    }
-  }
+    },
+  },
 }
 
 export default profile

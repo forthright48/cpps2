@@ -9,7 +9,7 @@ const service = axios.create({
   baseURL: process.env.BASE_API, // Api base_url
   timeout: timeout, // Request timeout
   withCredentials: true,
-  credentials: 'same-origin'
+  credentials: 'same-origin',
 })
 
 // request interceptor
@@ -38,7 +38,7 @@ service.interceptors.response.use(
         message: res.message,
         type: 'error',
         duration: 5 * 1000,
-        showClose: true
+        showClose: true,
       })
 
       // 50008:Illegal token; 50012:Other clients logged in;  50014:Token expired;
@@ -46,7 +46,7 @@ service.interceptors.response.use(
         MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again.', 'Confirm logout.', {
           confirmButtonText: 'Re-login',
           cancelButtonText: 'Cancel',
-          type: 'warning'
+          type: 'warning',
         }).then(() => {
           store.dispatch('FedLogOut').then(() => {
             location.reload()// To re-instantiate the vue-router object Avoid bugs
@@ -61,7 +61,7 @@ service.interceptors.response.use(
           type: 'success',
           message: response.data.message,
           duration: 10 * 1000,
-          showClose: true
+          showClose: true,
         })
       }
       return response.data
@@ -82,7 +82,7 @@ service.interceptors.response.use(
       message: message,
       type: 'error',
       showClose: true,
-      duration: 10 * 1000
+      duration: 10 * 1000,
     })
     return Promise.reject(error)
   }

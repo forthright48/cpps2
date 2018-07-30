@@ -26,14 +26,14 @@ export default {
   data() {
     return {
       img_404,
-      img_404_cloud
+      img_404_cloud,
     }
   },
   computed: {
     message() {
       return '特朗普说这个页面你不能进......'
-    }
-  }
+    },
+  },
 }
 </script>
 

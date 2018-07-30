@@ -43,14 +43,14 @@ export default {
   data() {
     return {
       loading: true,
-      itemList: []
+      itemList: [],
     }
   },
   computed: {
     ...mapGetters([
       'token',
       'gatewayItems',
-      'gatewayRoot'
+      'gatewayRoot',
     ]),
     gatewayItemsArray() {
       return Object.values(this.gatewayItems).map((item, index) => {
@@ -70,10 +70,10 @@ export default {
         }
         return item
       })
-    }
+    },
   },
   watch: {
-    '$route': 'initiateFolder'
+    '$route': 'initiateFolder',
   },
   async created() {
     await this.initiateFolder()
@@ -93,8 +93,8 @@ export default {
       } finally {
         this.loading = false
       }
-    }
-  }
+    },
+  },
 }
 </script>
 

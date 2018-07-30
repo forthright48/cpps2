@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       list: null,
-      listLoading: true
+      listLoading: true,
     }
   },
   filters: {
@@ -51,10 +51,10 @@ export default {
       const statusMap = {
         published: 'success',
         draft: 'gray',
-        deleted: 'danger'
+        deleted: 'danger',
       }
       return statusMap[status]
-    }
+    },
   },
   created() {
     this.fetchData()
@@ -66,7 +66,7 @@ export default {
         this.list = response.data.items
         this.listLoading = false
       })
-    }
-  }
+    },
+  },
 }
 </script>

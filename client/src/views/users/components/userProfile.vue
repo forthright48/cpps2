@@ -41,7 +41,7 @@ export default {
       }, {
         feature: 'Password',
         icon: 'key',
-      } ]
+      }]
       return this.isOwner ? ret : ret.filter((x) => x.public)
     },
     isOwner() {

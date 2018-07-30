@@ -4,34 +4,34 @@ export function addItem(form) {
   return request({
     url: '/api/v1/gateway',
     method: 'post',
-    data: form
+    data: form,
   })
 }
 
 export function getFolder(folderId) {
   return request({
     url: `/api/v1/gateway?parentId=${folderId}&childStat=true`,
-    method: 'get'
+    method: 'get',
   })
 }
 
 export function getItem(itemId) {
   return request({
     url: `/api/v1/gateway/${itemId}`,
-    method: 'get'
+    method: 'get',
   })
 }
 
 export function getFolderMapping() {
   return request({
     url: `/api/v1/gateway?type=folder`,
-    method: 'get'
+    method: 'get',
   })
 }
 
 export function deleteItem(id) {
   return request({
     url: `api/v1/gateway/${id}`,
-    method: 'delete'
+    method: 'delete',
   })
 }
