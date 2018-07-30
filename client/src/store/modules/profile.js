@@ -1,17 +1,18 @@
 import { getUser } from '@/api/user'
+import { normalizeVuexArray } from '@/utils'
 
 const profile = {
   state: {
     username: '',
     roles: [],
-    ojStats: [],
+    ojStats: {},
   },
 
   mutations: {
     SET_PROFILE: (state, profile) => {
       state.username = profile._id
       state.roles = profile.roles
-      state.ojStats = profile.ojStats
+      state.ojStats = normalizeVuexArray(profile.ojStats, 'ojname')
     },
   },
 
