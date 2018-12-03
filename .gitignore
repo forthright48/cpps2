@@ -1,6 +1,5 @@
 node_modules/*
 .eslintrc
-server/secret.js
 logs/
 .env
 backup/

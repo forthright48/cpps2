@@ -1,3 +1,10 @@
+// Setup environment variables
+const dotenv = require('dotenv');
+const result = dotenv.config();
+if (result.error) {
+  throw result.error;
+}
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('config');
@@ -6,7 +13,6 @@ const morgan = require('morgan');
 
 const app = express();
 const server = require('http').createServer(app);
-
 app.set('port', config.port);
 
 app.use(bodyParser.json()); // support json encoded bodies
