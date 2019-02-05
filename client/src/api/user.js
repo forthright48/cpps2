@@ -6,3 +6,10 @@ export function getUser(username) {
         method: 'get',
     })
 }
+
+export function setOjUsername(username, ojname, ojUsername) {
+    return request({
+        url: `/api/v1/users/${username}/set-oj-username/${ojname}/${ojUsername}`,
+        method: 'put',
+    })
+}

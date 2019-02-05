@@ -3,14 +3,14 @@
         <h1 class="text-center">Solve Count</h1>
         <el-table :data="getSolveCount">
             <el-table-column prop="index" label="#" />
-            <el-table-column prop="ojname" label="OJ" />
+            <el-table-column prop="ojDisplayName" label="OJ" />
             <el-table-column label="User ID">
                 <template slot-scope="scope">
                     <template v-if="scope.row.userID">
                         <span> {{scope.row.userID}} </span>
                     </template>
                     <template v-else>
-                        <el-button type="primary" @click="addUserID">Add UserID</el-button>
+                        <el-button type="primary" @click="addOjUsername(scope.row.ojname)">Add UserID</el-button>
                     </template>
                 </template>
             </el-table-column>
@@ -21,7 +21,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { GetOjInfo } from '@/store/actions'
+import { GetOjInfo, setOjUsername } from '@/store/actions'
 
 export default {
     props: ['username'],
@@ -34,7 +34,8 @@ export default {
             return Object.keys(this.ojInfo).map((ojname, ind) => {
                 return {
                     index: ind,
-                    ojname: this.ojInfo[ojname].displayName,
+                    ojname,
+                    ojDisplayName: this.ojInfo[ojname].displayName,
                     userID: this.profile.ojStats[ojname],
                 }
             })
@@ -46,17 +47,22 @@ export default {
         }
     },
     methods: {
-        async addUserID() {
+        async addOjUsername(ojname) {
             try {
-                const userID = await this.$prompt('Please input your userID', 'Hello', {
+                const ojUsername = await this.$prompt('Please input your userID', 'Hello', {
                     confirmButtonText: 'OK',
                     cancelButtonText: 'Cancel',
-                    inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+                    // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
                     inputErrorMessage: 'Invalid Email',
+                })
+                this.$store.dispatch(setOjUsername, {
+                    username: this.username,
+                    ojname,
+                    ojUsername: ojUsername.value,
                 })
                 this.$message({
                     type: 'success',
-                    message: 'Your email is:' + userID,
+                    message: 'Your userID is:' + ojUsername.value,
                 })
             } catch (err) {
                 this.$message({

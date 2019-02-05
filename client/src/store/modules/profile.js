@@ -1,4 +1,4 @@
-import { getUser } from '@/api/user'
+import { getUser, setOjUsername } from '@/api/user'
 import { normalizeVuexArray } from '@/utils'
 
 const profile = {
@@ -17,12 +17,21 @@ const profile = {
     },
 
     actions: {
-        async FetchProfile({ commit }, username) {
+        async fetchProfile({ commit }, username) {
             try {
                 const response = await getUser(username)
                 const data = response.data
                 commit('SET_PROFILE', data)
                 return data
+            } catch (err) {
+                throw err
+            }
+        },
+
+        async setOjUsername({ commit, dispatch }, { username, ojname, ojUsername }) {
+            try {
+                const response = await setOjUsername(username, ojname, ojUsername)
+                dispatch('fetchProfile', username) // We should have read username from Vuex.
             } catch (err) {
                 throw err
             }

@@ -3,5 +3,6 @@ module.exports = {
     GatewayAddItems: 'GatewayAddItems',
     GatewayInit: 'GatewayInit',
     GatewayDeleteItem: 'GatewayDeleteItem',
-    FetchProfile: 'FetchProfile',
+    fetchProfile: 'fetchProfile',
+    setOjUsername: 'setOjUsername',
 }

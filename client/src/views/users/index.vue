@@ -10,7 +10,7 @@
         </el-row>
         <el-row>
             <el-col>
-                <SolveCount />
+                <SolveCount :username="username" />
             </el-col>
         </el-row>
     </app-container>
@@ -18,7 +18,7 @@
 
 <script>
 import { UserProfile, SolveCount } from './components'
-import { FetchProfile } from '@/store/actions'
+import { fetchProfile } from '@/store/actions'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -46,7 +46,7 @@ export default {
                 return this.$router.push(`/user/profile/${this.user.username}`)
             }
             try {
-                await this.$store.dispatch(FetchProfile, this.username)
+                await this.$store.dispatch(fetchProfile, this.username)
             } finally {
                 this.loading = false
             }
