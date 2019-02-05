@@ -1,13 +1,19 @@
-<template lang="pug">
-  .app-container(v-loading="loading")
-    el-row(type="flex" justify="center")
-      el-col
-        UserProfile
-      el-col
-        h1.text-center Classroom
-    el-row
-      el-col
-        SolveCount
+<template>
+  <app-container v-loading="loading">
+    <el-row type="flex" justify="center">
+      <el-col>
+        <UserProfile />
+      </el-col>
+      <el-col>
+        <h1 class="text-center">Classroom</h1>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col>
+        <SolveCount />
+      </el-col>
+    </el-row>
+  </app-container>
 </template>
 
 <script>

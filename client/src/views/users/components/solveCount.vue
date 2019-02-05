@@ -1,16 +1,23 @@
-<template lang="pug">
-  div
-    h1.text-center Solve Count
-    el-table(:data="getSolveCount")
-      el-table-column(prop="index" label="#")
-      el-table-column(prop="ojname" label="OJ")
-      el-table-column
-        template(slot-scope="scope")
-          template(v-if="scope.row.userID")
-            span {{scope.row.userID}}
-          template(v-else)
-            el-button(type="primary" @click="addUserID") Add UserID
+<template>
+    <div>
+        <h1 class="text-center">Solve Count</h1>
+        <el-table :data="getSolveCount">
+            <el-table-column prop="index" label="#" />
+            <el-table-column prop="ojname" label="OJ" />
+            <el-table-column label="User ID">
+                <template slot-scope="scope">
+                    <template v-if="scope.row.userID">
+                        <span> {{scope.row.userID}} </span>
+                    </template>
+                    <template v-else>
+                        <el-button type="primary" @click="addUserID">Add UserID</el-button>
+                    </template>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
 </template>
+
 
 <script>
 import { mapGetters } from 'vuex'
@@ -27,7 +34,7 @@ export default {
       return Object.keys(this.ojInfo).map((ojname, ind) => {
         return {
           index: ind,
-          ojname,
+          ojname: this.ojInfo[ojname].displayName,
           userID: this.profile.ojStats[ojname],
         }
       })

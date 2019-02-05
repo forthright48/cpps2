@@ -1,18 +1,27 @@
-<template lang="pug">
-  div
-    h1.text-center User Profile
-    el-table(:data="getUserFields" align="center")
-      el-table-column
-        template(slot-scope="scope")
-          fa-icon.vertical-middle(:name="scope.row.icon")
-          span.ml-2 {{scope.row.feature}}
-      el-table-column(align="center")
-        template(slot-scope="scope")
-          template(v-if="scope.row.feature=='Password'")
-            el-button(size="mini" type="primary" round) Update Password
-          template(v-else)
-            span {{scope.row.value}}
+<template>
+    <div>
+        <h1 class="text-center">User Profile</h1>
+        <el-table :data="getUserFields" align="center">
+          <el-table-column>
+            <template slot-scope="scope">
+                <fa-icon class="vertical-middle" :name="scope.row.icon" />
+                <span class="ml-2">{{scope.row.feature}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column align="center">
+            <template slot-scope="scope">
+                <template v-if="scope.row.feature=='Password'">
+                  <el-button size="mini" type="primary" round>Update Password</el-button>
+                </template>
+                <template v-else>
+                  <span> {{scope.row.value}}</span>
+                </template>
+            </template>
+          </el-table-column>
+        </el-table>
+    </div>
 </template>
+
 
 <script>
 import { mapGetters } from 'vuex'
