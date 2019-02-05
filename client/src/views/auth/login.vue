@@ -29,60 +29,60 @@
 import { isvalidUsername } from '@/utils/validate'
 
 export default {
-  name: 'login',
-  data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('Please enter correct username.'))
-      } else {
-        callback()
-      }
-    }
-    const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('Password cannot be less than 5 characters long.'))
-      } else {
-        callback()
-      }
-    }
-    return {
-      loginForm: {
-        username: '',
-        password: '',
-      },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }],
-      },
-      loading: false,
-      pwdType: 'password',
-    }
-  },
-  methods: {
-    showPwd() {
-      if (this.pwdType === 'password') {
-        this.pwdType = ''
-      } else {
-        this.pwdType = 'password'
-      }
-    },
-    handleLogin() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then((response) => {
-            this.loading = false
-            this.$router.push({ path: '/' })
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.error('error submit!!')
-          return false
+    name: 'login',
+    data() {
+        const validateUsername = (rule, value, callback) => {
+            if (!isvalidUsername(value)) {
+                callback(new Error('Please enter correct username.'))
+            } else {
+                callback()
+            }
         }
-      })
+        const validatePass = (rule, value, callback) => {
+            if (value.length < 5) {
+                callback(new Error('Password cannot be less than 5 characters long.'))
+            } else {
+                callback()
+            }
+        }
+        return {
+            loginForm: {
+                username: '',
+                password: '',
+            },
+            loginRules: {
+                username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+                password: [{ required: true, trigger: 'blur', validator: validatePass }],
+            },
+            loading: false,
+            pwdType: 'password',
+        }
     },
-  },
+    methods: {
+        showPwd() {
+            if (this.pwdType === 'password') {
+                this.pwdType = ''
+            } else {
+                this.pwdType = 'password'
+            }
+        },
+        handleLogin() {
+            this.$refs.loginForm.validate(valid => {
+                if (valid) {
+                    this.loading = true
+                    this.$store.dispatch('Login', this.loginForm).then((response) => {
+                        this.loading = false
+                        this.$router.push({ path: '/' })
+                    }).catch(() => {
+                        this.loading = false
+                    })
+                } else {
+                    console.error('error submit!!')
+                    return false
+                }
+            })
+        },
+    },
 }
 </script>
 

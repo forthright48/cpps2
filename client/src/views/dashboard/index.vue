@@ -9,14 +9,14 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'dashboard',
-  computed: {
-    ...mapGetters([
-      'username',
-      'email',
-      'roles',
-    ]),
-  },
+    name: 'dashboard',
+    computed: {
+        ...mapGetters([
+            'username',
+            'email',
+            'roles',
+        ]),
+    },
 }
 </script>
 

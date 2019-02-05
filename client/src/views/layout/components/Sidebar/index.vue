@@ -19,17 +19,17 @@ import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 
 export default {
-  components: { SidebarItem },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-    ]),
-    routes() {
-      return this.$router.options.routes
+    components: { SidebarItem },
+    computed: {
+        ...mapGetters([
+            'sidebar',
+        ]),
+        routes() {
+            return this.$router.options.routes
+        },
+        isCollapse() {
+            return !this.sidebar.opened
+        },
     },
-    isCollapse() {
-      return !this.sidebar.opened
-    },
-  },
 }
 </script>

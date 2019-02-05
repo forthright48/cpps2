@@ -34,70 +34,70 @@
 import { isvalidUsername, validateEmail } from '@/utils/validate'
 
 export default {
-  name: 'login',
-  data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('Please enter correct username.'))
-      } else {
-        callback()
-      }
-    }
-    const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('Password cannot be less than 5 characters long.'))
-      } else {
-        callback()
-      }
-    }
-
-    const validateEmailRule = (rule, value, callback) => {
-      if (!validateEmail(value)) {
-        callback(new Error('Please enter correct email address.'))
-      } else {
-        callback()
-      }
-    }
-    return {
-      loginForm: {
-        username: '',
-        email: '',
-        password: '',
-      },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        email: [{ required: true, trigger: 'blur', validator: validateEmailRule }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }],
-      },
-      loading: false,
-      pwdType: 'password',
-    }
-  },
-  methods: {
-    showPwd() {
-      if (this.pwdType === 'password') {
-        this.pwdType = ''
-      } else {
-        this.pwdType = 'password'
-      }
-    },
-    handleRegister() {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          this.$store.dispatch('Register', this.loginForm).then((response) => {
-            this.loading = false
-            this.$router.push({ path: '/login' })
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+    name: 'login',
+    data() {
+        const validateUsername = (rule, value, callback) => {
+            if (!isvalidUsername(value)) {
+                callback(new Error('Please enter correct username.'))
+            } else {
+                callback()
+            }
         }
-      })
+        const validatePass = (rule, value, callback) => {
+            if (value.length < 5) {
+                callback(new Error('Password cannot be less than 5 characters long.'))
+            } else {
+                callback()
+            }
+        }
+
+        const validateEmailRule = (rule, value, callback) => {
+            if (!validateEmail(value)) {
+                callback(new Error('Please enter correct email address.'))
+            } else {
+                callback()
+            }
+        }
+        return {
+            loginForm: {
+                username: '',
+                email: '',
+                password: '',
+            },
+            loginRules: {
+                username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+                email: [{ required: true, trigger: 'blur', validator: validateEmailRule }],
+                password: [{ required: true, trigger: 'blur', validator: validatePass }],
+            },
+            loading: false,
+            pwdType: 'password',
+        }
     },
-  },
+    methods: {
+        showPwd() {
+            if (this.pwdType === 'password') {
+                this.pwdType = ''
+            } else {
+                this.pwdType = 'password'
+            }
+        },
+        handleRegister() {
+            this.$refs.loginForm.validate(valid => {
+                if (valid) {
+                    this.loading = true
+                    this.$store.dispatch('Register', this.loginForm).then((response) => {
+                        this.loading = false
+                        this.$router.push({ path: '/login' })
+                    }).catch(() => {
+                        this.loading = false
+                    })
+                } else {
+                    console.log('error submit!!')
+                    return false
+                }
+            })
+        },
+    },
 }
 </script>
 

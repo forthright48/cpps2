@@ -13,43 +13,43 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  computed: {
-    ...mapGetters([
-      'gatewayBreadcrumb',
-    ]),
-    levelListUpgraded() {
-      const second = this.levelList[1]
-      if (second && (second.name === 'gateway-root' || second.name === 'gateway')) {
-        const gatewayBreadcrumb = this.levelList.concat(this.gatewayBreadcrumb)
-        gatewayBreadcrumb[1].path = '/gateway/folder/000000000000000000000000'
-        return gatewayBreadcrumb
-      }
-      return this.levelList
+    computed: {
+        ...mapGetters([
+            'gatewayBreadcrumb',
+        ]),
+        levelListUpgraded() {
+            const second = this.levelList[1]
+            if (second && (second.name === 'gateway-root' || second.name === 'gateway')) {
+                const gatewayBreadcrumb = this.levelList.concat(this.gatewayBreadcrumb)
+                gatewayBreadcrumb[1].path = '/gateway/folder/000000000000000000000000'
+                return gatewayBreadcrumb
+            }
+            return this.levelList
+        },
     },
-  },
-  created() {
-    this.getBreadcrumb()
-  },
-  data() {
-    return {
-      levelList: null,
-    }
-  },
-  watch: {
-    $route() {
-      this.getBreadcrumb()
+    created() {
+        this.getBreadcrumb()
     },
-  },
-  methods: {
-    getBreadcrumb() {
-      let matched = this.$route.matched.filter(item => item.name)
-      const first = matched[0]
-      if (first && first.name !== 'dashboard') {
-        matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
-      }
-      this.levelList = matched
+    data() {
+        return {
+            levelList: null,
+        }
     },
-  },
+    watch: {
+        $route() {
+            this.getBreadcrumb()
+        },
+    },
+    methods: {
+        getBreadcrumb() {
+            let matched = this.$route.matched.filter(item => item.name)
+            const first = matched[0]
+            if (first && first.name !== 'dashboard') {
+                matched = [{ path: '/dashboard', meta: { title: 'Dashboard' }}].concat(matched)
+            }
+            this.levelList = matched
+        },
+    },
 }
 </script>
 

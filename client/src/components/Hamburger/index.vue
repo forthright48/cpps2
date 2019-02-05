@@ -14,17 +14,17 @@
 
 <script>
 export default {
-  name: 'hamburger',
-  props: {
-    isActive: {
-      type: Boolean,
-      default: false,
+    name: 'hamburger',
+    props: {
+        isActive: {
+            type: Boolean,
+            default: false,
+        },
+        toggleClick: {
+            type: Function,
+            default: null,
+        },
     },
-    toggleClick: {
-      type: Function,
-      default: null,
-    },
-  },
 }
 </script>
 

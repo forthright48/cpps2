@@ -36,78 +36,78 @@ import { GetOjInfo, GatewayAddItems } from '@/store/actions'
 import { getProblemInfo } from '@/api/problemBank'
 
 export default {
-  name: 'gateway_addItem',
-  props: ['folderId'],
-  data() {
-    return {
-      loading: false,
-      problemPreview: false,
-      addItem: {
-        parentId: this.folderId,
-        ind: 0,
-        type: 'problem',
-        title: '',
-        platform: '',
-        displayName: '',
-        pid: '',
-        link: '',
-      },
-    }
-  },
-  watch: {
-    folderId: function() {
-      this.addItem.parentId = this.folderId
-    },
-  },
-  computed: {
-    ...mapGetters([
-      'ojInfo',
-    ]),
-  },
-  async created() {
-    if (Object.keys(this.ojInfo).length === 0) {
-      await this.$store.dispatch(GetOjInfo)
-    }
-  },
-  methods: {
-    async showPreview() {
-      try {
-        this.loading = true
-        // Fetch problem details
-
-        // Validate user input
-        const ojInfo = this.ojInfo
-        const { platform, pid } = this.addItem
-        if (ojInfo[platform] === undefined) {
-          return this.$alert('Please select a platform', 'Validation Error in Platform Field')
+    name: 'gateway_addItem',
+    props: ['folderId'],
+    data() {
+        return {
+            loading: false,
+            problemPreview: false,
+            addItem: {
+                parentId: this.folderId,
+                ind: 0,
+                type: 'problem',
+                title: '',
+                platform: '',
+                displayName: '',
+                pid: '',
+                link: '',
+            },
         }
-
-        const format = ojInfo[platform].format
-        const regex = new RegExp(format, 'g')
-        if (regex.test(pid) === false) {
-          return this.$alert(`Problem Id did not match regex ${format}`, 'Validation Error in Problem Id field')
+    },
+    watch: {
+        folderId: function() {
+            this.addItem.parentId = this.folderId
+        },
+    },
+    computed: {
+        ...mapGetters([
+            'ojInfo',
+        ]),
+    },
+    async created() {
+        if (Object.keys(this.ojInfo).length === 0) {
+            await this.$store.dispatch(GetOjInfo)
         }
-
-        const problemInfo = await getProblemInfo(platform, pid)
-
-        this.addItem.title = problemInfo.data.title
-        this.addItem.link = problemInfo.data.link
-        this.addItem.displayName = this.ojInfo[platform].displayName
-
-        this.problemPreview = true
-      } finally {
-        this.loading = false
-      }
     },
-    async onSubmit() {
-      try {
-        this.loading = true
-        await this.$store.dispatch(GatewayAddItems, this.addItem)
-      } finally {
-        this.loading = false
-        this.problemPreview = false
-      }
+    methods: {
+        async showPreview() {
+            try {
+                this.loading = true
+                // Fetch problem details
+
+                // Validate user input
+                const ojInfo = this.ojInfo
+                const { platform, pid } = this.addItem
+                if (ojInfo[platform] === undefined) {
+                    return this.$alert('Please select a platform', 'Validation Error in Platform Field')
+                }
+
+                const format = ojInfo[platform].format
+                const regex = new RegExp(format, 'g')
+                if (regex.test(pid) === false) {
+                    return this.$alert(`Problem Id did not match regex ${format}`, 'Validation Error in Problem Id field')
+                }
+
+                const problemInfo = await getProblemInfo(platform, pid)
+
+                this.addItem.title = problemInfo.data.title
+                this.addItem.link = problemInfo.data.link
+                this.addItem.displayName = this.ojInfo[platform].displayName
+
+                this.problemPreview = true
+            } finally {
+                this.loading = false
+            }
+        },
+        async onSubmit() {
+            try {
+                this.loading = true
+                await this.$store.dispatch(GatewayAddItems, this.addItem)
+            } finally {
+                this.loading = false
+                this.problemPreview = false
+            }
+        },
     },
-  },
 }
 </script>

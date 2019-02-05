@@ -37,64 +37,64 @@ import { GatewayInit, GatewayDeleteItem } from '@/store/actions'
 import { AddItem } from './components'
 
 export default {
-  name: 'gateway',
-  components: { AddItem },
-  props: ['folderId'],
-  data() {
-    return {
-      loading: true,
-      itemList: [],
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'token',
-      'gatewayItems',
-      'gatewayRoot',
-    ]),
-    gatewayItemsArray() {
-      return Object.values(this.gatewayItems).map((item, index) => {
-        item.displayIndex = index + 1
-        if (item.type === 'problem') {
-          item.displayTitle = `${item.platform} ${item.pid} - ${item.title}`
-          item.titleIcon = 'link'
-          item.statIcon = 'user-times'
-          item.stat = item.userSolved
-          item.displayLink = item.link
-        } else {
-          item.displayTitle = item.title
-          item.titleIcon = 'folder'
-          item.statIcon = 'folder-open'
-          item.stat = `${this.token ? item.userCount : '---'}/${item.totalCount}`
-          item.displayLink = item._id
+    name: 'gateway',
+    components: { AddItem },
+    props: ['folderId'],
+    data() {
+        return {
+            loading: true,
+            itemList: [],
         }
-        return item
-      })
     },
-  },
-  watch: {
-    '$route': 'initiateFolder',
-  },
-  async created() {
-    await this.initiateFolder()
-  },
-  methods: {
-    async initiateFolder() {
-      try {
-        await this.$store.dispatch(GatewayInit, this.folderId)
-      } finally {
-        this.loading = false
-      }
+    computed: {
+        ...mapGetters([
+            'token',
+            'gatewayItems',
+            'gatewayRoot',
+        ]),
+        gatewayItemsArray() {
+            return Object.values(this.gatewayItems).map((item, index) => {
+                item.displayIndex = index + 1
+                if (item.type === 'problem') {
+                    item.displayTitle = `${item.platform} ${item.pid} - ${item.title}`
+                    item.titleIcon = 'link'
+                    item.statIcon = 'user-times'
+                    item.stat = item.userSolved
+                    item.displayLink = item.link
+                } else {
+                    item.displayTitle = item.title
+                    item.titleIcon = 'folder'
+                    item.statIcon = 'folder-open'
+                    item.stat = `${this.token ? item.userCount : '---'}/${item.totalCount}`
+                    item.displayLink = item._id
+                }
+                return item
+            })
+        },
     },
-    async handleDeleteItem(index, row) {
-      try {
-        this.loading = true
-        await this.$store.dispatch(GatewayDeleteItem, row._id)
-      } finally {
-        this.loading = false
-      }
+    watch: {
+        '$route': 'initiateFolder',
     },
-  },
+    async created() {
+        await this.initiateFolder()
+    },
+    methods: {
+        async initiateFolder() {
+            try {
+                await this.$store.dispatch(GatewayInit, this.folderId)
+            } finally {
+                this.loading = false
+            }
+        },
+        async handleDeleteItem(index, row) {
+            try {
+                this.loading = true
+                await this.$store.dispatch(GatewayDeleteItem, row._id)
+            } finally {
+                this.loading = false
+            }
+        },
+    },
 }
 </script>
 

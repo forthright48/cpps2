@@ -34,26 +34,26 @@
 
 <script>
 export default {
-  name: 'SidebarItem',
-  props: {
-    routes: {
-      type: Array,
+    name: 'SidebarItem',
+    props: {
+        routes: {
+            type: Array,
+        },
+        isNest: {
+            type: Boolean,
+            default: false,
+        },
     },
-    isNest: {
-      type: Boolean,
-      default: false,
+    methods: {
+        hasOneShowingChildren(children) {
+            const showingChildren = children.filter(item => {
+                return !item.hidden
+            })
+            if (showingChildren.length === 1) {
+                return true
+            }
+            return false
+        },
     },
-  },
-  methods: {
-    hasOneShowingChildren(children) {
-      const showingChildren = children.filter(item => {
-        return !item.hidden
-      })
-      if (showingChildren.length === 1) {
-        return true
-      }
-      return false
-    },
-  },
 }
 </script>
