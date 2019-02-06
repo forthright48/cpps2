@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const timestamps = require('mongoose-timestamp');
 // const mongoosePaginate = require('mongoose-paginate');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -34,16 +35,18 @@ const userSchema = new mongoose.Schema({
   },
   roles: [String],
   /** Stores usernames/userIDs of the user in various online judge */
-  ojStats: [{
-    ojname: String,
-    userIds: [String], /** Some people have multiple CF accounts for example*/
-    solveCount: Number,
-    solveList: [String],
+  ojStats: {
+    type: [
+      {
+        ojname: String,
+        userIds: [String], /** Some people have multiple CF accounts for example*/
+        solveCount: Number,
+        solveList: [String],
+      },
+    ],
     required: true,
     default: [],
-  }],
-}, {
-  timestamps: true,
+  },
 });
 
 // userSchema.plugin(mongoosePaginate);
@@ -58,5 +61,6 @@ userSchema.methods.comparePassword = function(val) {
   return bcrypt.compare(val, this.password);
 };
 userSchema.statics.normalizeEmail = validator.normalizeEmail;
+userSchema.plugin(timestamps);
 
-mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema, 'users');

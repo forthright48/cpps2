@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-const User = require('mongoose').model('User');
+const User = require('../../models/userModel');
 // const Classroom = require('mongoose').model('Classroom');
-const Gate = require('mongoose').model('Gate');
+const Gate = require('../../models/gateModel');
 const ojnames = require('../../models/ojInfo');
 const ojnamesOnly = ojnames.ojnamesOnly;
 
@@ -302,7 +302,9 @@ async function setOjUsername(req, res, next) {
       throw new Error(`setOjUsername: no such ojname ${ojname}`);
     }
 
-    const user = await User.findOne({username}).exec();
+    const user = await User.findOne({_id: username}).exec();
+
+    console.log(user);
     const ojStats = user.ojStats ? user.ojStats : [];
 
     let oj = ojStats.filter((x)=>x.ojname === ojname)[0];

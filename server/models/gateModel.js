@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const timestamps = require('mongoose-timestamp');
 const {ojnamesOnly} = require('./ojInfo');
 const validator = require('validator');
 
@@ -76,8 +77,6 @@ const schema = new mongoose.Schema({
     ref: 'User',
     // required: true enforced by system
   },
-}, {
-  timestamps: true,
 });
 
 schema.statics.getRoot = function() {
@@ -111,5 +110,6 @@ schema.pre('save', function(next, req) {
 });
 
 schema.index({platform: 1, pid: 1}, {unique: true, sparse: true});
+schema.plugin(timestamps);
 
-mongoose.model('Gate', schema);
+module.exports = mongoose.model('Gate', schema, 'gates');
