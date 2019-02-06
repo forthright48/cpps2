@@ -247,7 +247,7 @@ async function unsetOjUsername(req, res, next) {
       throw new Error(`UnsetOjUsername: {username} cannot unset oj username of ${req.params.username}`);
     }
 
-    const user = await User.findOne({username}).exec();
+    const user = await User.findOne({_id: username}).exec();
     const ojStats = user.ojStats;
 
     const oj = ojStats.filter((x)=>x.ojname === ojname)[0];
@@ -278,6 +278,11 @@ async function unsetOjUsername(req, res, next) {
     oj.userIds = [];
     oj.solveCount = 0;
     oj.solveList = [];
+
+    for (const ojstat of user.ojStats) {
+      if (ojstat.ojname !== oj.ojname) continue;
+      ojstat = oj;
+    }
 
     await user.save();
 
@@ -323,7 +328,11 @@ async function setOjUsername(req, res, next) {
       throw new Error('setOjUsername: cannot set multiple userId');
     }
 
-    oj.userIds = [userId];
+    for (const ojstat of user.ojStats) {
+      if (ojstat.ojname !== oj.ojname) continue;
+      ojstat.userIds = [userId];
+      break;
+    }
 
     logger.info(`setOjUsername: ${username} has set userId for ${ojname}:${oj.userIds[0]}`);
 
