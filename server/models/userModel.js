@@ -39,6 +39,8 @@ const userSchema = new mongoose.Schema({
     userIds: [String], /** Some people have multiple CF accounts for example*/
     solveCount: Number,
     solveList: [String],
+    required: true,
+    default: [],
   }],
 }, {
   timestamps: true,

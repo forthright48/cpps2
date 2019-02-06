@@ -43,7 +43,7 @@ require('./api/v1/problemBank.js').addRouter(app);
 /* Error Handling */
 app.use('/api/', function(err, req, res, next) {
   if (process.env.NODE_ENV === 'dev') {
-    console.log(err);
+     console.log(err);
   }
   const status = err.status || 500;
   if ( status == 500 ) {
