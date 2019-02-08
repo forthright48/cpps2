@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const User = require('mongoose').model('User');
 
+const User = require('../../models/userModel');
 // const Classroom = require('mongoose').model('Classroom');
-// const Gate = require('mongoose').model('Gate');
-// const ojnames = require(path.join(rootPath, 'models/ojnames'));
+const Gate = require('../../models/gateModel');
 const ojnames = require('../../models/ojInfo');
 const ojnamesOnly = ojnames.ojnamesOnly;
-// const logger = require('logger');
+
+const logger = require('logger');
 // const queue = require('queue');
 
 // router.get('/users/username-userId/:username', getUserIdFromUsername );
@@ -21,7 +21,7 @@ router.get('/user/:username', getUser );
 //
 // router.put('/users/:username/change-password', changePassword);
 //
-// router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
+router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
 router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
 
 
@@ -239,57 +239,57 @@ async function getUser(req, res, next) {
 //   }
 // }
 //
-// async function unsetOjUsername(req, res, next) {
-//   try {
-//     const username = req.session.username;
-//     const ojname = req.params.ojname;
-//     if (username !== req.params.username) {
-//       throw new Error(`UnsetOjUsername: {username} cannot unset oj username of ${req.params.username}`);
-//     }
-//
-//     const user = await User.findOne({username}).exec();
-//     const ojStats = user.ojStats;
-//
-//     const oj = ojStats.filter((x)=>x.ojname === ojname)[0];
-//
-//     if (!oj) {
-//       throw new Error(`unsetOjUsername: No such oj ${ojname}`);
-//     }
-//
-//     // Now, remove user from all problems present in solvelist
-//
-//     const solveList = oj.solveList;
-//
-//     await Gate.update({
-//       platform: ojname,
-//       pid: {
-//         $in: solveList,
-//       },
-//     }, {
-//       $pull: {
-//         doneList: username,
-//       },
-//     }, {
-//       multi: true,
-//     });
-//
-//     logger.info(`unsetOjUsername: ${username} has removed ${ojname}:${oj.userIds[0]}`);
-//
-//     oj.userIds = [];
-//     oj.solveCount = 0;
-//     oj.solveList = [];
-//
-//     await user.save();
-//
-//     return res.status(201).json({
-//       status: 201,
-//       data: user.ojStats,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// }
-//
+async function unsetOjUsername(req, res, next) {
+  try {
+    const username = req.session.username;
+    const ojname = req.params.ojname;
+    if (username !== req.params.username) {
+      throw new Error(`UnsetOjUsername: {username} cannot unset oj username of ${req.params.username}`);
+    }
+
+    const user = await User.findOne({username}).exec();
+    const ojStats = user.ojStats;
+
+    const oj = ojStats.filter((x)=>x.ojname === ojname)[0];
+
+    if (!oj) {
+      throw new Error(`unsetOjUsername: No such oj ${ojname}`);
+    }
+
+    // Now, remove user from all problems present in solvelist
+
+    const solveList = oj.solveList;
+
+    await Gate.update({
+      platform: ojname,
+      pid: {
+        $in: solveList,
+      },
+    }, {
+      $pull: {
+        doneList: username,
+      },
+    }, {
+      multi: true,
+    });
+
+    logger.info(`unsetOjUsername: ${username} has removed ${ojname}:${oj.userIds[0]}`);
+
+    oj.userIds = [];
+    oj.solveCount = 0;
+    oj.solveList = [];
+
+    await user.save();
+
+    return res.status(201).json({
+      status: 201,
+      data: user.ojStats,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function setOjUsername(req, res, next) {
   try {
     const username = req.session.username;
@@ -302,8 +302,10 @@ async function setOjUsername(req, res, next) {
       throw new Error(`setOjUsername: no such ojname ${ojname}`);
     }
 
-    const user = await User.findOne({username}).exec();
-    const ojStats = user.ojStats;
+    const user = await User.findOne({_id: username}).exec();
+
+    console.log(user);
+    const ojStats = user.ojStats ? user.ojStats : [];
 
     let oj = ojStats.filter((x)=>x.ojname === ojname)[0];
 
@@ -332,11 +334,9 @@ async function setOjUsername(req, res, next) {
       data: user.ojStats,
     });
   } catch (err) {
-    console.error(err);
     next(err);
   }
 }
-
 //
 // async function changePassword(req, res, next) {
 //   try {

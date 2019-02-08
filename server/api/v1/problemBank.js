@@ -1,5 +1,5 @@
 const express = require('express');
-const ProblemBank = require('mongoose').model('ProblemBank');
+const ProblemBank = require('../../models/problemBankModel');
 const ojscraper = require('ojscraper');
 
 const router = express.Router();
