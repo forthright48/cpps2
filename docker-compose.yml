@@ -10,7 +10,7 @@ services:
         volumes:
             - .:/var/www/nsups/cpps
         working_dir: /var/www/nsups/cpps
-        command: node server/index.js
+        command: npm run dev
         depends_on:
             - mongodb
             - redisdb
@@ -18,6 +18,8 @@ services:
     mongodb:
         image: mongo:3.4
         restart: unless-stopped
+        ports: 
+            - "27018:27017"
 
     redisdb:
         image: redis

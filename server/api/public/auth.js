@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('mongoose').model('User');
+const User = require('../../models/userModel');
 // const recaptcha = require('express-recaptcha');
 // const allowSignUp = require('middlewares').allowSignUp;
 // const mailer = require('mailer').mailer;

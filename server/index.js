@@ -24,9 +24,9 @@ config.database.init();
 config.session.init(app);
 
 /* Models*/
-require('./models/userModel.js');
-require('./models/gateModel.js');
-require('./models/problemBankModel.js');
+// require('./models/userModel.js');
+// require('./models/gateModel.js');
+// require('./models/problemBankModel.js');
 
 /* Middlewares */
 app.use(morgan('dev'));
@@ -39,11 +39,13 @@ require('./api/v1/users.js').addRouter(app);
 require('./api/v1/ojInfo.js').addRouter(app);
 require('./api/v1/gateway.js').addRouter(app);
 require('./api/v1/problemBank.js').addRouter(app);
+console.log('Requiring done');
+
 
 /* Error Handling */
 app.use('/api/', function(err, req, res, next) {
   if (process.env.NODE_ENV === 'dev') {
-    console.log(err);
+     console.log(err);
   }
   const status = err.status || 500;
   if ( status == 500 ) {
