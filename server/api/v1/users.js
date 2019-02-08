@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const User = require('mongoose').model('User');
-
 // const Classroom = require('mongoose').model('Classroom');
 // const Gate = require('mongoose').model('Gate');
 // const ojnames = require(path.join(rootPath, 'models/ojnames'));
-const ojnames = require('../../models/ojInfo');
-const ojnamesOnly = ojnames.ojnamesOnly;
+// const ojnamesOnly = ojnames.data.map((x)=>x.name);
 // const logger = require('logger');
 // const queue = require('queue');
 
@@ -22,7 +20,7 @@ router.get('/user/:username', getUser );
 // router.put('/users/:username/change-password', changePassword);
 //
 // router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
-router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
+// router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
 
 
 module.exports = {
@@ -290,53 +288,51 @@ async function getUser(req, res, next) {
 //   }
 // }
 //
-async function setOjUsername(req, res, next) {
-  try {
-    const username = req.session.username;
-    const ojname = req.params.ojname;
-    const userId = req.params.userId;
-    if (username !== req.params.username) {
-      throw new Error(`setOjUsername: {username} cannot unset oj username of ${req.params.username}`);
-    }
-    if (ojnamesOnly.findIndex((x)=>x === ojname) === -1) {
-      throw new Error(`setOjUsername: no such ojname ${ojname}`);
-    }
-
-    const user = await User.findOne({username}).exec();
-    const ojStats = user.ojStats;
-
-    let oj = ojStats.filter((x)=>x.ojname === ojname)[0];
-
-    if (!oj) {
-      oj = {
-        ojname,
-        userIds: [],
-        solveCount: 0,
-        solveList: [],
-      };
-      ojStats.push(oj);
-    }
-
-    if (oj.userIds.length === 1) {
-      throw new Error('setOjUsername: cannot set multiple userId');
-    }
-
-    oj.userIds = [userId];
-
-    logger.info(`setOjUsername: ${username} has set userId for ${ojname}:${oj.userIds[0]}`);
-
-    await user.save();
-
-    return res.status(201).json({
-      status: 201,
-      data: user.ojStats,
-    });
-  } catch (err) {
-    console.error(err);
-    next(err);
-  }
-}
-
+// async function setOjUsername(req, res, next) {
+//   try {
+//     const username = req.session.username;
+//     const ojname = req.params.ojname;
+//     const userId = req.params.userId;
+//     if (username !== req.params.username) {
+//       throw new Error(`setOjUsername: {username} cannot unset oj username of ${req.params.username}`);
+//     }
+//     if (ojnamesOnly.findIndex((x)=>x === ojname) === -1) {
+//       throw new Error(`setOjUsername: no such ojname ${ojname}`);
+//     }
+//
+//     const user = await User.findOne({username}).exec();
+//     const ojStats = user.ojStats;
+//
+//     let oj = ojStats.filter((x)=>x.ojname === ojname)[0];
+//
+//     if (!oj) {
+//       oj = {
+//         ojname,
+//         userIds: [],
+//         solveCount: 0,
+//         solveList: [],
+//       };
+//       ojStats.push(oj);
+//     }
+//
+//     if (oj.userIds.length === 1) {
+//       throw new Error('setOjUsername: cannot set multiple userId');
+//     }
+//
+//     oj.userIds = [userId];
+//
+//     logger.info(`setOjUsername: ${username} has set userId for ${ojname}:${oj.userIds[0]}`);
+//
+//     await user.save();
+//
+//     return res.status(201).json({
+//       status: 201,
+//       data: user.ojStats,
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// }
 //
 // async function changePassword(req, res, next) {
 //   try {
