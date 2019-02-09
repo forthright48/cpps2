@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const User = require('../../models/userModel');
-// const Classroom = require('mongoose').model('Classroom');
 const Gate = require('../../models/gateModel');
 const ojnames = require('../../models/ojInfo');
 const ojnamesOnly = ojnames.ojnamesOnly;
+// const Classroom = require('mongoose').model('Classroom');
 
 const logger = require('logger');
 // const queue = require('queue');
@@ -244,7 +244,7 @@ async function unsetOjUsername(req, res, next) {
     const username = req.session.username;
     const ojname = req.params.ojname;
     if (username !== req.params.username) {
-      throw new Error(`UnsetOjUsername: {username} cannot unset oj username of ${req.params.username}`);
+      throw new Error(`UnsetOjUsername: ${username} cannot unset oj username of ${req.params.username}`);
     }
 
     const user = await User.findOne({_id: username}).exec();
@@ -279,7 +279,7 @@ async function unsetOjUsername(req, res, next) {
     oj.solveCount = 0;
     oj.solveList = [];
 
-    for (const ojstat of user.ojStats) {
+    for (let ojstat of user.ojStats) {
       if (ojstat.ojname !== oj.ojname) continue;
       ojstat = oj;
     }

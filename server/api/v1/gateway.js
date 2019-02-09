@@ -1,6 +1,6 @@
 const express = require('express');
-const Gate = require('mongoose').model('Gate');
-const User = require('mongoose').model('User');
+const Gate = require('../../models/gateModel');
+const User = require('../../models/userModel');
 const {data: ojInfo} = require('models').ojInfo;
 
 const router = express.Router();
