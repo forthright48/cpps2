@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 
 const User = require('../../models/userModel');
-// const Classroom = require('mongoose').model('Classroom');
 const Gate = require('../../models/gateModel');
 const ojnames = require('../../models/ojInfo');
 const ojnamesOnly = ojnames.ojnamesOnly;
+// const Classroom = require('mongoose').model('Classroom');
 
 const logger = require('logger');
 // const queue = require('queue');
@@ -244,10 +244,10 @@ async function unsetOjUsername(req, res, next) {
     const username = req.session.username;
     const ojname = req.params.ojname;
     if (username !== req.params.username) {
-      throw new Error(`UnsetOjUsername: {username} cannot unset oj username of ${req.params.username}`);
+      throw new Error(`UnsetOjUsername: ${username} cannot unset oj username of ${req.params.username}`);
     }
 
-    const user = await User.findOne({username}).exec();
+    const user = await User.findOne({_id: username}).exec();
     const ojStats = user.ojStats;
 
     const oj = ojStats.filter((x)=>x.ojname === ojname)[0];
@@ -278,6 +278,11 @@ async function unsetOjUsername(req, res, next) {
     oj.userIds = [];
     oj.solveCount = 0;
     oj.solveList = [];
+
+    for (let ojstat of user.ojStats) {
+      if (ojstat.ojname !== oj.ojname) continue;
+      ojstat = oj;
+    }
 
     await user.save();
 
@@ -323,7 +328,11 @@ async function setOjUsername(req, res, next) {
       throw new Error('setOjUsername: cannot set multiple userId');
     }
 
-    oj.userIds = [userId];
+    for (const ojstat of user.ojStats) {
+      if (ojstat.ojname !== oj.ojname) continue;
+      ojstat.userIds = [userId];
+      break;
+    }
 
     logger.info(`setOjUsername: ${username} has set userId for ${ojname}:${oj.userIds[0]}`);
 
