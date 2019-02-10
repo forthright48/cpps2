@@ -8,9 +8,16 @@ export function addItem(form) {
     })
 }
 
+export function getRootFolderId() {
+    return request({
+        url: `/api/v1/gateway/root`,
+        method: 'get',
+    })
+}
+
 export function getFolder(folderId) {
     return request({
-        url: `/api/v1/gateway?parentId=${folderId}&childStat=true`,
+        url: `/api/v1/gateway/content?parentId=${folderId}&childStat=true`,
         method: 'get',
     })
 }

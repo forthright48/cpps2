@@ -25,9 +25,9 @@ export function register(username, email, password) {
 
 export function getInfo(token) {
     return request({
-        url: '/api/v1/users/info',
+        url: '/api/v1/users',
         method: 'get',
-        params: { token },
+        params: { info: token },
     })
 }
 

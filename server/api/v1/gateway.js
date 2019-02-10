@@ -6,7 +6,8 @@ const {data: ojInfo} = require('models').ojInfo;
 const router = express.Router();
 
 router.post('/gateway', postAddItem);
-router.get('/gateway', getItems);
+router.get('/gateway/root', getRoot);
+router.get('/gateway/content', getItems);
 
 router.get('/gateway/:_id', getItem);
 router.delete('/gateway/:_id', deleteItem);
@@ -176,6 +177,14 @@ async function getProblemItemStats(item, session) {
   } catch (err) {
     throw err;
   }
+}
+
+async function getRoot(req, res, next) {
+  console.log(Gate.getRoot());
+  return res.status(200).json({
+    status: 200,
+    data: Gate.getRoot(),
+  });
 }
 
 async function getItems(req, res, next) {
