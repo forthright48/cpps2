@@ -13,9 +13,9 @@ const logger = require('logger');
 // router.get('/users/username-userId/:username', getUserIdFromUsername );
 // router.get('/users/stats/whoSolvedIt', whoSolvedIt );
 
-router.get('/users/info', getInfo);
+router.get('/users', getInfo);
 router.post('/users/logout', logout);
-router.get('/user/:username', getUser );
+router.get('/users/:username', getUser );
 // router.get('/users/:username/root-stats', rootStats);
 // router.put('/users/:username/sync-solve-count', syncSolveCount);
 //
@@ -32,6 +32,7 @@ module.exports = {
 };
 
 function getInfo(req, res, next) {
+  // verify token here
   const s = req.session;
   return res.status(200).json({
     status: 200,

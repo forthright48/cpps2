@@ -8,15 +8,17 @@ module.exports = {
   addSession(app) {
     app.use(cookieParser(secret));
 
-    app.use(session({
-      secret,
-      resave: false,
-      saveUninitialized: false,
-      store: new MongoStore({
-        mongooseConnection: mongoose.connection,
-        ttl: 2 * 60 * 60,
-        touchAfter: 2 * 3600
+    app.use(
+      session({
+        secret,
+        resave: false,
+        saveUninitialized: false,
+        store: new MongoStore({
+          mongooseConnection: mongoose.connection,
+          ttl: 2 * 60 * 60,
+          touchAfter: 2 * 3600,
+        }),
       })
-    }));
-  }
+    );
+  },
 };

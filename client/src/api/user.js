@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getUser(username) {
     return request({
-        url: `/api/v1/user/${username}`,
+        url: `/api/v1/users/${username}`,
         method: 'get',
     })
 }

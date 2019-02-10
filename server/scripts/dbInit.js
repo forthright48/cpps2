@@ -40,10 +40,10 @@ async function main() {
     require('../models/gateModel');
     const Gate = mongoose.model('Gate');
 
-    const root = await Gate.findOne({_id: '000000000000000000000000'}).exec();
+    const root = await Gate.findOne({_id: process.env.GATEWAY_ROOT}).exec();
     if ( !root ) {
       const newRoot = new Gate({
-        _id: '000000000000000000000000',
+        _id: process.env.GATEWAY_ROOT,
         type: 'folder',
         ancestor: [],
         ind: 0,
