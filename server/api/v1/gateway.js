@@ -5,12 +5,12 @@ const {data: ojInfo} = require('models').ojInfo;
 
 const router = express.Router();
 
-router.post('/gateway', postAddItem);
 router.get('/gateway/root', getRoot);
 router.get('/gateway/content', getItems);
+router.post('/gateway/content', postAddItem);
 
-router.get('/gateway/:_id', getItem);
-router.delete('/gateway/:_id', deleteItem);
+router.get('/gateway/content/:_id', getItem);
+router.delete('/gateway/content/:_id', deleteItem);
 
 module.exports = {
   addRouter(app) {
@@ -25,15 +25,18 @@ module.exports = {
 // For a given {ojname, pid} pair, find all users that solved the problems
 async function usersThatSolved(ojname, problemId) {
   try {
-    const userList = await User.find({
-      ojStats: {
-        $elemMatch: {
-          ojname,
-          solveList: problemId,
+    const userList = await User.find(
+      {
+        ojStats: {
+          $elemMatch: {
+            ojname,
+            solveList: problemId,
+          },
         },
       },
-    }, {_id: 1}).exec();
-    return userList.map((x)=> x._id);
+      {_id: 1}
+    ).exec();
+    return userList.map((x) => x._id);
   } catch (err) {
     throw err;
   }
@@ -71,7 +74,9 @@ async function postAddItem(req, res, next) {
   // For that we need ancestor list of the parent
 
   try {
-    const x = await Gate.findOne({_id: item.parentId}).select('ancestor').exec();
+    const x = await Gate.findOne({_id: item.parentId})
+      .select('ancestor')
+      .exec();
     if (!x) {
       return next({
         status: 400,
@@ -119,7 +124,7 @@ async function postAddItem(req, res, next) {
   }
 }
 
-async function getItemStats(item, session={}) {
+async function getItemStats(item, session = {}) {
   if (item.type.toString() === 'folder') {
     return await getFolderItemStats(item, session);
   } else if (item.type.toString() === 'problem') {
@@ -139,9 +144,7 @@ async function getFolderItemStats(item, session) {
       },
     }).exec();
 
-
-    const userCountPromise =
-      session.login
+    const userCountPromise = session.login
       ? Gate.count({
           ancestor: item._id,
           type: {
@@ -151,8 +154,10 @@ async function getFolderItemStats(item, session) {
         }).exec()
       : -1;
 
-
-    const [totalCount, userCount] = await Promise.all([totalCountPromise, userCountPromise]);
+    const [totalCount, userCount] = await Promise.all([
+      totalCountPromise,
+      userCountPromise,
+    ]);
     return {...item._doc, totalCount, userCount};
   } catch (err) {
     throw err;
@@ -162,17 +167,20 @@ async function getFolderItemStats(item, session) {
 // Set stats about how many users solved this particular problem
 async function getProblemItemStats(item, session) {
   try {
-    const result = await Gate.aggregate([{
+    const result = await Gate.aggregate([
+      {
         $match: {
           _id: item._id,
         },
-      }, {
+      },
+      {
         $project: {
           userSolved: {
             $size: '$doneList',
           },
         },
-      }]).exec();
+      },
+    ]).exec();
     return {...item._doc, userSolved: result[0].userSolved};
   } catch (err) {
     throw err;
@@ -180,11 +188,18 @@ async function getProblemItemStats(item, session) {
 }
 
 async function getRoot(req, res, next) {
-  console.log(Gate.getRoot());
-  return res.status(200).json({
-    status: 200,
-    data: Gate.getRoot(),
-  });
+  if (req.query.space) {
+    // implement after introducing spaces
+    return res.status(200).json({
+      status: 200,
+      data: Gate.getRoot(),
+    });
+  } else {
+    return res.status(200).json({
+      status: 200,
+      data: Gate.getRoot(),
+    });
+  }
 }
 
 async function getItems(req, res, next) {
@@ -197,7 +212,7 @@ async function getItems(req, res, next) {
     const children = await Gate.find(query).exec();
 
     if (req.query.childStat === 'true') {
-      const childrenStatsPromise = children.map((item)=>{
+      const childrenStatsPromise = children.map((item) => {
         return getItemStats(item, req.session);
       });
       const childrenWithStats = await Promise.all(childrenStatsPromise);

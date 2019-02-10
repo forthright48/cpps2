@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function addItem(form) {
     return request({
-        url: '/api/v1/gateway',
+        url: '/api/v1/gateway/content',
         method: 'post',
         data: form,
     })
@@ -24,21 +24,21 @@ export function getFolder(folderId) {
 
 export function getItem(itemId) {
     return request({
-        url: `/api/v1/gateway/${itemId}`,
+        url: `/api/v1/gateway/content/${itemId}`,
         method: 'get',
     })
 }
 
 export function getFolderMapping() {
     return request({
-        url: `/api/v1/gateway?type=folder`,
+        url: `/api/v1/gateway/content?type=folder`,
         method: 'get',
     })
 }
 
 export function deleteItem(id) {
     return request({
-        url: `api/v1/gateway/${id}`,
+        url: `api/v1/gateway/content/${id}`,
         method: 'delete',
     })
 }
