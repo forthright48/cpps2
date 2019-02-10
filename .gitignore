@@ -3,7 +3,9 @@ node_modules/
 
 # Environment secrets
 .env
-server/**/secret.js
+
+# ignore secrets
+secret.js
 
 # Generated frontend code
 public/
