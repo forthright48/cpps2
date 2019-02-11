@@ -4,6 +4,9 @@ node_modules/
 # Environment secrets
 .env
 
+# ignore secrets
+secret.js
+
 # Generated frontend code
 public/
 
