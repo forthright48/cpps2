@@ -6,8 +6,13 @@
             <el-table-column prop="ojDisplayName" label="OJ" />
             <el-table-column label="User ID">
                 <template slot-scope="scope">
-                    <template v-if="scope.row.userID">
-                        <span> {{scope.row.userID.userIds}} </span>
+                    <template v-if="scope.row.userID && scope.row.userID.userIds.length > 0">
+                        <span>
+                            {{scope.row.userID.userIds[0]}}
+                            <span style="cursor: pointer;" @click="unsetOjUsername(scope.row.ojname, scope.row.userID.userIds[0])">
+                                <b>x</b>
+                            </span>
+                        </span>
                     </template>
                     <template v-else>
                         <el-button type="primary" @click="addOjUsername(scope.row.ojname)">Add UserID</el-button>
@@ -21,7 +26,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { GetOjInfo, setOjUsername } from '@/store/actions'
+import { GetOjInfo, setOjUsername, unsetOjUsername } from '@/store/actions'
 
 export default {
     props: ['username'],
@@ -63,6 +68,25 @@ export default {
                 this.$message({
                     type: 'success',
                     message: 'Your userID is:' + ojUsername.value,
+                })
+            } catch (err) {
+                this.$message({
+                    type: 'info',
+                    message: 'Input canceled',
+                })
+            }
+        },
+
+        async unsetOjUsername(ojname, ojUsername) {
+            try {
+                this.$store.dispatch(unsetOjUsername, {
+                    username: this.username,
+                    ojname,
+                    ojUsername,
+                })
+                this.$message({
+                    type: 'success',
+                    message: 'UserID reset!',
                 })
             } catch (err) {
                 this.$message({

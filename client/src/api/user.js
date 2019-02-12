@@ -13,3 +13,10 @@ export function setOjUsername(username, ojname, ojUsername) {
         method: 'put',
     })
 }
+
+export function unsetOjUsername(username, ojname, ojUsername) {
+    return request({
+        url: `/api/v1/users/${username}/unset-oj-username/${ojname}`,
+        method: 'put',
+    })
+}
