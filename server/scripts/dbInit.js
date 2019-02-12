@@ -6,6 +6,13 @@
  * 3. Create admin
  */
 
+ // Setup environment variables
+const dotenv = require('dotenv');
+const result = dotenv.config();
+if (result.error) {
+  throw result.error;
+}
+
 const mongoose = require('mongoose');
 const dburl = require('../secret.js').dburl;
 const readline = require('readline');
