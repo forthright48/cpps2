@@ -3,27 +3,23 @@ const router = express.Router();
 
 const User = require('../../models/userModel');
 const Gate = require('../../models/gateModel');
+const Classroom = require('../../models/classroomModel');
+
 const ojnames = require('../../models/ojInfo');
 const ojnamesOnly = ojnames.ojnamesOnly;
-// const Classroom = require('mongoose').model('Classroom');
 
 const logger = require('logger');
 // const queue = require('queue');
 
-// router.get('/users/username-userId/:username', getUserIdFromUsername );
-// router.get('/users/stats/whoSolvedIt', whoSolvedIt );
-
 router.get('/users', getInfo);
 router.post('/users/logout', logout);
-router.get('/users/:username', getUser );
-// router.get('/users/:username/root-stats', rootStats);
-// router.put('/users/:username/sync-solve-count', syncSolveCount);
-//
+router.get('/users/:username', getUser);
 // router.put('/users/:username/change-password', changePassword);
-//
+
+router.get('/users/stats/whoSolvedIt', whoSolvedIt);
+// router.put('/users/:username/sync-solve-count', syncSolveCount);
 router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
 router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
-
 
 module.exports = {
   addRouter(app) {
@@ -54,35 +50,14 @@ function logout(req, res, next) {
   });
 }
 
-// async function getUserIdFromUsername(req, res, next) {
-//   try {
-//     const {username} = req.params;
-//     if (!username) {
-//       const err = new Error(`Query 'username' must be provided`);
-//       err.status = 400;
-//       throw err;
-//     }
-//     const user = await User.findOne({username}, {_id: 1});
-//     if (!user) {
-//       const err = new Error(`Username ${username} not found`);
-//       err.status = 404;
-//       throw err;
-//     }
-//     return res.status(200).json({
-//       status: 200,
-//       data: user._id,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// }
-//
 async function getUser(req, res, next) {
   try {
     const {username} = req.params;
     const {select} = req.query;
 
-    const user = await User.findOne({_id: username}).select(select).exec();
+    const user = await User.findOne({_id: username})
+      .select(select)
+      .exec();
 
     if (!user) {
       return next({
@@ -104,96 +79,44 @@ async function getUser(req, res, next) {
   }
 }
 
-// async function whoSolvedIt(req, res, next) {
-//   try {
-//     const {problemList, classId} = req.query;
-//
-//     const studentList = await Classroom
-//       .findOne({_id: classId})
-//       .select({students: 1})
-//       .exec();
-//
-//     const studentIds = studentList.students;
-//
-//     const resp = await Promise.all(problemList.map(async (p)=>{
-//       const solvedBy = await User.find({
-//         _id: studentIds,
-//         ojStats: {
-//           $elemMatch: {
-//             ojname: p.ojname,
-//             solveList: p.problemId,
-//           },
-//         },
-//       }).select('_id username').exec();
-//       p.solvedBy = solvedBy.map((x)=>x.username);
-//       p.solveCount = solvedBy.length;
-//       return p;
-//     }));
-//
-//     return res.status(200).json({
-//       status: 200,
-//       data: resp,
-//     });
-//   } catch (err) {
-//     return next(err);
-//   }
-// }
-//
-//
-// async function rootStats(req, res, next) {
-//   const {username} = req.params;
-//   const parentId = '0'.repeat(24);
-//
-//   try {
-//     const root = {
-//       _id: parentId,
-//     };
-//     if (!root) throw new Error(`No parent with id ${parentId}`);
-//
-//     await setFolderStat(root, username);
-//
-//     // Grab children under root
-//     const childrenModel = await Gate.find({parentId})
-//       .select('_id title').lean().exec();
-//
-//     const childrenWithStat = await Promise.all(childrenModel
-//       .map(async (child)=>{
-//         await setFolderStat(child, username);
-//         return child;
-//       }));
-//
-//     return res.json({
-//       status: 200,
-//       data: {
-//         root,
-//         children: childrenWithStat,
-//       },
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// }
-//
-// async function setFolderStat(folder, username) {
-//   try {
-//     const totalProblems = await Gate.count({
-//       ancestor: folder._id,
-//       type: 'problem',
-//     }).exec();
-//
-//     const userSolved = await Gate.count({
-//       ancestor: folder._id,
-//       type: 'problem',
-//       doneList: username,
-//     });
-//
-//     folder.total = totalProblems;
-//     folder.user = userSolved;
-//   } catch (err) {
-//     throw err;
-//   }
-// }
-//
+async function whoSolvedIt(req, res, next) {
+  try {
+    const {problemList, classId} = req.query;
+
+    const studentList = await Classroom.findOne({_id: classId})
+      .select({students: 1})
+      .exec();
+
+    const studentIds = studentList.students;
+
+    const resp = await Promise.all(
+      problemList.map(async (p) => {
+        const solvedBy = await User.find({
+          _id: studentIds,
+          ojStats: {
+            $elemMatch: {
+              ojname: p.ojname,
+              solveList: p.problemId,
+            },
+          },
+        })
+          .select('_id username')
+          .exec();
+        p.solvedBy = solvedBy.map((x) => x.username);
+        p.solveCount = solvedBy.length;
+        return p;
+      })
+    );
+
+    return res.status(200).json({
+      status: 200,
+      data: resp,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
 // async function syncSolveCount(req, res, next) {
 //   const username = req.params.username;
 //   if (!username) {
@@ -245,13 +168,17 @@ async function unsetOjUsername(req, res, next) {
     const username = req.session.username;
     const ojname = req.params.ojname;
     if (username !== req.params.username) {
-      throw new Error(`UnsetOjUsername: ${username} cannot unset oj username of ${req.params.username}`);
+      throw new Error(
+        `UnsetOjUsername: ${username} cannot unset oj username of ${
+          req.params.username
+        }`
+      );
     }
 
     const user = await User.findOne({_id: username}).exec();
     const ojStats = user.ojStats;
 
-    const oj = ojStats.filter((x)=>x.ojname === ojname)[0];
+    const oj = ojStats.filter((x) => x.ojname === ojname)[0];
 
     if (!oj) {
       throw new Error(`unsetOjUsername: No such oj ${ojname}`);
@@ -261,20 +188,26 @@ async function unsetOjUsername(req, res, next) {
 
     const solveList = oj.solveList;
 
-    await Gate.update({
-      platform: ojname,
-      pid: {
-        $in: solveList,
+    await Gate.update(
+      {
+        platform: ojname,
+        pid: {
+          $in: solveList,
+        },
       },
-    }, {
-      $pull: {
-        doneList: username,
+      {
+        $pull: {
+          doneList: username,
+        },
       },
-    }, {
-      multi: true,
-    });
+      {
+        multi: true,
+      }
+    );
 
-    logger.info(`unsetOjUsername: ${username} has removed ${ojname}:${oj.userIds[0]}`);
+    logger.info(
+      `unsetOjUsername: ${username} has removed ${ojname}:${oj.userIds[0]}`
+    );
 
     oj.userIds = [];
     oj.solveCount = 0;
@@ -302,9 +235,13 @@ async function setOjUsername(req, res, next) {
     const ojname = req.params.ojname;
     const userId = req.params.userId;
     if (username !== req.params.username) {
-      throw new Error(`setOjUsername: {username} cannot unset oj username of ${req.params.username}`);
+      throw new Error(
+        `setOjUsername: {username} cannot unset oj username of ${
+          req.params.username
+        }`
+      );
     }
-    if (ojnamesOnly.findIndex((x)=>x === ojname) === -1) {
+    if (ojnamesOnly.findIndex((x) => x === ojname) === -1) {
       throw new Error(`setOjUsername: no such ojname ${ojname}`);
     }
 
@@ -313,7 +250,7 @@ async function setOjUsername(req, res, next) {
     console.log(user);
     const ojStats = user.ojStats ? user.ojStats : [];
 
-    let oj = ojStats.filter((x)=>x.ojname === ojname)[0];
+    let oj = ojStats.filter((x) => x.ojname === ojname)[0];
 
     if (!oj) {
       oj = {
@@ -335,7 +272,9 @@ async function setOjUsername(req, res, next) {
       break;
     }
 
-    logger.info(`setOjUsername: ${username} has set userId for ${ojname}:${oj.userIds[0]}`);
+    logger.info(
+      `setOjUsername: ${username} has set userId for ${ojname}:${oj.userIds[0]}`
+    );
 
     await user.save();
 

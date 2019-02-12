@@ -42,6 +42,26 @@ async function usersThatSolved(ojname, problemId) {
   }
 }
 
+// async function setFolderStat(folder, username) {
+//   try {
+//     const totalProblems = await Gate.count({
+//       ancestor: folder._id,
+//       type: 'problem',
+//     }).exec();
+
+//     const userSolved = await Gate.count({
+//       ancestor: folder._id,
+//       type: 'problem',
+//       doneList: username,
+//     });
+
+//     folder.total = totalProblems;
+//     folder.user = userSolved;
+//   } catch (err) {
+//     throw err;
+//   }
+// }
+
 async function postAddItem(req, res, next) {
   /**
    * Validation Gateway Schema
@@ -189,7 +209,7 @@ async function getProblemItemStats(item, session) {
 
 async function getRoot(req, res, next) {
   if (req.query.space) {
-    // implement after introducing spaces
+    // TODO implement after introducing spaces
     return res.status(200).json({
       status: 200,
       data: Gate.getRoot(),
