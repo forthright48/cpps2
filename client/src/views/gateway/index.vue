@@ -1,34 +1,52 @@
-<template lang="pug">
-  .app-container
-    el-row(type="flex" align="middle")
-      el-col(:span="2")
-        router-link(v-if="gatewayRoot.parentId" :to="gatewayRoot.parentId")
-          fa-icon.ml-2(name="level-up" scale="2")
-      el-col(:span="22")
-        h1.text-center Gateway
-    AddItem.text-center(:folderId="folderId")
+<template>
+    <div class="app-container">
+        <el-row type="flex" align="middle">
+        <el-col :span="2">
+            <router-link v-if="gatewayRoot.parentId" :to="gatewayRoot.parentId">
+            <fa-icon class="ml-2" name="level-up" scale="2" />
+            </router-link>
+        </el-col>
+        <el-col :span="22">
+            <h1 class="text-center">Gateway</h1>
+        </el-col>
+        </el-row>
 
-    el-table(
-        :data="gatewayItemsArray"
-        v-loading="loading"
-        border
-      )
-      el-table-column(prop="displayIndex" label="#" width="40")
-      el-table-column(label="Title" :sortable="true")
-        template(slot-scope="scope")
-          fa-icon.vertical-middle(:name="scope.row.titleIcon")
-          template(v-if="scope.row.type==='problem'")
-            a.ml-2.vertical-middle(:href="scope.row.displayLink" target="_blank") {{scope.row.displayTitle}}
-          template(v-else)
-            router-link.ml-2.vertical-middle(:to="scope.row.displayLink") {{scope.row.displayTitle}}
-      el-table-column(label="Stats" :sortable="true" align="center" width="140")
-        template(slot-scope="scope")
-          fa-icon(:name="scope.row.statIcon")
-          span.ml-1 {{scope.row.stat}}
-      el-table-column(label="Admin" align="center" width="140")
-        template(slot-scope="scope")
-          el-button(size="mini" round type="danger" @click="handleDeleteItem(scope.$index, scope.row)")
-            fa-icon.vertical-middle(name="trash")
+        <AddItem class="text-center" :folderId="folderId" />
+
+        <el-table :data="gatewayItemsArray" v-loading="loading" border>
+            <el-table-column prop="displayIndex" label="#" width="40" />
+            <el-table-column label="Title" :sortable="true">
+                <template slot-scope="scope">
+                    <fa-icon class="vertical-middle" :name="scope.row.titleIcon" />
+                    <template v-if="scope.row.type==='problem'">
+                        <a class="ml-2 vertical-middle" :href="scope.row.displayLink" target="_blank">
+                            {{scope.row.displayTitle}}
+                        </a>
+                    </template>
+                    <template v-else>
+                        <router-link class="ml-2 vertical-middle" :to="scope.row.displayLink">
+                            {{scope.row.displayTitle}}
+                        </router-link>
+                    </template>
+                </template>
+            </el-table-column>
+
+            <el-table-column label="Stats" :sortable="true" align="center" width="140">
+                <template slot-scope="scope">
+                    <fa-icon :name="scope.row.statIcon" />
+                    <span class="ml-1">{{scope.row.stat}}</span>
+                </template>
+            </el-table-column>
+            <el-table-column label="Admin" align="center" width="140">
+                <template slot-scope="scope">
+                    <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.$index, scope.row)">
+                        <fa-icon class="vertical-middle" name="trash" />
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </div>
+
 </template>
 
 <script>

@@ -7,7 +7,7 @@
             <el-table-column label="User ID">
                 <template slot-scope="scope">
                     <template v-if="scope.row.userID">
-                        <span> {{scope.row.userID}} </span>
+                        <span> {{scope.row.userID.userIds}} </span>
                     </template>
                     <template v-else>
                         <el-button type="primary" @click="addOjUsername(scope.row.ojname)">Add UserID</el-button>
