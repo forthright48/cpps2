@@ -15,6 +15,7 @@ router.get('/classrooms/:classId', getOneClassroom);
 router.put('/classrooms/:classId', updateClassroom);
 router.delete('/classrooms/:classId', deleteClassroom);
 
+router.get('/classrooms/:classId/whoSolvedIt', whoSolvedIt);
 router.get('/classrooms/:classId/leaderboard', getLeaderboard);
 
 router.post('/classrooms/:classId/students', postAddStudents);
@@ -282,6 +283,45 @@ async function getProblemLists(req, res, next) {
     });
   } catch (err) {
     next(err);
+  }
+}
+
+async function whoSolvedIt(req, res, next) {
+  try {
+    const {problemList} = req.query;
+    const {classId} = req.params;
+
+    const studentList = await Classroom.findOne({_id: classId})
+      .select({students: 1})
+      .exec();
+
+    const studentIds = studentList.students;
+
+    const resp = await Promise.all(
+      problemList.map(async (p) => {
+        const solvedBy = await User.find({
+          _id: studentIds,
+          ojStats: {
+            $elemMatch: {
+              ojname: p.ojname,
+              solveList: p.problemId,
+            },
+          },
+        })
+          .select('_id username')
+          .exec();
+        p.solvedBy = solvedBy.map((x) => x.username);
+        p.solveCount = solvedBy.length;
+        return p;
+      })
+    );
+
+    return res.status(200).json({
+      status: 200,
+      data: resp,
+    });
+  } catch (err) {
+    return next(err);
   }
 }
 

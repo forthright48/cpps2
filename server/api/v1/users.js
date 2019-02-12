@@ -16,7 +16,6 @@ router.post('/users/logout', logout);
 router.get('/users/:username', getUser);
 // router.put('/users/:username/change-password', changePassword);
 
-router.get('/users/stats/whoSolvedIt', whoSolvedIt);
 // router.put('/users/:username/sync-solve-count', syncSolveCount);
 router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
 router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
@@ -73,44 +72,6 @@ async function getUser(req, res, next) {
     return res.status(200).json({
       status: 200,
       data: user,
-    });
-  } catch (err) {
-    return next(err);
-  }
-}
-
-async function whoSolvedIt(req, res, next) {
-  try {
-    const {problemList, classId} = req.query;
-
-    const studentList = await Classroom.findOne({_id: classId})
-      .select({students: 1})
-      .exec();
-
-    const studentIds = studentList.students;
-
-    const resp = await Promise.all(
-      problemList.map(async (p) => {
-        const solvedBy = await User.find({
-          _id: studentIds,
-          ojStats: {
-            $elemMatch: {
-              ojname: p.ojname,
-              solveList: p.problemId,
-            },
-          },
-        })
-          .select('_id username')
-          .exec();
-        p.solvedBy = solvedBy.map((x) => x.username);
-        p.solveCount = solvedBy.length;
-        return p;
-      })
-    );
-
-    return res.status(200).json({
-      status: 200,
-      data: resp,
     });
   } catch (err) {
     return next(err);
