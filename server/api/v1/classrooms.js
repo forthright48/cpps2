@@ -1,12 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const User = require('../../models/userModel');
-const ProblemList = mongoose.model('ProblemList');
+const ProblemList = require('../../models/ProblemList');
 const Classroom = require('../../models/classroomModel');
-const isObjectId = mongoose.Types.ObjectId.isValid;
 
-const {isAdmin} = require('middlewares/userGroup');
 const router = express.Router();
+const {isAdmin} = require('middlewares/userGroup');
+const isObjectId = mongoose.Types.ObjectId.isValid;
 
 router.get('/classrooms', getClassroom);
 router.post('/classrooms', isAdmin, insertClassroom);
