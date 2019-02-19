@@ -23,7 +23,7 @@ export default {
             const second = this.levelList[1]
             if (second && (second.name === 'gateway-root' || second.name === 'gateway')) {
                 const gatewayBreadcrumb = this.levelList.concat(this.gatewayBreadcrumb)
-                gatewayBreadcrumb[1].path = `/gateway/folder/${process.env.GATEWAY_ROOT}`
+                gatewayBreadcrumb[1].path = `/gateway/folder/000000000000000000000000`
                 return gatewayBreadcrumb
             }
             return this.levelList
