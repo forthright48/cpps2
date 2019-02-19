@@ -75,11 +75,11 @@ export const constantRouterMap = [
         component: Layout,
         children: [
             {
-                path: `folder/${process.env.GATEWAY_ROOT}`,
+                path: `folder/000000000000000000000000`,
                 name: 'gateway-root',
                 component: () => import('@/views/gateway/index'),
                 meta: { title: 'Gateway', icon: 'example' },
-                props: { folderId: `${process.env.GATEWAY_ROOT}` },
+                props: { folderId: `000000000000000000000000` },
             },
             {
                 path: 'folder/:folderId',
