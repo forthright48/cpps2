@@ -7,7 +7,7 @@ import {
 } from '@/api/gateway'
 import { normalizeVuexArray } from '@/utils'
 
-const root = '000000000000000000000000'
+const root = process.env.GATEWAY_ROOT
 
 // Imagine I am looking into a folder
 const gateway = {

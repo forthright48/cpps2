@@ -1,4 +1,4 @@
-import { getUser, setOjUsername } from '@/api/user'
+import { getUser, setOjUsername, unsetOjUsername } from '@/api/user'
 import { normalizeVuexArray } from '@/utils'
 
 const profile = {
@@ -28,7 +28,7 @@ const profile = {
             }
         },
 
-        async setOjUsername({ commit, dispatch }, { username, ojname, ojUsername }) {
+        async setOjUsername({ dispatch }, { username, ojname, ojUsername }) {
             try {
                 const response = await setOjUsername(username, ojname, ojUsername)
                 dispatch('fetchProfile', username) // We should have read username from Vuex.
@@ -36,6 +36,16 @@ const profile = {
                 throw err
             }
         },
+
+        async unsetOjUsername({ dispatch }, { username, ojname, ojUsername }) {
+            try {
+                const response = await unsetOjUsername(username, ojname, ojUsername)
+                dispatch('fetchProfile', username) // We should have read username from Vuex.
+            } catch (err) {
+                throw err
+            }
+        },
+
     },
 }
 

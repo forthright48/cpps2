@@ -5,4 +5,5 @@ module.exports = {
     GatewayDeleteItem: 'GatewayDeleteItem',
     fetchProfile: 'fetchProfile',
     setOjUsername: 'setOjUsername',
+    unsetOjUsername: 'unsetOjUsername',
 }
