@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const timestamps = require('mongoose-timestamp');
 const {ojnamesOnly} = require('./ojInfo');
 const validator = require('validator');
+const {isEmpty} = require('lodash');
 
 function removeNullOrBlank(data) {
   if (data === null || data === '') return undefined;
@@ -83,12 +84,12 @@ const schema = new mongoose.Schema({
   },
 });
 
-schema.statics.getRoot = function(spaceId = null) {
-  if (spaceId) {
-    // enable after introducing spaces
+schema.statics.getRoot = function() {
+  if (!isEmpty(process.env.GATEWAY_ROOT)) {
     return mongoose.Types.ObjectId(process.env.GATEWAY_ROOT);
   } else {
-    return mongoose.Types.ObjectId(process.env.GATEWAY_ROOT);
+    // Added a default value
+    return '0'.repeat(24);
   }
 };
 
