@@ -85,12 +85,7 @@ const schema = new mongoose.Schema({
 });
 
 schema.statics.getRoot = function() {
-  if (!isEmpty(process.env.GATEWAY_ROOT)) {
-    return mongoose.Types.ObjectId(process.env.GATEWAY_ROOT);
-  } else {
-    // Added a default value
-    return '0'.repeat(24);
-  }
+  return '0'.repeat(24);
 };
 
 /**
