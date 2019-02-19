@@ -174,12 +174,14 @@ async function insertClassroom(req, res, next) {
       err.status = 400;
       throw err;
     }
-    if (!students.every(isObjectId)) {
+    let s = Array.from(JSON.parse(students));
+    // console.log(name, s, Array.isArray(s));
+    if (!s.every(isObjectId)) {
       const err = new Error('Students must be an array of ObjectId');
       err.status = 400;
       throw err;
     }
-    if (new Set(students).size !== students.length) {
+    if (new Set(s).size !== s.length) {
       const err = new Error('Students array must contain unique Ids');
       err.status = 400;
       throw err;
@@ -188,7 +190,7 @@ async function insertClassroom(req, res, next) {
     const classroom = new Classroom({
       name,
       coach: req.session.userId,
-      students,
+      students: s,
     });
     await classroom.save();
     return res.status(201).json({

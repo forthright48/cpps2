@@ -56,7 +56,7 @@ async function postLogin(req, res, next) {
       req.session.email = user.email;
       req.session.roles = user.roles;
       req.session.username = user.username;
-      req.session._id = user._id;
+      req.session.userId = user._id;
 
       return res.status(200).json({
         status: 200,
