@@ -38,7 +38,7 @@ export default {
         getSolveCount() {
             return Object.keys(this.ojInfo).map((ojname, ind) => {
                 return {
-                    index: ind,
+                    index: ind + 1,
                     ojname,
                     ojDisplayName: this.ojInfo[ojname].displayName,
                     userID: this.profile.ojStats[ojname],

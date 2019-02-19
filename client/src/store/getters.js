@@ -11,5 +11,6 @@ const getters = {
     gatewayBreadcrumb: state => state.gateway.gatewayBreadcrumb,
     user: state => state.user,
     profile: state => state.profile,
+    classrooms: state => state.classrooms.classrooms,
 }
 export default getters
