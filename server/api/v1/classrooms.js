@@ -1,11 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const User = require('../../models/userModel');
-const ProblemList = require('../../models/ProblemList');
+const ProblemList = require('../../models/problemListModel');
 const Classroom = require('../../models/classroomModel');
+const {isAdmin} = require('middlewares/userGroup');
+
 
 const router = express.Router();
-const {isAdmin} = require('middlewares/userGroup');
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
 router.get('/classrooms', getClassroom);
@@ -33,6 +34,7 @@ module.exports = {
  */
 
 async function getClassroom(req, res, next) {
+  console.log('============ here');
   try {
     const {
       coach = req.session.userId,

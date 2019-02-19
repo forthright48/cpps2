@@ -19,7 +19,7 @@ const classroomSchema = new mongoose.Schema({
 
 classroomSchema.plugin(timestamps);
 
-mongoose.model('Classroom', classroomSchema, 'classrooms');
+module.exports = mongoose.model('Classroom', classroomSchema, 'classrooms');
 
 /*
  * Implementation

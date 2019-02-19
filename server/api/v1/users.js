@@ -35,6 +35,7 @@ function getInfo(req, res, next) {
       username: s.username,
       roles: s.roles,
       email: s.email,
+      _id: s._id,
     },
   });
 }
@@ -54,7 +55,7 @@ async function getUser(req, res, next) {
     const {username} = req.params;
     const {select} = req.query;
 
-    const user = await User.findOne({_id: username})
+    const user = await User.findOne({username})
       .select(select)
       .exec();
 
@@ -136,7 +137,7 @@ async function unsetOjUsername(req, res, next) {
       );
     }
 
-    const user = await User.findOne({_id: username}).exec();
+    const user = await User.findOne({username}).exec();
     const ojStats = user.ojStats;
 
     const oj = ojStats.filter((x) => x.ojname === ojname)[0];
@@ -206,9 +207,8 @@ async function setOjUsername(req, res, next) {
       throw new Error(`setOjUsername: no such ojname ${ojname}`);
     }
 
-    const user = await User.findOne({_id: username}).exec();
+    const user = await User.findOne({username}).exec();
 
-    console.log(user);
     const ojStats = user.ojStats ? user.ojStats : [];
 
     let oj = ojStats.filter((x) => x.ojname === ojname)[0];
