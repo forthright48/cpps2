@@ -15,10 +15,10 @@ router.get('/classrooms/:classId', getOneClassroom);
 router.put('/classrooms/:classId', updateClassroom);
 router.delete('/classrooms/:classId', deleteClassroom);
 
-router.get('/classrooms/:classId/whoSolvedIt', whoSolvedIt);
 router.get('/classrooms/:classId/leaderboard', getLeaderboard);
+router.get('/classrooms/:classId/who-solved-it', solveCountInClassroom);
 
-router.post('/classrooms/:classId/students', postAddStudents);
+router.put('/classrooms/:classId/students', postAddStudents);
 router.delete('/classrooms/:classId/students', deleteOneStudent);
 
 router.get('/classrooms/:classId/problemlists', getProblemLists);
@@ -286,39 +286,57 @@ async function getProblemLists(req, res, next) {
   }
 }
 
-async function whoSolvedIt(req, res, next) {
+async function solveCountInClassroom(req, res, next) {
   try {
-    const {problemList} = req.query;
     const {classId} = req.params;
+    const {problemListId} = req.query;
+    const {userId} = req.session;
 
-    const studentList = await Classroom.findOne({_id: classId})
-      .select({students: 1})
-      .exec();
+    const studentList = await Classroom.findById(classId).populate('students').exec();
+    const problemList = await ProblemList.findById(problemListId).exec();
 
-    const studentIds = studentList.students;
+    if (studentList.coach.toString() !== problemList.createdBy.toString()) {
+      return next({
+        status: 401,
+        message: 'Owner of classroom and problem list do not match',
+      });
+    }
 
-    const resp = await Promise.all(
-      problemList.map(async (p) => {
-        const solvedBy = await User.find({
-          _id: studentIds,
-          ojStats: {
-            $elemMatch: {
-              ojname: p.ojname,
-              solveList: p.problemId,
-            },
+    const studentIds = studentList.students.map((s)=>s._id.toString());
+    if (userId !== problemList.createdBy.toString() && !studentIds.includes(userId)) {
+      return next({
+        status: 401,
+        message: 'You are neither the owner, nor student of classroom',
+      });
+    }
+
+    const resp = await Promise.all(problemList.problems.map(async (p)=>{
+      const solvedBy = await User.find({
+        _id: studentIds,
+        ojStats: {
+          $elemMatch: {
+            ojname: p.platform,
+            solveList: p.problemId,
           },
-        })
-          .select('_id username')
-          .exec();
-        p.solvedBy = solvedBy.map((x) => x.username);
-        p.solveCount = solvedBy.length;
-        return p;
-      })
-    );
+        },
+      }).select('_id username').exec();
+      return {
+        _id: p._id,
+        title: p.title,
+        platform: p.platform,
+        problemId: p.problemId,
+        link: p.link,
+        solvedBy: solvedBy.map((x)=>x.username),
+        solveCount: solvedBy.length,
+      };
+    }));
 
     return res.status(200).json({
       status: 200,
-      data: resp,
+      data: {
+        ranklist: resp,
+        studentUsernames: studentList.students.map((s)=>s.username),
+      },
     });
   } catch (err) {
     return next(err);

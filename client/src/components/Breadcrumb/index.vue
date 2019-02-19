@@ -1,9 +1,11 @@
 <template>
   <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
-      <el-breadcrumb-item v-for="(item,index)  in levelListUpgraded" :key="item.path" v-if="item.meta.title">
-        <span v-if="item.redirect==='noredirect'||index==levelListUpgraded.length-1" class="no-redirect">{{item.meta.title}}</span>
-        <router-link v-else :to="item.redirect||item.path">{{item.meta.title}}</router-link>
+      <el-breadcrumb-item v-for="(item,index)  in levelListUpgraded" :key="item.path">
+        <span v-if="item.meta.title">
+          <span v-if="item.redirect==='noredirect'||index==levelListUpgraded.length-1" class="no-redirect">{{item.meta.title}}</span>
+          <router-link v-else :to="item.redirect||item.path">{{item.meta.title}}</router-link>
+        </span>
       </el-breadcrumb-item>
     </transition-group>
   </el-breadcrumb>
@@ -21,7 +23,7 @@ export default {
             const second = this.levelList[1]
             if (second && (second.name === 'gateway-root' || second.name === 'gateway')) {
                 const gatewayBreadcrumb = this.levelList.concat(this.gatewayBreadcrumb)
-                gatewayBreadcrumb[1].path = '/gateway/folder/000000000000000000000000'
+                gatewayBreadcrumb[1].path = `/gateway/folder/${process.env.GATEWAY_ROOT}`
                 return gatewayBreadcrumb
             }
             return this.levelList
