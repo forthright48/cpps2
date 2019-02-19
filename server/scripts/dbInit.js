@@ -81,7 +81,8 @@ async function main() {
 
     const pass = await User.createHash(password);
     const user = new User({
-      _id: username,
+      // _id: username,
+      username,
       email,
       password: pass,
       roles: ['root', 'user'],
