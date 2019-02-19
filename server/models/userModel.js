@@ -5,7 +5,7 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  _id: { // Username
+  username: { // Username
     type: String,
     maxlength: 256,
     // validate: /^[A-Za-z_0-9.]+$/g,
