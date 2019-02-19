@@ -34,7 +34,6 @@ module.exports = {
  */
 
 async function getClassroom(req, res, next) {
-  console.log('============ here');
   try {
     const {
       coach = req.session.userId,
