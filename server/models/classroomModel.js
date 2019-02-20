@@ -14,7 +14,15 @@ const classroomSchema = new mongoose.Schema({
     required: true,
     index: true,
   },
-  students: [{type: ObjectId, ref: 'User'}],
+  students: {
+    type: [
+      {
+        type: ObjectId,
+        set: removeNullOrBlank,
+        ref: 'User',
+      },
+    ],
+  },
 });
 
 classroomSchema.plugin(timestamps);

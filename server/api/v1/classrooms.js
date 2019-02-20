@@ -4,6 +4,7 @@ const User = require('../../models/userModel');
 const ProblemList = require('../../models/problemListModel');
 const Classroom = require('../../models/classroomModel');
 const {isAdmin} = require('middlewares/userGroup');
+const {isEmpty} = require('lodash');
 
 
 const router = express.Router();
@@ -35,18 +36,18 @@ module.exports = {
 
 async function getClassroom(req, res, next) {
   try {
-    const {
-      coach = req.session.userId,
+    let {
+      coach,
       student,
-      select,
-      populate = ['', ''],
     } = req.query;
-    const dbQuery = {};
 
-    if (coach) {
-      dbQuery.coach = mongoose.Types.ObjectId(coach);
+    const populate = ['coach students', 'username'];
+
+    if (isEmpty(coach) && isEmpty(student)) {
+      coach = req.session.userId;
     }
-    if (coach !== req.session.userId) {
+
+    if (!isEmpty(coach) && coach !== req.session.userId) {
       return next({
         status: 400,
         message: `You ${
@@ -54,12 +55,14 @@ async function getClassroom(req, res, next) {
         } are not allowed to view classrooms of ${coach}`,
       });
     }
-    if (student) {
-      dbQuery.students = student;
-    }
 
-    const classrooms = await Classroom.find(dbQuery)
-      .select(select)
+    const options = [];
+    if (coach) options.push({coach});
+    if (student) options.push({students: student});
+
+    const classrooms = await Classroom.find({
+      $or: options,
+    })
       .populate(populate[0], populate[1])
       .exec();
     return res.status(200).json({
@@ -100,10 +103,8 @@ async function getOneClassroom(req, res, next) {
 async function postAddStudents(req, res, next) {
   try {
     const {classId} = req.params;
-    let {students} = req.body;
+    let {studentId} = req.body;
     const {userId} = req.session;
-
-    students = students.filter((s) => isObjectId(s));
 
     const classroom = await Classroom.findOneAndUpdate(
       {
@@ -112,12 +113,12 @@ async function postAddStudents(req, res, next) {
       },
       {
         $addToSet: {
-          students: {
-            $each: students,
-          },
+          students: studentId,
         },
       }
-    );
+    )
+      .populate('coach students', 'username')
+      .exec();
 
     if (!classroom) {
       const e = new Error(`No such classroom: ${classId}`);
@@ -150,7 +151,9 @@ async function deleteOneStudent(req, res, next) {
           students: studentId,
         },
       }
-    );
+    )
+      .populate('coach students', 'username')
+      .exec();
 
     if (!classroom) {
       const e = new Error('No such classroom');
@@ -168,29 +171,16 @@ async function deleteOneStudent(req, res, next) {
 
 async function insertClassroom(req, res, next) {
   try {
-    const {name, students} = req.body;
-    if (!name || !students) {
+    const {name} = req.body;
+    if (!name) {
       const err = new Error('Post body must have name and students field');
       err.status = 400;
       throw err;
     }
-    let s = Array.from(JSON.parse(students));
-    // console.log(name, s, Array.isArray(s));
-    if (!s.every(isObjectId)) {
-      const err = new Error('Students must be an array of ObjectId');
-      err.status = 400;
-      throw err;
-    }
-    if (new Set(s).size !== s.length) {
-      const err = new Error('Students array must contain unique Ids');
-      err.status = 400;
-      throw err;
-    }
-
     const classroom = new Classroom({
       name,
       coach: req.session.userId,
-      students: s,
+      students: [],
     });
     await classroom.save();
     return res.status(201).json({
