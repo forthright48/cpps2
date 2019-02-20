@@ -10,18 +10,18 @@ const {isEmpty} = require('lodash');
 const router = express.Router();
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
-router.get('/classrooms', getClassroom);
+router.get('/classrooms', getClassrooms);
 router.post('/classrooms', isAdmin, insertClassroom);
 
-router.get('/classrooms/:classId', getOneClassroom);
+router.get('/classrooms/:classId', getClassroom);
 router.put('/classrooms/:classId', updateClassroom);
 router.delete('/classrooms/:classId', deleteClassroom);
 
 router.get('/classrooms/:classId/leaderboard', getLeaderboard);
 router.get('/classrooms/:classId/who-solved-it', solveCountInClassroom);
 
-router.put('/classrooms/:classId/students', postAddStudents);
-router.delete('/classrooms/:classId/students', deleteOneStudent);
+router.put('/classrooms/:classId/students', addStudent);
+router.delete('/classrooms/:classId/students', deleteStudent);
 
 router.get('/classrooms/:classId/problemlists', getProblemLists);
 
@@ -34,7 +34,7 @@ module.exports = {
  *Implementation
  */
 
-async function getClassroom(req, res, next) {
+async function getClassrooms(req, res, next) {
   try {
     let {
       coach,
@@ -43,8 +43,19 @@ async function getClassroom(req, res, next) {
 
     const populate = ['coach students', 'username'];
 
-    if (isEmpty(coach) && isEmpty(student)) {
-      coach = req.session.userId;
+    if (isEmpty(coach)) {
+      if (isEmpty(student)) {
+        coach = req.session.userId;
+      } else {
+        if (student !== req.session.userId) {
+          return next({
+            status: 400,
+            message: `You ${
+              req.session.userId
+            } are not allowed to view classrooms of ${student}`,
+          });
+        }
+      }
     }
 
     if (!isEmpty(coach) && coach !== req.session.userId) {
@@ -74,7 +85,7 @@ async function getClassroom(req, res, next) {
   }
 }
 
-async function getOneClassroom(req, res, next) {
+async function getClassroom(req, res, next) {
   try {
     const {userId} = req.session;
     const {classId} = req.params;
@@ -100,7 +111,7 @@ async function getOneClassroom(req, res, next) {
   }
 }
 
-async function postAddStudents(req, res, next) {
+async function addStudent(req, res, next) {
   try {
     const {classId} = req.params;
     let {studentId} = req.body;
@@ -135,7 +146,7 @@ async function postAddStudents(req, res, next) {
   }
 }
 
-async function deleteOneStudent(req, res, next) {
+async function deleteStudent(req, res, next) {
   try {
     const {classId} = req.params;
     const {studentId} = req.body;
