@@ -14,7 +14,7 @@ router.get('/classrooms', getClassrooms);
 router.post('/classrooms', isAdmin, insertClassroom);
 
 router.get('/classrooms/:classId', getClassroom);
-router.put('/classrooms/:classId', updateClassroom);
+router.patch('/classrooms/:classId', updateClassroom);
 router.delete('/classrooms/:classId', deleteClassroom);
 
 router.get('/classrooms/:classId/leaderboard', getLeaderboard);
@@ -126,6 +126,9 @@ async function addStudent(req, res, next) {
         $addToSet: {
           students: studentId,
         },
+      },
+      {
+        new: true,
       }
     )
       .populate('coach students', 'username')
@@ -161,6 +164,9 @@ async function deleteStudent(req, res, next) {
         $pull: {
           students: studentId,
         },
+      },
+      {
+        new: true,
       }
     )
       .populate('coach students', 'username')
@@ -184,7 +190,7 @@ async function insertClassroom(req, res, next) {
   try {
     const {name} = req.body;
     if (!name) {
-      const err = new Error('Post body must have name and students field');
+      const err = new Error('Post body must have name field');
       err.status = 400;
       throw err;
     }
@@ -205,11 +211,11 @@ async function insertClassroom(req, res, next) {
 
 async function updateClassroom(req, res, next) {
   try {
-    const {name, students} = req.body;
+    const {name} = req.body;
     const {classId} = req.params;
     const {userId} = req.session;
-    if (!name || !students) {
-      throw new Error('Post body must have name and students field');
+    if (!name) {
+      throw new Error('Post body must have name field');
     }
     const classroom = await Classroom.findOneAndUpdate(
       {
@@ -218,8 +224,9 @@ async function updateClassroom(req, res, next) {
       },
       {
         name,
-        coach: req.session.userId,
-        students,
+      },
+      {
+        new: true,
       }
     );
 
@@ -237,6 +244,17 @@ async function deleteClassroom(req, res, next) {
     const {classId} = req.params;
     const {userId} = req.session;
 
+    const data = await Classroom.findOneAndRemove({
+      _id: classId,
+      coach: userId,
+    }).exec();
+
+    if (!data) {
+      const e = new Error(`No such classroom: ${classId}`);
+      e.status = 400;
+      throw e;
+    }
+
     await ProblemList.update(
       {
         sharedWith: classId,
@@ -251,10 +269,6 @@ async function deleteClassroom(req, res, next) {
       }
     ).exec();
 
-    await Classroom.findOneAndRemove({
-      _id: classId,
-      coach: userId,
-    }).exec();
     return res.status(200).json({
       status: 200,
     });
