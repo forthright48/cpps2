@@ -118,6 +118,7 @@ export const constantRouterMap = [
             {
                 path: ':classroomId',
                 name: 'classroom',
+                component: () => import('@/views/classrooms/classroom'),
                 meta: { title: 'Classroom' },
                 props: true,
                 hidden: true,

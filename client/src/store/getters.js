@@ -12,5 +12,6 @@ const getters = {
     user: state => state.user,
     profile: state => state.profile,
     classrooms: state => state.classrooms.classrooms,
+    classroom: state => state.classroom.classroom,
 }
 export default getters

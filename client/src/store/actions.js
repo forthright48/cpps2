@@ -8,4 +8,6 @@ module.exports = {
     unsetOjUsername: 'unsetOjUsername',
     fetchClassrooms: 'fetchClassrooms',
     createNewClassroom: 'createNewClassroom',
+    fetchClassroom: 'fetchClassroom',
+    addNewStudentToClassroom: 'addNewStudentToClassroom',
 }
