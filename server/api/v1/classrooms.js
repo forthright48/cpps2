@@ -114,8 +114,20 @@ async function getClassroom(req, res, next) {
 async function addStudent(req, res, next) {
   try {
     const {classId} = req.params;
-    let {studentId} = req.body;
+    let {studentUsername} = req.body;
     const {userId} = req.session;
+
+    const student = await User.find(
+      {
+        username: studentUsername,
+      }
+    ).exec();
+
+    if (!student) {
+      const e = new Error(`No such user: ${studentUsername}`);
+      e.status = 400;
+      throw e;
+    }
 
     const classroom = await Classroom.findOneAndUpdate(
       {
@@ -124,7 +136,7 @@ async function addStudent(req, res, next) {
       },
       {
         $addToSet: {
-          students: studentId,
+          students: student._id,
         },
       },
       {
@@ -152,8 +164,20 @@ async function addStudent(req, res, next) {
 async function deleteStudent(req, res, next) {
   try {
     const {classId} = req.params;
-    const {studentId} = req.body;
+    const {studentUsername} = req.body;
     const {userId} = req.session;
+
+    const student = await User.find(
+      {
+        username: studentUsername,
+      }
+    ).exec();
+
+    if (!student) {
+      const e = new Error(`No such user: ${studentUsername}`);
+      e.status = 400;
+      throw e;
+    }
 
     const classroom = await Classroom.findOneAndUpdate(
       {
@@ -162,7 +186,7 @@ async function deleteStudent(req, res, next) {
       },
       {
         $pull: {
-          students: studentId,
+          students: student._id,
         },
       },
       {
