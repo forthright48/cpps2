@@ -104,6 +104,27 @@ export const constantRouterMap = [
             },
         ],
     },
+    {
+        path: '/classrooms',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                name: 'classrooms',
+                component: () => import('@/views/classrooms/index'),
+                meta: { title: 'Classrooms', icon: 'user' },
+                props: true,
+            },
+            {
+                path: ':classroomId',
+                name: 'classroom',
+                component: () => import('@/views/classrooms/classroom'),
+                meta: { title: 'Classroom' },
+                props: true,
+                hidden: true,
+            },
+        ],
+    },
     { path: '*', redirect: '/404', hidden: true },
 ]
 
