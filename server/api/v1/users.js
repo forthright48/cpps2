@@ -3,7 +3,6 @@ const router = express.Router();
 
 const User = require('../../models/userModel');
 const Gate = require('../../models/gateModel');
-const Classroom = require('../../models/classroomModel');
 
 const ojnames = require('../../models/ojInfo');
 const ojnamesOnly = ojnames.ojnamesOnly;
@@ -29,14 +28,15 @@ module.exports = {
 function getInfo(req, res, next) {
   // verify token here
   const s = req.session;
+  const data = {
+    username: s.username,
+    roles: s.roles,
+    email: s.email,
+    userId: s.userId,
+  };
   return res.status(200).json({
+    data,
     status: 200,
-    data: {
-      username: s.username,
-      roles: s.roles,
-      email: s.email,
-      _id: s._id,
-    },
   });
 }
 

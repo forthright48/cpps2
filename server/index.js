@@ -40,6 +40,7 @@ require('./api/v1/ojInfo.js').addRouter(app);
 require('./api/v1/gateway.js').addRouter(app);
 require('./api/v1/problemBank.js').addRouter(app);
 require('./api/v1/classrooms.js').addRouter(app);
+require('./api/v1/problemList.js').addRouter(app);
 
 /* Error Handling */
 app.use('/api/', function(err, req, res, next) {
