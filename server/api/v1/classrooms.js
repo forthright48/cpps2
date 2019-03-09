@@ -4,23 +4,24 @@ const User = require('../../models/userModel');
 const ProblemList = require('../../models/problemListModel');
 const Classroom = require('../../models/classroomModel');
 const {isAdmin} = require('middlewares/userGroup');
+const {isEmpty} = require('lodash');
 
 
 const router = express.Router();
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
-router.get('/classrooms', getClassroom);
+router.get('/classrooms', getClassrooms);
 router.post('/classrooms', isAdmin, insertClassroom);
 
-router.get('/classrooms/:classId', getOneClassroom);
-router.put('/classrooms/:classId', updateClassroom);
+router.get('/classrooms/:classId', getClassroom);
+router.patch('/classrooms/:classId', updateClassroom);
 router.delete('/classrooms/:classId', deleteClassroom);
 
 router.get('/classrooms/:classId/leaderboard', getLeaderboard);
 router.get('/classrooms/:classId/who-solved-it', solveCountInClassroom);
 
-router.put('/classrooms/:classId/students', postAddStudents);
-router.delete('/classrooms/:classId/students', deleteOneStudent);
+router.put('/classrooms/:classId/students', addStudent);
+router.delete('/classrooms/:classId/students', deleteStudent);
 
 router.get('/classrooms/:classId/problemlists', getProblemLists);
 
@@ -33,20 +34,31 @@ module.exports = {
  *Implementation
  */
 
-async function getClassroom(req, res, next) {
+async function getClassrooms(req, res, next) {
   try {
-    const {
-      coach = req.session.userId,
+    let {
+      coach,
       student,
-      select,
-      populate = ['', ''],
     } = req.query;
-    const dbQuery = {};
 
-    if (coach) {
-      dbQuery.coach = mongoose.Types.ObjectId(coach);
+    const populate = ['coach students', 'username'];
+
+    if (isEmpty(coach)) {
+      if (isEmpty(student)) {
+        coach = req.session.userId;
+      } else {
+        if (student !== req.session.userId) {
+          return next({
+            status: 400,
+            message: `You ${
+              req.session.userId
+            } are not allowed to view classrooms of ${student}`,
+          });
+        }
+      }
     }
-    if (coach !== req.session.userId) {
+
+    if (!isEmpty(coach) && coach !== req.session.userId) {
       return next({
         status: 400,
         message: `You ${
@@ -54,12 +66,14 @@ async function getClassroom(req, res, next) {
         } are not allowed to view classrooms of ${coach}`,
       });
     }
-    if (student) {
-      dbQuery.students = student;
-    }
 
-    const classrooms = await Classroom.find(dbQuery)
-      .select(select)
+    const options = [];
+    if (coach) options.push({coach});
+    if (student) options.push({students: student});
+
+    const classrooms = await Classroom.find({
+      $or: options,
+    })
       .populate(populate[0], populate[1])
       .exec();
     return res.status(200).json({
@@ -71,7 +85,7 @@ async function getClassroom(req, res, next) {
   }
 }
 
-async function getOneClassroom(req, res, next) {
+async function getClassroom(req, res, next) {
   try {
     const {userId} = req.session;
     const {classId} = req.params;
@@ -97,13 +111,23 @@ async function getOneClassroom(req, res, next) {
   }
 }
 
-async function postAddStudents(req, res, next) {
+async function addStudent(req, res, next) {
   try {
     const {classId} = req.params;
-    let {students} = req.body;
+    let {studentUsername} = req.body;
     const {userId} = req.session;
 
-    students = students.filter((s) => isObjectId(s));
+    const student = await User.findOne(
+      {
+        username: studentUsername,
+      }
+    ).exec();
+
+    if (!student) {
+      const e = new Error(`No such user: ${studentUsername}`);
+      e.status = 400;
+      throw e;
+    }
 
     const classroom = await Classroom.findOneAndUpdate(
       {
@@ -112,12 +136,15 @@ async function postAddStudents(req, res, next) {
       },
       {
         $addToSet: {
-          students: {
-            $each: students,
-          },
+          students: student._id,
         },
+      },
+      {
+        new: true,
       }
-    );
+    )
+      .populate('coach students', 'username')
+      .exec();
 
     if (!classroom) {
       const e = new Error(`No such classroom: ${classId}`);
@@ -134,11 +161,23 @@ async function postAddStudents(req, res, next) {
   }
 }
 
-async function deleteOneStudent(req, res, next) {
+async function deleteStudent(req, res, next) {
   try {
     const {classId} = req.params;
-    const {studentId} = req.body;
+    const {studentUsername} = req.body;
     const {userId} = req.session;
+
+    const student = await User.findOne(
+      {
+        username: studentUsername,
+      }
+    ).exec();
+
+    if (!student) {
+      const e = new Error(`No such user: ${studentUsername}`);
+      e.status = 400;
+      throw e;
+    }
 
     const classroom = await Classroom.findOneAndUpdate(
       {
@@ -147,10 +186,15 @@ async function deleteOneStudent(req, res, next) {
       },
       {
         $pull: {
-          students: studentId,
+          students: student._id,
         },
+      },
+      {
+        new: true,
       }
-    );
+    )
+      .populate('coach students', 'username')
+      .exec();
 
     if (!classroom) {
       const e = new Error('No such classroom');
@@ -168,29 +212,16 @@ async function deleteOneStudent(req, res, next) {
 
 async function insertClassroom(req, res, next) {
   try {
-    const {name, students} = req.body;
-    if (!name || !students) {
-      const err = new Error('Post body must have name and students field');
+    const {name} = req.body;
+    if (!name) {
+      const err = new Error('Post body must have name field');
       err.status = 400;
       throw err;
     }
-    let s = Array.from(JSON.parse(students));
-    // console.log(name, s, Array.isArray(s));
-    if (!s.every(isObjectId)) {
-      const err = new Error('Students must be an array of ObjectId');
-      err.status = 400;
-      throw err;
-    }
-    if (new Set(s).size !== s.length) {
-      const err = new Error('Students array must contain unique Ids');
-      err.status = 400;
-      throw err;
-    }
-
     const classroom = new Classroom({
       name,
       coach: req.session.userId,
-      students: s,
+      students: [],
     });
     await classroom.save();
     return res.status(201).json({
@@ -204,11 +235,11 @@ async function insertClassroom(req, res, next) {
 
 async function updateClassroom(req, res, next) {
   try {
-    const {name, students} = req.body;
+    const {name} = req.body;
     const {classId} = req.params;
     const {userId} = req.session;
-    if (!name || !students) {
-      throw new Error('Post body must have name and students field');
+    if (!name) {
+      throw new Error('Post body must have name field');
     }
     const classroom = await Classroom.findOneAndUpdate(
       {
@@ -217,8 +248,9 @@ async function updateClassroom(req, res, next) {
       },
       {
         name,
-        coach: req.session.userId,
-        students,
+      },
+      {
+        new: true,
       }
     );
 
@@ -236,6 +268,17 @@ async function deleteClassroom(req, res, next) {
     const {classId} = req.params;
     const {userId} = req.session;
 
+    const data = await Classroom.findOneAndRemove({
+      _id: classId,
+      coach: userId,
+    }).exec();
+
+    if (!data) {
+      const e = new Error(`No such classroom: ${classId}`);
+      e.status = 400;
+      throw e;
+    }
+
     await ProblemList.update(
       {
         sharedWith: classId,
@@ -250,10 +293,6 @@ async function deleteClassroom(req, res, next) {
       }
     ).exec();
 
-    await Classroom.findOneAndRemove({
-      _id: classId,
-      coach: userId,
-    }).exec();
     return res.status(200).json({
       status: 200,
     });

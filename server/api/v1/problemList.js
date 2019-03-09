@@ -6,12 +6,12 @@ const router = express.Router();
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
 router.get('/problemlists', getProblemLists);
-router.get('/problemlists/:problemListId', getSingleProblemList);
+router.get('/problemlists/:problemListId', getProblemList);
 router.delete('/problemlists/:problemListId', deleteProblemList);
 
 router.post('/problemlists', insertProblemList);
 router.put('/problemlists/:problemListId/problems', addProblemToList);
-router.delete('/problemlists/:problemListId/problems/:pid', deleteProblemFromList);
+router.delete('/problemlists/:problemListId/problems', deleteProblemFromList);
 
 router.put('/problemlists/:problemListId/shared-with', shareWithClassroom);
 router.delete('/problemlists/:problemListId/shared-with', removeShareWithAClassroom);
@@ -25,7 +25,7 @@ module.exports = {
 async function getProblemLists(req, res, next) {
   try {
     const {userId, username} = req.session;
-    const {createdBy} = req.query;
+    const {createdBy = userId} = req.query;
 
     if (userId !== createdBy) {
       return next({
@@ -65,7 +65,7 @@ async function insertProblemList(req, res, next) {
   }
 }
 
-async function getSingleProblemList(req, res, next) {
+async function getProblemList(req, res, next) {
   try {
     const {problemListId} = req.params;
 
@@ -161,7 +161,8 @@ async function addProblemToList(req, res, next) {
 
 async function deleteProblemFromList(req, res, next) {
   try {
-    const {problemListId, pid} = req.params;
+    const {problemListId} = req.params;
+    const {pid} = req.body;
 
     if (!problemListId || !pid) {
       return next({
@@ -170,16 +171,20 @@ async function deleteProblemFromList(req, res, next) {
       });
     }
 
-    await ProblemList.findOneAndUpdate({
-      _id: problemListId,
-      createdBy: req.session.userId,
-    }, {
-      $pull: {
-        problems: {
-          _id: pid,
+    await ProblemList.findOneAndUpdate(
+      {
+        _id: problemListId,
+        createdBy: req.session.userId,
+      }, {
+        $pull: {
+          problems: {
+            _id: pid,
+          },
         },
-      },
-    });
+      }, {
+        new: true,
+      }
+    );
 
     return res.status(201).json({
       status: 201,

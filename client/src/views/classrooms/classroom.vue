@@ -3,7 +3,7 @@
         <h3>{{classroom.name}}</h3>
         <el-row>
             <el-col :span="8">
-                <el-input v-model="newStudentId" placeholder="Student ID" />
+                <el-input v-model="newStudentUsername" placeholder="Student ID" />
             </el-col>
             <el-col :span="8">
                 <el-button type="primary" @click="addNewStudent">Create</el-button>
@@ -23,7 +23,7 @@ export default {
 
     data() {
         return {
-            newStudentId: '',
+            newStudentUsername: '',
         }
     },
 
@@ -41,7 +41,7 @@ export default {
         async addNewStudent() {
             await this.$store.dispatch(addNewStudentToClassroom, {
                 classroomId: this.classroomId,
-                studentId: this.newStudentId,
+                studentUsername: this.newStudentUsername,
             })
         },
     },
