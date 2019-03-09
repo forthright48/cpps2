@@ -5,7 +5,9 @@ import {
 
 export default {
     state: {
-        classroom: {},
+        classroom: {
+            students: [],
+        },
     },
 
     mutations: {
