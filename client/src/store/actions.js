@@ -10,4 +10,8 @@ module.exports = {
     createNewClassroom: 'createNewClassroom',
     fetchClassroom: 'fetchClassroom',
     addNewStudentToClassroom: 'addNewStudentToClassroom',
+    fetchProblemLists: 'fetchProblemLists',
+    createNewProblemList: 'createNewProblemList',
+    fetchProblemList: 'fetchProblemList',
+    createNewProblem: 'createNewProblem',
 }

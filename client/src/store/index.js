@@ -7,6 +7,8 @@ import gateway from './modules/gateway'
 import profile from './modules/profile'
 import classrooms from './modules/classrooms'
 import classroom from './modules/classroom'
+import problemLists from './modules/problemLists'
+import problemList from './modules/problemList'
 import getters from './getters'
 
 Vue.use(Vuex)
@@ -20,6 +22,8 @@ const store = new Vuex.Store({
         profile,
         classrooms,
         classroom,
+        problemLists,
+        problemList,
     },
     getters,
 })
