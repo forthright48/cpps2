@@ -3,81 +3,59 @@
         <h1>{{problemList.title}}</h1>
         <el-row>
             <el-col :span="14">
-                <el-card class="box-card">
-                    <div slot="header">
-                        <h2>Problems</h2>
-                    </div>
-                    <AddProblem />
-
-                    <el-table :data="getProblems" border>
-                        <el-table-column prop="displayIndex" label="#" width="40" />
-                        <el-table-column label="Title" :sortable="true">
-                            <template slot-scope="scope">
-                                <fa-icon class="vertical-middle" :name="scope.row.titleIcon" />
-                                <template>
-                                    <a class="ml-2 vertical-middle" :href="scope.row.displayLink" target="_blank">
-                                        {{scope.row.displayTitle}}
-                                    </a>
-                                </template>
-                            </template>
-                        </el-table-column>
-
-
-                        <el-table-column label="Admin" align="center" width="140">
-                            <template slot-scope="scope">
-                                <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.$index, scope.row)">
-                                    <fa-icon class="vertical-middle" name="trash" />
-                                </el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </el-card>
+                <Problems :problemListId="problemListId" />
             </el-col>
             <el-col :span="1">
                 &nbsp;
             </el-col>
             <el-col :span="8">
-                <el-card class="box-card">
-                    <div slot="header">
-                        <h2>Shared to these classrooms</h2>
-                    </div>
-                </el-card>
+                <SharedWith :problemListId="problemListId" />
             </el-col>
         </el-row>
     </div>
 </template>
 
 <script>
-import AddProblem from './components/addProblem'
-import { fetchProblemList } from '@/store/actions'
+import Problems from './components/Problems'
+import SharedWith from './components/SharedWith'
+import { fetchClassrooms, addProblemListToClassroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
 
 export default {
     components: {
-        AddProblem,
+        Problems,
+        SharedWith,
     },
 
     props: ['problemListId'],
 
+    data() {
+        return {
+            loading: false,
+            targetClassroom: '',
+        }
+    },
+
     computed: {
         ...mapGetters([
+            'classrooms',
             'problemList',
         ]),
-
-        getProblems() {
-            return this.problemList.problems.map((item, idx) => {
-                return {
-                    displayIndex: idx + 1,
-                    displayTitle: `${item.platform} ${item.problemId} - ${item.title}`,
-                    titleIcon: 'link',
-                    displayLink: item.link,
-                }
-            })
-        },
     },
 
     async created() {
-        await this.$store.dispatch(fetchProblemList, this.problemListId)
+        await this.$store.dispatch(fetchClassrooms)
+    },
+
+    methods: {
+        async addToClassroom() {
+            this.loading = true
+            try {
+                await this.$store.dispatch(addProblemListToClassroom, this.targetClassroom)
+            } finally {
+                this.loading = false
+            }
+        },
     },
 }
 </script>

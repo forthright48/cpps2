@@ -29,7 +29,7 @@
 
 <script>
 
-import { createNewProblem, GetOjInfo } from '@/store/actions'
+import { addProblemToProblemList, GetOjInfo } from '@/store/actions'
 import { getProblemInfo } from '@/api/problemBank'
 import { mapGetters } from 'vuex'
 
@@ -92,7 +92,7 @@ export default {
         async addNewProblem() {
             try {
                 this.loading = true
-                await this.$store.dispatch(createNewProblem, {
+                await this.$store.dispatch(addProblemToProblemList, {
                     platform: this.addItem.platform,
                     title: this.addItem.title,
                     problemId: this.addItem.pid,

@@ -7,7 +7,7 @@
             <AddProblemList />
             <el-table :data="getProblemLists" border>
                 <el-table-column prop="index" label="#" width="40" />
-                <el-table-column label="Problem list name" width="700">
+                <el-table-column label="Problem list name" class="ml-2">
                     <template slot-scope="scope">
                         <router-link :to="`/problemlists/${scope.row._id}`">{{ scope.row.title }}</router-link>
                     </template>

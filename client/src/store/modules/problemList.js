@@ -1,7 +1,4 @@
-import {
-    addProblemToProblemList,
-    getProblemList,
-} from '@/api/problemList'
+import API from '@/api/problemList'
 
 export default {
     state: {
@@ -11,6 +8,10 @@ export default {
     },
 
     mutations: {
+        ADD_PROBLEM(context, problem) {
+            context.problemList.problems.push(problem)
+        },
+
         SET_PROBLEM_LIST(context, problemList) {
             context.problemList = problemList
         },
@@ -18,14 +19,20 @@ export default {
 
     actions: {
         async fetchProblemList(context, problemListId) {
-            const response = await getProblemList(problemListId)
+            const response = await API.fetchProblemList(problemListId)
 
             context.commit('SET_PROBLEM_LIST', response.data)
         },
 
-        async createNewProblem(context, { platform, title, problemId, link }) {
+        async addProblemToProblemList(context, { platform, title, problemId, link }) {
             const problemListId = context.state.problemList._id
-            const response = await addProblemToProblemList(problemListId, platform, title, problemId, link)
+            const response = await API.addProblemToProblemList(problemListId, platform, title, problemId, link)
+            context.commit('ADD_PROBLEM', response.data)
+        },
+
+        async addProblemListToClassroom(context, classroomId) {
+            const problemListId = context.state.problemList._id
+            const response = await API.addProblemListToClassroom(problemListId, classroomId)
         },
     },
 }

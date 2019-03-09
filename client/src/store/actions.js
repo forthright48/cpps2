@@ -13,5 +13,6 @@ module.exports = {
     fetchProblemLists: 'fetchProblemLists',
     createNewProblemList: 'createNewProblemList',
     fetchProblemList: 'fetchProblemList',
-    createNewProblem: 'createNewProblem',
+    addProblemToProblemList: 'addProblemToProblemList',
+    addProblemListToClassroom: 'addProblemListToClassroom',
 }
