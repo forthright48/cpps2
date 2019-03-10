@@ -3,7 +3,7 @@
         <h3>{{classroom.name}}</h3>
         <el-row>
             <el-col :span="8">
-                <el-input v-model="newStudentId" placeholder="Student ID" />
+                <el-input v-model="newStudentUsername" placeholder="Student ID" />
             </el-col>
             <el-col :span="8">
                 <el-button type="primary" @click="addNewStudent">Create</el-button>
@@ -11,6 +11,20 @@
         </el-row>
         <br />
         <br />
+        <el-col :span="8">
+            <el-row>
+                <el-table :data="getStudents">
+                    <el-table-column prop="index" label="#" />
+                    <el-table-column label="Students">
+                        <template slot-scope="scope">
+                            <!-- <router-link :to="`/classrooms/${scope.row._id}`">{{scope.row.name}}</router-link> -->
+                            <span>{{scope.row.username}}</span>
+                        </template>
+                    </el-table-column>
+                    <!-- <el-table-column prop="students" label="Students" /> -->
+                </el-table>
+            </el-row>
+        </el-col>
     </div>
 
 </template>
@@ -23,7 +37,7 @@ export default {
 
     data() {
         return {
-            newStudentId: '',
+            newStudentUsername: '',
         }
     },
 
@@ -31,6 +45,16 @@ export default {
         ...mapGetters([
             'classroom',
         ]),
+
+        getStudents() {
+            return this.classroom.students.map((student, idx) => {
+                return {
+                    index: idx + 1,
+                    _id: student._id,
+                    username: student.username,
+                }
+            })
+        },
     },
 
     async created() {
@@ -41,7 +65,7 @@ export default {
         async addNewStudent() {
             await this.$store.dispatch(addNewStudentToClassroom, {
                 classroomId: this.classroomId,
-                studentId: this.newStudentId,
+                studentUsername: this.newStudentUsername,
             })
         },
     },

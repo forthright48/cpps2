@@ -117,7 +117,7 @@ async function addStudent(req, res, next) {
     let {studentUsername} = req.body;
     const {userId} = req.session;
 
-    const student = await User.find(
+    const student = await User.findOne(
       {
         username: studentUsername,
       }
@@ -167,7 +167,7 @@ async function deleteStudent(req, res, next) {
     const {studentUsername} = req.body;
     const {userId} = req.session;
 
-    const student = await User.find(
+    const student = await User.findOne(
       {
         username: studentUsername,
       }

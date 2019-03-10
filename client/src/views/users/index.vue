@@ -1,5 +1,5 @@
 <template>
-    <app-container v-loading="loading">
+    <div class="app-container" v-loading="loading">
         <el-row type="flex" justify="center">
             <el-col>
                 <UserProfile />
@@ -13,7 +13,7 @@
                 <SolveCount :username="username" />
             </el-col>
         </el-row>
-    </app-container>
+    </div>
 </template>
 
 <script>
