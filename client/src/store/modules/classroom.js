@@ -24,8 +24,8 @@ export default {
         },
 
         async addNewStudentToClassroom(context, { classroomId, studentUsername }) {
-            console.log(`classid = ${classroomId}, studentUsername = ${studentUsername}`)
-            const response = await addStudent(classroomId, studentUsername)
+            await addStudent(classroomId, studentUsername)
+            context.dispatch('fetchClassroom', context.state.classroom._id)
         },
     },
 }

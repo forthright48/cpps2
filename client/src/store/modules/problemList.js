@@ -4,6 +4,7 @@ export default {
     state: {
         problemList: {
             problems: [],
+            sharedWith: [],
         },
     },
 
@@ -32,7 +33,15 @@ export default {
 
         async addProblemListToClassroom(context, classroomId) {
             const problemListId = context.state.problemList._id
-            const response = await API.addProblemListToClassroom(problemListId, classroomId)
+            await API.addProblemListToClassroom(problemListId, classroomId)
+        },
+
+        async removeProblemListFromClassroom(context, { problemListId, classroomId }) {
+            await API.removeProblemListFromClassroom(problemListId, classroomId)
+        },
+
+        async removeProblemFromProblemList(context, { problemListId, problemId }) {
+            await API.removeProblemFromProblemList(problemListId, problemId)
         },
     },
 }

@@ -13,28 +13,24 @@
                 <el-button type="primary" @click="addToClassroom" :loading="submitting">Add</el-button>
             </el-form-item>
         </el-form>
-
-
-            <el-table :data="sharedWith" border>
-                <el-table-column prop="displayIndex" label="#" width="40" />
-                <el-table-column prop="name" label="Classroom Name" class="ml-2" />
-                <el-table-column label="Admin" align="center" width="100">
-                    <template slot-scope="scope">
-                        <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.$index, scope.row)">
-                            <fa-icon class="vertical-middle" name="trash" />
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-
-
-
+        <el-table :data="sharedWith" border>
+            <el-table-column prop="displayIndex" label="#" width="40" />
+            <el-table-column prop="classroom.name" label="Classroom Name" class="ml-2" />
+            <el-table-column label="Admin" align="center" width="100">
+                <template slot-scope="scope">
+                    <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.row.classroom._id)">
+                        <fa-icon class="vertical-middle" name="trash" />
+                    </el-button>
+                </template>
+            </el-table-column>
+        </el-table>
     </el-card>
 </template>
 
 <script>
-import { fetchClassrooms, addProblemListToClassroom } from '@/store/actions'
+import { fetchClassrooms, addProblemListToClassroom, removeProblemListFromClassroom, fetchProblemList } from '@/store/actions'
 import { mapGetters } from 'vuex'
+import { findById } from '@/utils'
 
 export default {
     props: ['problemListId'],
@@ -56,7 +52,7 @@ export default {
             return this.problemList.sharedWith.map((classroomId, idx) => {
                 return {
                     displayIndex: idx + 1,
-                    name: classroomId,
+                    classroom: findById(this.classrooms, classroomId),
                 }
             })
         },
@@ -74,6 +70,15 @@ export default {
             } finally {
                 this.submitting = false
             }
+        },
+
+        async handleDeleteItem(classroomId) {
+            console.log(`classroom id = `, classroomId, `problelistid = `, this.problemListId)
+            await this.$store.dispatch(removeProblemListFromClassroom, {
+                classroomId,
+                problemListId: this.problemListId,
+            })
+            await this.$store.dispatch(fetchProblemList, this.problemListId)
         },
     },
 }

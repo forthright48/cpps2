@@ -1,18 +1,19 @@
 <template>
-    <div class="app-container">
-        <h3>{{classroom.name}}</h3>
-        <el-row>
-            <el-col :span="8">
-                <el-input v-model="newStudentUsername" placeholder="Student ID" />
-            </el-col>
-            <el-col :span="8">
-                <el-button type="primary" @click="addNewStudent">Create</el-button>
-            </el-col>
-        </el-row>
-        <br />
-        <br />
-        <el-col :span="8">
+    <div>
+        <el-card class="box-card">
+            <div slot="header">
+                <h3>Students</h3>
+            </div>
             <el-row>
+                <el-col :span="20">
+                    <el-input v-model="newStudentUsername" placeholder="Student ID" />
+                </el-col>
+                <el-col :span="4">
+                    <el-button type="primary" @click="addNewStudent">Create</el-button>
+                </el-col>
+            </el-row>
+            <br />
+            <br />
                 <el-table :data="getStudents">
                     <el-table-column prop="index" label="#" />
                     <el-table-column label="Students">
@@ -23,14 +24,12 @@
                     </el-table-column>
                     <!-- <el-table-column prop="students" label="Students" /> -->
                 </el-table>
-            </el-row>
-        </el-col>
+        </el-card>
     </div>
-
 </template>
 
 <script>
-import { fetchClassroom, addNewStudentToClassroom } from '@/store/actions'
+import { addNewStudentToClassroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
 export default {
     props: ['classroomId'],
@@ -58,7 +57,6 @@ export default {
     },
 
     async created() {
-        await this.$store.dispatch(fetchClassroom, this.classroomId)
     },
 
     methods: {
