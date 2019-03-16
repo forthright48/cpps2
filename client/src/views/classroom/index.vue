@@ -1,6 +1,9 @@
 <template>
     <div class="app-container">
         <h3>{{classroom.name}}</h3>
+        <el-row>
+            <Leaderboard :classroomId="classroomId" />
+        </el-row>
 
         <el-row>
             <el-col :span="10">
@@ -10,7 +13,7 @@
                 &nbsp;
             </el-col>
             <el-col :span="10">
-                <!-- <SharedWith :problemListId="problemListId" /> -->
+                <ProblemLists :classroomId="classroomId" />
             </el-col>
         </el-row>
     </div>
@@ -19,11 +22,15 @@
 
 <script>
 import Students from './components/Students'
+import ProblemLists from './components/ProblemLists'
+import Leaderboard from './components/Leaderboard'
 import { fetchClassroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
 export default {
     components: {
         Students,
+        ProblemLists,
+        Leaderboard,
     },
 
     props: ['classroomId'],

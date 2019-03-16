@@ -73,12 +73,10 @@ export default {
         },
 
         async handleDeleteItem(classroomId) {
-            console.log(`classroom id = `, classroomId, `problelistid = `, this.problemListId)
             await this.$store.dispatch(removeProblemListFromClassroom, {
                 classroomId,
                 problemListId: this.problemListId,
             })
-            await this.$store.dispatch(fetchProblemList, this.problemListId)
         },
     },
 }

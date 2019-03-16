@@ -34,14 +34,17 @@ export default {
         async addProblemListToClassroom(context, classroomId) {
             const problemListId = context.state.problemList._id
             await API.addProblemListToClassroom(problemListId, classroomId)
+            await context.dispatch('fetchProblemList', problemListId)
         },
 
         async removeProblemListFromClassroom(context, { problemListId, classroomId }) {
             await API.removeProblemListFromClassroom(problemListId, classroomId)
+            await context.dispatch('fetchProblemList', problemListId)
         },
 
         async removeProblemFromProblemList(context, { problemListId, problemId }) {
             await API.removeProblemFromProblemList(problemListId, problemId)
+            await context.dispatch('fetchProblemList', problemListId)
         },
     },
 }

@@ -14,8 +14,8 @@
             </el-row>
             <br />
             <br />
-                <el-table :data="getStudents">
-                    <el-table-column prop="index" label="#" />
+                <el-table :data="getStudents" border>
+                    <el-table-column prop="index" label="#" width="40" />
                     <el-table-column label="Students">
                         <template slot-scope="scope">
                             <!-- <router-link :to="`/classrooms/${scope.row._id}`">{{scope.row.name}}</router-link> -->

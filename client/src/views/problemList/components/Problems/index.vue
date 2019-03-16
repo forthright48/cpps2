@@ -78,7 +78,6 @@ export default {
                 problemListId: this.problemListId,
                 problemId,
             })
-            await this.$store.dispatch(fetchProblemList, this.problemListId)
         },
     },
 }
