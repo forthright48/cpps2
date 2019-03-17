@@ -22,7 +22,7 @@
 
                 <el-table-column label="Admin" align="center" width="140">
                     <template slot-scope="scope">
-                        <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.$index, scope.row)">
+                        <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.row._id)">
                             <fa-icon class="vertical-middle" name="trash" />
                         </el-button>
                     </template>
@@ -34,7 +34,7 @@
 
 <script>
 import AddProblem from './addProblem'
-import { fetchProblemList } from '@/store/actions'
+import { fetchProblemList, removeProblemFromProblemList } from '@/store/actions'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -58,6 +58,7 @@ export default {
         getProblems() {
             return this.problemList.problems.map((item, idx) => {
                 return {
+                    _id: item._id,
                     displayIndex: idx + 1,
                     displayTitle: `${item.platform} ${item.problemId} - ${item.title}`,
                     titleIcon: 'link',
@@ -69,6 +70,15 @@ export default {
 
     async created() {
         await this.$store.dispatch(fetchProblemList, this.problemListId)
+    },
+
+    methods: {
+        async handleDeleteItem(problemId) {
+            await this.$store.dispatch(removeProblemFromProblemList, {
+                problemListId: this.problemListId,
+                problemId,
+            })
+        },
     },
 }
 </script>

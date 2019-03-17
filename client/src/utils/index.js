@@ -65,3 +65,13 @@ export function normalizeVuexArray(array, key) {
     })
     return obj
 }
+
+export function findById(array, id) {
+    for (const obj of array) {
+        if (obj._id === id) {
+            return obj
+        }
+    }
+
+    return {}
+}

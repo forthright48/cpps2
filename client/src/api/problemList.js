@@ -21,9 +21,29 @@ export default {
         })
     },
 
+    removeProblemFromProblemList(problemListId, problemId) {
+        return request({
+            method: 'delete',
+            url: `/api/v1/problemlists/${problemListId}/problems`,
+            data: {
+                pid: problemId,
+            },
+        })
+    },
+
     addProblemListToClassroom(problemListId, classroomId) {
         return request({
             method: 'put',
+            url: `/api/v1/problemlists/${problemListId}/shared-with`,
+            data: {
+                classId: classroomId,
+            },
+        })
+    },
+
+    removeProblemListFromClassroom(problemListId, classroomId) {
+        return request({
+            method: 'delete',
             url: `/api/v1/problemlists/${problemListId}/shared-with`,
             data: {
                 classId: classroomId,

@@ -10,7 +10,7 @@ const profile = {
 
     mutations: {
         SET_PROFILE: (state, profile) => {
-            state.username = profile._id
+            state.username = profile.username
             state.roles = profile.roles
             state.ojStats = normalizeVuexArray(profile.ojStats, 'ojname')
         },

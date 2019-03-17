@@ -14,5 +14,7 @@ module.exports = {
     createNewProblemList: 'createNewProblemList',
     fetchProblemList: 'fetchProblemList',
     addProblemToProblemList: 'addProblemToProblemList',
+    removeProblemFromProblemList: 'removeProblemFromProblemList',
     addProblemListToClassroom: 'addProblemListToClassroom',
+    removeProblemListFromClassroom: 'removeProblemListFromClassroom',
 }

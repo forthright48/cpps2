@@ -13,7 +13,6 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="countProblems" label="Number of problems" width="200"/>
-                <!-- <el-table-column prop="students" label="Students" /> -->
             </el-table>
         </el-card>
     </div>
@@ -46,7 +45,13 @@ export default {
     },
 
     async created() {
-        await this.$store.dispatch(fetchProblemLists)
+        await this.init()
+    },
+
+    methods: {
+        async init() {
+            await this.$store.dispatch(fetchProblemLists)
+        },
     },
 
 }
