@@ -3,12 +3,14 @@ const {isRoot} = require('middlewares/userGroup');
 const Contest = require('../../models/contestModel');
 const Standing = require('../../models/standingModel');
 const Classroom = require('../../models/classroomModel');
+const {isEmpty, pick} = require('lodash');
 
 const router = express.Router();
 
 router.get('/contests', getContests);
 router.post('/contests', isRoot, insertContest);
-router.delete('/contests/:contestId', isRoot, deleteStandings);
+router.put('/contests/:contestId', isRoot, updateContest);
+router.delete('/contests/:contestId', isRoot, deleteContest);
 
 module.exports = {
   addRouter(app) {
@@ -75,24 +77,89 @@ async function insertContest(req, res, next) {
   }
 }
 
+
 // Only allow deleting standings
-async function deleteStandings(req, res, next) {
+async function updateContest(req, res, next) {
+  const {contestId} = req.params;
+  const {userId} = req.session;
+
+  if (req.body.name && isEmpty(req.body.name)) {
+    delete req.body.name;
+  }
+  if (req.body.link && isEmpty(req.body.link)) {
+    delete req.body.link;
+  }
+
+  // Now remove all related standings
+  try {
+    if (!contestId) {
+      const e = new Error(
+        `contestId: ${contestId} query is missing`);
+      e.status = 400;
+      throw e;
+    }
+    const contest = await Contest.findOne({_id: contestId, coach: userId}).exec();
+    if (!contest) {
+      const e = new Error(
+        `contestId: ${contestId} No such contest `);
+      e.status = 400;
+      throw e;
+    }
+    const updated = await Contest.findByIdAndUpdate(
+      contestId,
+      pick(req.body, ['name', 'link']),
+      {
+        new: true,
+      }
+    ).exec();
+    return res.status(200).json({
+      status: 200,
+      data: updated,
+    });
+  } catch (err) {
+    err.message = err.message + ' Error in contest deletion';
+    err.status = 500;
+    err.type = 'contest-error';
+    return next(err);
+  }
+}
+
+
+// Only allow deleting standings
+async function deleteContest(req, res, next) {
   const {contestId} = req.params;
   const {userId} = req.session;
 
   // Now remove all related standings
   try {
-    await Standing.remove({
-      contestId,
-      coach: userId,
-    }).exec();
+    if (!contestId) {
+      const e = new Error(
+        `contestId: ${contestId} query is missing`);
+      e.status = 400;
+      throw e;
+    }
+    const contest = await Contest.findOne({_id: contestId, coach: userId}).exec();
+    if (!contest) {
+      const e = new Error(
+        `contestId: ${contestId} No such contest `);
+      e.status = 400;
+      throw e;
+    }
+    const standings = await Standing.find({contestId}).exec();
+    if (!isEmpty(standings)) {
+      return res.status(400).json({
+        status: 400,
+        message: 'Cannot delete classroom with existing standing.',
+      });
+    }
+    await Contest.findByIdAndDelete(contestId).exec();
     return res.status(200).json({
       status: 200,
     });
   } catch (err) {
-    err.message = err.message + ' Error in standings deletion';
+    err.message = err.message + ' Error in contest deletion';
     err.status = 500;
-    err.type = 'standings-error';
+    err.type = 'contest-error';
     return next(err);
   }
 }

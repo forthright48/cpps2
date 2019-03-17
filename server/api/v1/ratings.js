@@ -1,12 +1,13 @@
 const express = require('express');
 const {isRoot} = require('middlewares/userGroup');
+const Classroom = require('../../models/classroomModel');
 const Rating = require('../../models/ratingModel');
 const Standing = require('../../models/standingModel');
 
 const router = express.Router();
 
-router.post('/ratings', getRatings);
-router.put('/ratings/apply/contest/:contestId', isRoot, applyRating);
+router.get('/ratings', getRatings);
+router.put('/ratings', isRoot, applyRating);
 
 module.exports = {
   addRouter(app) {
@@ -16,7 +17,11 @@ module.exports = {
 
 async function getRatings(req, res, next) {
   try {
-    const {classroomId, userIds} = req.body;
+    const {classroomId} = req.query;
+    const studentList = await Classroom.findById(classroomId)
+      .select('students')
+      .exec();
+    const userIds = studentList.students;
     if (!classroomId || !userIds || !userIds[0]) {
       const e = new Error(
         `classroomId: ${classroomId} or userIds: ${userIds} query is missing`);
@@ -49,10 +54,14 @@ async function getRatings(req, res, next) {
 
 async function applyRating(req, res, next) {
   try {
-    const {contestId} = req.params;
+    const {contestId} = req.body;
+    const {userId} = req.session;
 
     // Get rating changes due to contestId
-    const standing = await Standing.find({contestId}).exec();
+    const standing = await Standing.find({
+      contestId,
+      coach: userId,
+    }).exec();
 
     await Promise.all(standing.map(async (s)=>{
       await Rating.findOneAndUpdate({
