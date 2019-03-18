@@ -23,11 +23,6 @@ app.use(bodyParser.urlencoded({
 config.database.init();
 config.session.init(app);
 
-/* Models*/
-require('./models/userModel.js');
-require('./models/gateModel.js');
-require('./models/problemBankModel.js');
-
 /* Middlewares */
 app.use(morgan('dev'));
 
@@ -41,6 +36,9 @@ require('./api/v1/gateway.js').addRouter(app);
 require('./api/v1/problemBank.js').addRouter(app);
 require('./api/v1/classrooms.js').addRouter(app);
 require('./api/v1/problemList.js').addRouter(app);
+require('./api/v1/contests.js').addRouter(app);
+require('./api/v1/standings.js').addRouter(app);
+require('./api/v1/ratings.js').addRouter(app);
 
 /* Error Handling */
 app.use('/api/', function(err, req, res, next) {

@@ -8,14 +8,13 @@ const ojnames = require('../../models/ojInfo');
 const ojnamesOnly = ojnames.ojnamesOnly;
 
 const logger = require('logger');
-// const queue = require('queue');
-
+const queue = require('queue');
 router.get('/users', getInfo);
 router.post('/users/logout', logout);
 router.get('/users/:username', getUser);
 // router.put('/users/:username/change-password', changePassword);
 
-// router.put('/users/:username/sync-solve-count', syncSolveCount);
+router.put('/users/:username/sync-solve-count', syncSolveCount);
 router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
 router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
 
@@ -79,52 +78,52 @@ async function getUser(req, res, next) {
   }
 }
 
-// async function syncSolveCount(req, res, next) {
-//   const username = req.params.username;
-//   if (!username) {
-//     return res.status(400).json({
-//       status: 400,
-//       message: `Invalid username: ${username}. You cannot sync this user.`,
-//     });
-//   }
-//   logger.info(`syncSolveCount: ${req.session.username} has synced solve count of ${username}`);
-//
-//   try {
-//     const job = queue.create('syncSolveCount', {
-//       title: username,
-//       requestedBy: req.session.username,
-//     }).unique(username).ttl(300000);
-//
-//     job.on('complete', function(result) {
-//       job.remove(function(error, job) {
-//         if (error) {
-//           logger.error(error);
-//         }
-//       });
-//     });
-//
-//     job.on('error', function(err) {
-//       logger.error(err);
-//       job.remove(function(error, job) {
-//         if (error) {
-//           logger.error(error);
-//         }
-//       });
-//     });
-//
-//     job.save(function(err) {
-//       if (err) next(err);
-//       else {
-//         return res.status(202).json({
-//           status: 202,
-//         });
-//       }
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// }
-//
+async function syncSolveCount(req, res, next) {
+  const username = req.params.username;
+  if (!username) {
+    return res.status(400).json({
+      status: 400,
+      message: `Invalid username: ${username}. You cannot sync this user.`,
+    });
+  }
+  logger.info(`syncSolveCount: ${req.session.username} has synced solve count of ${username}`);
+
+  try {
+    const job = queue.create('syncSolveCount', {
+      title: username,
+      requestedBy: req.session.username,
+    }).unique(username).ttl(300000);
+
+    job.on('complete', function(result) {
+      job.remove(function(error, job) {
+        if (error) {
+          logger.error(error);
+        }
+      });
+    });
+
+    job.on('error', function(err) {
+      logger.error(err);
+      job.remove(function(error, job) {
+        if (error) {
+          logger.error(error);
+        }
+      });
+    });
+
+    job.save(function(err) {
+      if (err) next(err);
+      else {
+        return res.status(202).json({
+          status: 202,
+        });
+      }
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function unsetOjUsername(req, res, next) {
   try {
     const username = req.session.username;

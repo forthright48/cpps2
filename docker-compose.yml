@@ -15,12 +15,22 @@ services:
             - mongodb
             - redisdb
 
+    worker:
+        image: coffeemate/nodejs
+        restart: unless-stopped
+        volumes:
+            - .:/var/www/nsups/cpps
+        working_dir: /var/www/nsups/cpps
+        command: node server/node_modules/queue/worker.js
+
     mongodb:
         image: mongo:3.4
         restart: unless-stopped
-        ports: 
+        ports:
             - "27018:27017"
 
     redisdb:
         image: redis
         restart: unless-stopped
+        ports:
+            - "6378:6379"

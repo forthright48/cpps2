@@ -118,8 +118,29 @@ export const constantRouterMap = [
             {
                 path: ':classroomId',
                 name: 'classroom',
-                component: () => import('@/views/classrooms/classroom'),
+                component: () => import('@/views/classroom'),
                 meta: { title: 'Classroom' },
+                props: true,
+                hidden: true,
+            },
+        ],
+    },
+    {
+        path: '/problemlists',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                name: 'problemLists',
+                component: () => import('@/views/problemLists/index'),
+                meta: { title: 'Problem Lists', icon: 'user' },
+                props: true,
+            },
+            {
+                path: ':problemListId',
+                name: 'problemList',
+                component: () => import('@/views/problemList/index'),
+                meta: { title: 'Problem List', icon: 'user' },
                 props: true,
                 hidden: true,
             },

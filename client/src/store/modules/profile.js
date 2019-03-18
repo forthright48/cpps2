@@ -10,7 +10,7 @@ const profile = {
 
     mutations: {
         SET_PROFILE: (state, profile) => {
-            state.username = profile._id
+            state.username = profile.username
             state.roles = profile.roles
             state.ojStats = normalizeVuexArray(profile.ojStats, 'ojname')
         },
@@ -30,7 +30,7 @@ const profile = {
 
         async setOjUsername({ dispatch }, { username, ojname, ojUsername }) {
             try {
-                const response = await setOjUsername(username, ojname, ojUsername)
+                await setOjUsername(username, ojname, ojUsername)
                 dispatch('fetchProfile', username) // We should have read username from Vuex.
             } catch (err) {
                 throw err
@@ -39,7 +39,7 @@ const profile = {
 
         async unsetOjUsername({ dispatch }, { username, ojname, ojUsername }) {
             try {
-                const response = await unsetOjUsername(username, ojname, ojUsername)
+                await unsetOjUsername(username, ojname, ojUsername)
                 dispatch('fetchProfile', username) // We should have read username from Vuex.
             } catch (err) {
                 throw err
