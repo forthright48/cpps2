@@ -32,3 +32,5 @@ services:
     redisdb:
         image: redis
         restart: unless-stopped
+        ports:
+            - "6378:6379"

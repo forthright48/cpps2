@@ -23,11 +23,6 @@ app.use(bodyParser.urlencoded({
 config.database.init();
 config.session.init(app);
 
-/* Models*/
-require('./models/userModel.js');
-require('./models/gateModel.js');
-require('./models/problemBankModel.js');
-
 /* Middlewares */
 app.use(morgan('dev'));
 
