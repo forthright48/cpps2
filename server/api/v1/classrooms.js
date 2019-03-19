@@ -395,10 +395,11 @@ async function getLeaderboard(req, res, next) {
 
     const userData = await User.aggregate([
       {$match: {_id: {$in: studentsIdList}}},
-      {$project: {username: 1, _id: 0, ojStats: 1}},
+      {$project: {username: 1, _id: 1, ojStats: 1}},
       {$unwind: '$ojStats'},
       {
         $project: {
+          _id: 1,
           username: 1,
           ojname: '$ojStats.ojname',
           solveCount: '$ojStats.solveCount',
@@ -406,7 +407,7 @@ async function getLeaderboard(req, res, next) {
       },
       {
         $group: {
-          _id: '$username',
+          _id: {_id: '$_id', username: '$username'},
           totalSolved: {$sum: '$solveCount'},
           ojStats: {
             $push: {
@@ -416,22 +417,26 @@ async function getLeaderboard(req, res, next) {
           },
         },
       },
-      {$project: {_id: 0, username: '$_id', totalSolved: 1, ojStats: 1}},
+      {$project: {_id: 1, totalSolved: 1, ojStats: 1}},
       {$sort: {totalSolved: -1, username: 1}},
     ]);
 
-    const data = [];
-    userData.forEach(function(user) {
-      const d = {};
-      d.username = user.username;
-      d.totalSolved = user.totalSolved;
-      user.ojStats.forEach(function(stat) {
-        let {ojname, solveCount} = stat;
-        if (!solveCount) solveCount = 0;
-        d[ojname] = solveCount;
-      });
-      data.push(d);
-    });
+    const data = await Promise.all(
+      userData.map(function(user) {
+        const result = {};
+        const {_id, totalSolved, ojStats} = user;
+        for (const stat of ojStats) {
+          let {ojname, solveCount} = stat;
+          if (!solveCount) solveCount = 0;
+          result[ojname] = solveCount;
+        }
+        return {
+          ..._id,
+          ...result,
+          totalSolved,
+        };
+      })
+    );
 
     return res.status(200).json({
       status: 200,

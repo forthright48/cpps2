@@ -22,7 +22,7 @@ async function getRatings(req, res, next) {
       .select('students')
       .exec();
     const userIds = studentList.students;
-    if (!classroomId || !userIds || !userIds[0]) {
+    if (!classroomId || !userIds || !Array.isArray(userIds)) {
       const e = new Error(
         `classroomId: ${classroomId} or userIds: ${userIds} query is missing`);
       e.status = 400;
@@ -30,10 +30,12 @@ async function getRatings(req, res, next) {
     }
 
     const rating = await Rating.find({classroomId, userId: userIds}).exec();
+    const foundIds = await Promise.all(
+      rating.map((a)=>JSON.stringify(a.userId))
+    );
 
-    const missingIds = userIds.filter((id)=>{
-      const found = rating.some((x)=> x.userId.toString() === id);
-      return !found;
+    const missingIds = userIds.filter((a)=>{
+      return !foundIds.includes(JSON.stringify(a));
     });
 
     missingIds.forEach((id)=>{
