@@ -12,7 +12,7 @@ const queue = require('queue');
 router.get('/users', getInfo);
 router.post('/users/logout', logout);
 router.get('/users/:username', getUser);
-// router.put('/users/:username/change-password', changePassword);
+router.put('/users/:username/change-password', changePassword);
 
 router.put('/users/:username/sync-solve-count', syncSolveCount);
 router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
@@ -246,49 +246,49 @@ async function setOjUsername(req, res, next) {
     next(err);
   }
 }
-//
-// async function changePassword(req, res, next) {
-//   try {
-//     const {currentPassword, newPassword, repeatPassword} = req.body;
-//
-//     if (newPassword !== repeatPassword) {
-//       return next({
-//         status: 400,
-//         message: 'New password does not match with retyped password',
-//       });
-//     }
-//
-//     const username = req.session.username;
-//
-//     if (username !== req.params.username) {
-//       return next({
-//         status: 400,
-//         message: `You ${username} cannot change password of ${req.params.username}`,
-//       });
-//     }
-//
-//     const user = await User.findOne({username}).exec();
-//     if (!user) {
-//       return next({
-//         status: 400,
-//         message: `No user found with username ${username}`,
-//       });
-//     }
-//
-//     if (!user.comparePassword(currentPassword)) {
-//       return next({
-//         status: 400,
-//         message: `Current Password is Wrong`,
-//       });
-//     }
-//
-//     user.password = User.createHash(newPassword);
-//     await user.save();
-//
-//     return res.status(201).json({
-//       status: 201,
-//     });
-//   } catch (err) {
-//     return next(err);
-//   }
-// }
+
+async function changePassword(req, res, next) {
+  try {
+    const {currentPassword, newPassword, repeatPassword} = req.body;
+
+    if (newPassword !== repeatPassword) {
+      return next({
+        status: 400,
+        message: 'New password does not match with retyped password',
+      });
+    }
+
+    const username = req.session.username;
+
+    if (username !== req.params.username) {
+      return next({
+        status: 400,
+        message: `You ${username} cannot change password of ${req.params.username}`,
+      });
+    }
+
+    const user = await User.findOne({username}).exec();
+    if (!user) {
+      return next({
+        status: 400,
+        message: `No user found with username ${username}`,
+      });
+    }
+
+    if (!user.comparePassword(currentPassword)) {
+      return next({
+        status: 400,
+        message: `Current Password is Wrong`,
+      });
+    }
+
+    user.password = await User.createHash(newPassword);
+    await user.save();
+
+    return res.status(201).json({
+      status: 201,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
