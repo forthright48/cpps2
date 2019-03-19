@@ -37,19 +37,21 @@ async function getStandings(req, res, next) {
 }
 
 async function insertStandings(req, res, next) {
-  const {classroomId, standings, contestId} = req.body;
+  const {classroomId, standings: _, contestId} = req.body;
   const {userId} = req.session;
   try {
     const contest = await Contest.findOne({_id: contestId}).exec();
     if (!contest) {
       const e = new Error(
-        `contestId: ${contestId} No such contest `);
+        `contestId: ${contestId} No such contest `
+      );
       e.status = 400;
       throw e;
     }
     if (contest.classroomId.toString() !== classroomId ) {
       const e = new Error(
-        `classroomId: ${classroomId} No such classroom `);
+        `classroomId: ${classroomId} No such classroom `
+      );
       e.status = 400;
       throw e;
     }
@@ -59,6 +61,8 @@ async function insertStandings(req, res, next) {
       e.status = 400;
       throw e;
     }
+
+    const standings = JSON.parse(_);
 
     const data = await Promise.all(standings.map(async (s)=>{
       const standing = new Standing({
@@ -123,25 +127,25 @@ async function deleteStandings(req, res, next) {
 }
 
 function runScript() {
-  const {spawn} = require("child_process");
-  return new Promise(function(resolve,reject) {
+  const {spawn} = require('child_process');
+  return new Promise(function(resolve, reject) {
     const pythonProcess = spawn(
-      "python", 
-      ["./server/api/public/script.py"],
+      'python',
+      ['./server/api/public/script.py'],
     );
-    pythonProcess.stdout.on("data", data => {
+    pythonProcess.stdout.on('data', (data) => {
       console.log(data.toString());
     });
-    pythonProcess.on("exit", code => {
+    pythonProcess.on('exit', (code) => {
       console.log(`Child exited with code ${code}`);
       resolve();
     });
   });
 }
 
-async function getRawRanklist (req, res, next) {
+async function getRawRanklist(req, res, next) {
   try {
-    await childProcess();
+    await runScript();
     return res.status(200).json({
       stauts: 200,
     });

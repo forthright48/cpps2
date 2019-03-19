@@ -6,7 +6,6 @@ if (result.error) {
 }
 
 const express = require('express');
-const bodyParser = require('body-parser');
 const config = require('config');
 const logger = require('logger');
 const morgan = require('morgan');
@@ -15,8 +14,8 @@ const app = express();
 const server = require('http').createServer(app);
 app.set('port', config.port);
 
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({
+app.use(express.json()); // support json encoded bodies
+app.use(express.urlencoded({
   extended: true,
 })); // support encoded bodies
 
