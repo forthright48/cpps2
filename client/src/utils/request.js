@@ -33,7 +33,7 @@ service.interceptors.response.use(
   * status为非20000是抛错 可结合自己业务进行修改
   */
         const res = response.data
-        if (res.status !== 200 && res.status !== 201) {
+        if (res.status !== 200 && res.status !== 201 && res.status !== 202) {
             Message({
                 message: res.message,
                 type: 'error',

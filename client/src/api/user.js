@@ -1,22 +1,31 @@
 import request from '@/utils/request'
 
-export function getUser(username) {
-    return request({
-        url: `/api/v1/users/${username}`,
-        method: 'get',
-    })
-}
+export default {
+    getUser(username) {
+        return request({
+            url: `/api/v1/users/${username}`,
+            method: 'get',
+        })
+    },
 
-export function setOjUsername(username, ojname, ojUsername) {
-    return request({
-        url: `/api/v1/users/${username}/set-oj-username/${ojname}/${ojUsername}`,
-        method: 'put',
-    })
-}
+    syncSolveCount(username) {
+        return request({
+            url: `/api/v1/users/${username}/sync-solve-count`,
+            method: 'put',
+        })
+    },
 
-export function unsetOjUsername(username, ojname, ojUsername) {
-    return request({
-        url: `/api/v1/users/${username}/unset-oj-username/${ojname}`,
-        method: 'put',
-    })
+    setOjUsername(username, ojname, ojUsername) {
+        return request({
+            url: `/api/v1/users/${username}/set-oj-username/${ojname}/${ojUsername}`,
+            method: 'put',
+        })
+    },
+
+    unsetOjUsername(username, ojname, ojUsername) {
+        return request({
+            url: `/api/v1/users/${username}/unset-oj-username/${ojname}`,
+            method: 'put',
+        })
+    },
 }

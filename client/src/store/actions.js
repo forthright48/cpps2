@@ -6,6 +6,7 @@ module.exports = {
     fetchProfile: 'fetchProfile',
     setOjUsername: 'setOjUsername',
     unsetOjUsername: 'unsetOjUsername',
+    syncSolveCount: 'syncSolveCount',
     fetchClassrooms: 'Coach/fetchClassrooms',
     createNewClassroom: 'createNewClassroom',
     fetchClassroom: 'fetchClassroom',
