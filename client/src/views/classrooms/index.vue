@@ -1,26 +1,41 @@
 <template>
     <div class="app-container">
-        <h3>Classrooms</h3>
+
         <el-row>
-            <el-col :span="8">
-                <el-input v-model="newClassroomName" placeholder="Classroom name" />
+            <el-col :span="12">
+                <el-card class="box-card">
+                    <div slot="header">
+                        <h3>My Classrooms</h3>
+                    </div>
+                    <br />
+                    <br />
+                    <el-row>
+                        <el-table :data="getClassrooms">
+                            <el-table-column prop="index" label="#" />
+                            <el-table-column label="Classroom name">
+                                <template slot-scope="scope">
+                                    <router-link :to="`/classrooms/${scope.row._id}`">{{scope.row.name}}</router-link>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="students" label="Students" />
+                        </el-table>
+                    </el-row>
+                    <br />
+                    <el-row>
+                        <el-col :span="19">
+                            <el-input v-model="newClassroomName" placeholder="Classroom name" />
+                        </el-col>
+                        <el-col :span="1"> &nbsp; </el-col>
+                        <el-col :span="4">
+                            <el-button type="primary" @click="createClassroom">Create</el-button>
+                        </el-col>
+                    </el-row>
+                </el-card>
             </el-col>
-            <el-col :span="8">
-                <el-button type="primary" @click="createClassroom">Create</el-button>
+
+            <el-col :span="12">
+
             </el-col>
-        </el-row>
-        <br />
-        <br />
-        <el-row>
-            <el-table :data="getClassrooms">
-                <el-table-column prop="index" label="#" />
-                <el-table-column label="Classroom name">
-                    <template slot-scope="scope">
-                        <router-link :to="`/classrooms/${scope.row._id}`">{{scope.row.name}}</router-link>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="students" label="Students" />
-            </el-table>
         </el-row>
     </div>
 
@@ -38,11 +53,11 @@ export default {
 
     computed: {
         ...mapGetters([
-            'classrooms',
+            'coach_classrooms',
         ]),
 
         getClassrooms() {
-            return this.classrooms.map((classroom, idx) => {
+            return this.coach_classrooms.map((classroom, idx) => {
                 return {
                     _id: classroom._id,
                     index: idx + 1,
@@ -54,13 +69,13 @@ export default {
     },
 
     async created() {
-        await this.$store.dispatch(fetchClassrooms)
-        console.log(this.classrooms)
+        await this.$store.dispatch('Coach/fetchClassrooms')
     },
 
     methods: {
         async createClassroom() {
-            await this.$store.dispatch(createNewClassroom, this.newClassroomName)
+            await this.$store.dispatch('Coach/createNewClassroom', this.newClassroomName)
+            this.newClassroomName = ''
         },
     },
 }

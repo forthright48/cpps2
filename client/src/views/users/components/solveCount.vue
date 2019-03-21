@@ -1,6 +1,9 @@
 <template>
     <div>
-        <h1 class="text-center">Solve Count</h1>
+        <center>
+            <h1 style="display:inline-block;">Solve Count</h1>
+            <el-button class="ml-2" type="primary" @click="syncSolveCount">Sync</el-button>
+        </center>
         <el-table :data="getSolveCount">
             <el-table-column prop="index" label="#" />
             <el-table-column prop="ojDisplayName" label="OJ" />
@@ -19,14 +22,20 @@
                     </template>
                 </template>
             </el-table-column>
+            <el-table-column label="Total Solve">
+                <template scope="scope">
+                    {{scope.row.solveCount}}
+                </template>
+            </el-table-column>
         </el-table>
     </div>
 </template>
 
 
 <script>
+import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
-import { GetOjInfo, setOjUsername, unsetOjUsername } from '@/store/actions'
+import { GetOjInfo, setOjUsername, unsetOjUsername, syncSolveCount } from '@/store/actions'
 
 export default {
     props: ['username'],
@@ -42,6 +51,7 @@ export default {
                     ojname,
                     ojDisplayName: this.ojInfo[ojname].displayName,
                     userID: this.profile.ojStats[ojname],
+                    solveCount: this.profile.ojStats[ojname].solveCount,
                 }
             })
         },
@@ -94,6 +104,16 @@ export default {
                     message: 'Input canceled',
                 })
             }
+        },
+
+        async syncSolveCount() {
+            await this.$store.dispatch(syncSolveCount, this.profile.username)
+            Message({
+                type: 'success',
+                message: 'Syncing in process',
+                duration: 10 * 1000,
+                showClose: true,
+            })
         },
     },
 }
