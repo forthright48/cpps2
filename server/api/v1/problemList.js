@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const {isEmpty, pick} = require('lodash');
 const ProblemList = require('../../models/problemListModel');
 
 const router = express.Router();
@@ -7,6 +8,7 @@ const isObjectId = mongoose.Types.ObjectId.isValid;
 
 router.get('/problemlists', getProblemLists);
 router.get('/problemlists/:problemListId', getProblemList);
+router.put('/problemlists/:problemListId', updateProblemList);
 router.delete('/problemlists/:problemListId', deleteProblemList);
 
 router.post('/problemlists', insertProblemList);
@@ -14,7 +16,10 @@ router.put('/problemlists/:problemListId/problems', addProblemToList);
 router.delete('/problemlists/:problemListId/problems', deleteProblemFromList);
 
 router.put('/problemlists/:problemListId/shared-with', shareWithClassroom);
-router.delete('/problemlists/:problemListId/shared-with', removeShareWithAClassroom);
+router.delete(
+  '/problemlists/:problemListId/shared-with',
+  removeShareWithAClassroom
+);
 
 module.exports = {
   addRouter(app) {
@@ -65,6 +70,34 @@ async function insertProblemList(req, res, next) {
   }
 }
 
+async function updateProblemList(req, res, next) {
+  try {
+    const {problemListId} = req.params;
+    const {userId} = req.session;
+
+    if (req.body.title && isEmpty(req.body.title)) {
+      delete req.body.title;
+    }
+
+    const newProblemList = await ProblemList.findOneAndUpdate({
+        _id: problemListId,
+        createdBy: userId,
+      }, pick(req.body, ['title']), {
+        new: true,
+      },
+    ).exec();
+
+    console.log(newProblemList);
+
+    return res.status(200).json({
+      status: 200,
+      data: newProblemList,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
 async function getProblemList(req, res, next) {
   try {
     const {problemListId} = req.params;
@@ -76,7 +109,9 @@ async function getProblemList(req, res, next) {
       });
     }
 
-    const problemList = await ProblemList.findOne({_id: problemListId}).exec();
+    const problemList = await ProblemList.findOne({
+      _id: problemListId,
+    }).exec();
 
     if (problemList.createdBy.toString() !== req.session.userId) {
       return next({
@@ -127,21 +162,25 @@ async function addProblemToList(req, res, next) {
       });
     }
 
-    const updatedList = await ProblemList.findOneAndUpdate({
-      _id: problemListId,
-      createdBy: req.session.userId,
-    }, {
-      $push: {
-        problems: {
-          title,
-          platform,
-          problemId,
-          link,
+    const updatedList = await ProblemList.findOneAndUpdate(
+      {
+        _id: problemListId,
+        createdBy: req.session.userId,
+      },
+      {
+        $push: {
+          problems: {
+            title,
+            platform,
+            problemId,
+            link,
+          },
         },
       },
-    }, {
-      new: true,
-    });
+      {
+        new: true,
+      }
+    );
 
     if (!updatedList) {
       return next({
@@ -152,7 +191,7 @@ async function addProblemToList(req, res, next) {
 
     return res.status(201).json({
       status: 201,
-      data: updatedList.problems[updatedList.problems.length-1],
+      data: updatedList.problems[updatedList.problems.length - 1],
     });
   } catch (err) {
     return next(err);
@@ -175,13 +214,15 @@ async function deleteProblemFromList(req, res, next) {
       {
         _id: problemListId,
         createdBy: req.session.userId,
-      }, {
+      },
+      {
         $pull: {
           problems: {
             _id: pid,
           },
         },
-      }, {
+      },
+      {
         new: true,
       }
     );
@@ -214,14 +255,17 @@ async function shareWithClassroom(req, res, next) {
       });
     }
 
-    await ProblemList.findOneAndUpdate({
-      _id: problemListId,
-      createdBy: userId,
-    }, {
-      $addToSet: {
-        sharedWith: classId,
+    await ProblemList.findOneAndUpdate(
+      {
+        _id: problemListId,
+        createdBy: userId,
       },
-    });
+      {
+        $addToSet: {
+          sharedWith: classId,
+        },
+      }
+    );
 
     return res.status(201).json({
       status: 201,
@@ -251,14 +295,17 @@ async function removeShareWithAClassroom(req, res, next) {
       });
     }
 
-    await ProblemList.findOneAndUpdate({
-      _id: problemListId,
-      createdBy: userId,
-    }, {
-      $pull: {
-        sharedWith: classId,
+    await ProblemList.findOneAndUpdate(
+      {
+        _id: problemListId,
+        createdBy: userId,
       },
-    });
+      {
+        $pull: {
+          sharedWith: classId,
+        },
+      }
+    );
 
     return res.status(200).json({
       status: 200,

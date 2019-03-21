@@ -6,7 +6,6 @@ if (result.error) {
 }
 
 const express = require('express');
-const bodyParser = require('body-parser');
 const config = require('config');
 const logger = require('logger');
 const morgan = require('morgan');
@@ -15,18 +14,13 @@ const app = express();
 const server = require('http').createServer(app);
 app.set('port', config.port);
 
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({
+app.use(express.json()); // support json encoded bodies
+app.use(express.urlencoded({
   extended: true,
 })); // support encoded bodies
 
 config.database.init();
 config.session.init(app);
-
-/* Models*/
-require('./models/userModel.js');
-require('./models/gateModel.js');
-require('./models/problemBankModel.js');
 
 /* Middlewares */
 app.use(morgan('dev'));
@@ -41,6 +35,9 @@ require('./api/v1/gateway.js').addRouter(app);
 require('./api/v1/problemBank.js').addRouter(app);
 require('./api/v1/classrooms.js').addRouter(app);
 require('./api/v1/problemList.js').addRouter(app);
+require('./api/v1/contests.js').addRouter(app);
+require('./api/v1/standings.js').addRouter(app);
+require('./api/v1/ratings.js').addRouter(app);
 
 /* Error Handling */
 app.use('/api/', function(err, req, res, next) {
