@@ -1,4 +1,4 @@
-import { getUser, setOjUsername, unsetOjUsername } from '@/api/user'
+import Api from '@/api/user'
 import { normalizeVuexArray } from '@/utils'
 
 const profile = {
@@ -19,7 +19,7 @@ const profile = {
     actions: {
         async fetchProfile({ commit }, username) {
             try {
-                const response = await getUser(username)
+                const response = await Api.getUser(username)
                 const data = response.data
                 commit('SET_PROFILE', data)
                 return data
@@ -28,9 +28,13 @@ const profile = {
             }
         },
 
+        async syncSolveCount(context, username) {
+            await Api.syncSolveCount(username)
+        },
+
         async setOjUsername({ dispatch }, { username, ojname, ojUsername }) {
             try {
-                await setOjUsername(username, ojname, ojUsername)
+                await Api.setOjUsername(username, ojname, ojUsername)
                 dispatch('fetchProfile', username) // We should have read username from Vuex.
             } catch (err) {
                 throw err
@@ -39,7 +43,7 @@ const profile = {
 
         async unsetOjUsername({ dispatch }, { username, ojname, ojUsername }) {
             try {
-                await unsetOjUsername(username, ojname, ojUsername)
+                await Api.unsetOjUsername(username, ojname, ojUsername)
                 dispatch('fetchProfile', username) // We should have read username from Vuex.
             } catch (err) {
                 throw err

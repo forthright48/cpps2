@@ -4,9 +4,6 @@
             <el-col>
                 <UserProfile />
             </el-col>
-            <el-col>
-                <h1 class="text-center">Classroom</h1>
-            </el-col>
         </el-row>
         <el-row>
             <el-col>
