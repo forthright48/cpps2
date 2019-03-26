@@ -2,12 +2,12 @@
     <div class="app-container" v-loading="loading">
         <el-row type="flex" justify="center">
             <el-col>
-                <UserProfile />
+                <UserProfile v-if="!loading" />
             </el-col>
         </el-row>
         <el-row>
             <el-col>
-                <SolveCount :username="username" />
+                <SolveCount v-if="!loading" :username="username" />
             </el-col>
         </el-row>
     </div>
