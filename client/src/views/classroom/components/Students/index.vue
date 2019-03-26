@@ -18,11 +18,10 @@
                     <el-table-column prop="index" label="#" width="40" />
                     <el-table-column label="Students">
                         <template slot-scope="scope">
-                            <!-- <router-link :to="`/classrooms/${scope.row._id}`">{{scope.row.name}}</router-link> -->
                             <span>{{scope.row.username}}</span>
                         </template>
                     </el-table-column>
-                    <!-- <el-table-column prop="students" label="Students" /> -->
+                    <el-table-column prop="totalSolved" :sortable="true" label="Total Solved" width="130" />
                 </el-table>
         </el-card>
     </div>
@@ -46,13 +45,18 @@ export default {
         ]),
 
         getStudents() {
-            return this.classroom.students.map((student, idx) => {
-                return {
-                    index: idx + 1,
-                    _id: student._id,
-                    username: student.username,
+            const data = []
+            for (const userId in this.classroom.students) {
+                const student = {
+                    index: data.length + 1,
+                    _id: this.classroom.students[userId]._id,
+                    username: this.classroom.students[userId].username,
+                    totalSolved: this.classroom.students[userId].totalSolved,
                 }
-            })
+                data.push(student)
+            }
+
+            return data
         },
     },
 
