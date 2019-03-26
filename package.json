@@ -29,18 +29,10 @@
     "nodemon": "^1.18.9",
     "path": "^0.12.7",
     "validator": "^10.3.0",
-    "winston": "^3.0.0-rc6",
-    "cheerio": "^1.0.0-rc.2",
-    "puppeteer": "^0.13.0",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "winston": "^3.0.0-rc6"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
-    "eslint-config-google": "^0.9.1",
-    "eslint-plugin-import": "^2.3.0",
-    "eslint-plugin-node": "^5.0.0",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1"
+    "eslint-config-google": "^0.9.1"
   }
 }
