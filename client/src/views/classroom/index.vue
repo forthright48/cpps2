@@ -13,22 +13,31 @@
                 &nbsp;
             </el-col>
             <el-col :span="10">
-                <ProblemLists :classroomId="classroomId" />
+                <Contests :classroomId="classroomId" />
             </el-col>
         </el-row>
+        <br />
+        <br />
+        <el-row>
+            <ProblemLists :classroomId="classroomId" />
+        </el-row>
+
     </div>
 
 </template>
 
 <script>
 import Students from './components/Students'
+import Contests from './components/Contests'
 import ProblemLists from './components/ProblemLists'
 // import Leaderboard from './components/Leaderboard'
 import { fetchClassroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
+
 export default {
     components: {
         Students,
+        Contests,
         ProblemLists,
         // Leaderboard,
     },

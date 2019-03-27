@@ -14,15 +14,15 @@
             </el-row>
             <br />
             <br />
-                <el-table :data="getStudents" border>
-                    <el-table-column prop="index" label="#" width="40" />
-                    <el-table-column label="Students">
-                        <template slot-scope="scope">
-                            <span>{{scope.row.username}}</span>
-                        </template>
-                    </el-table-column>
-                    <el-table-column prop="totalSolved" :sortable="true" label="Total Solved" width="130" />
-                </el-table>
+            <el-table :data="getStudents" border>
+                <el-table-column prop="index" label="#" width="40" />
+                <el-table-column label="Students">
+                    <template slot-scope="scope">
+                        <span>{{scope.row.username}}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="totalSolved" :sortable="true" label="Total Solved" width="130" />
+            </el-table>
         </el-card>
     </div>
 </template>

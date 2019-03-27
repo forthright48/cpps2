@@ -43,10 +43,10 @@ export default {
     },
 
     computed: {
-        ...mapGetters([
-            'classrooms',
-            'problemList',
-        ]),
+        ...mapGetters({
+            classrooms: 'coach_classrooms',
+            problemList: 'problemList',
+        }),
 
         sharedWith() {
             return this.problemList.sharedWith.map((classroomId, idx) => {

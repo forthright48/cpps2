@@ -10,6 +10,7 @@ module.exports = {
     fetchClassrooms: 'Coach/fetchClassrooms',
     createNewClassroom: 'createNewClassroom',
     fetchClassroom: 'fetchClassroom',
+    fetchContests: 'fetchContests',
     addNewStudentToClassroom: 'addNewStudentToClassroom',
     fetchProblemLists: 'fetchProblemLists',
     createNewProblemList: 'createNewProblemList',
@@ -18,4 +19,5 @@ module.exports = {
     removeProblemFromProblemList: 'removeProblemFromProblemList',
     addProblemListToClassroom: 'addProblemListToClassroom',
     removeProblemListFromClassroom: 'removeProblemListFromClassroom',
+    addNewContestToClassroom: 'addNewContestToClassroom',
 }
