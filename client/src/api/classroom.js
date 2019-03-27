@@ -42,4 +42,14 @@ export default {
             },
         })
     },
+
+    removeStudent(classroomId, studentUsername) {
+        return request({
+            url: `/api/v1/classrooms/${classroomId}/students`,
+            method: 'delete',
+            data: {
+                studentUsername,
+            },
+        })
+    },
 }

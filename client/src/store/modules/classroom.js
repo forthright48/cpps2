@@ -49,6 +49,11 @@ export default {
             context.dispatch('fetchClassroom', context.state.classroom._id)
         },
 
+        async removeStudentFromClasssroom(context, { classroomId, studentUsername }) {
+            await Api.removeStudent(classroomId, studentUsername)
+            context.dispatch('fetchClassroom', context.state.classroom._id)
+        },
+
         async addNewContestToClassroom(context, { classroomId, name, link }) {
             await Api.addNewContestToClassroom(classroomId, name, link)
         },

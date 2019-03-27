@@ -12,6 +12,7 @@ module.exports = {
     fetchClassroom: 'fetchClassroom',
     fetchContests: 'fetchContests',
     addNewStudentToClassroom: 'addNewStudentToClassroom',
+    removeStudentFromClasssroom: 'removeStudentFromClasssroom',
     fetchProblemLists: 'fetchProblemLists',
     createNewProblemList: 'createNewProblemList',
     fetchProblemList: 'fetchProblemList',

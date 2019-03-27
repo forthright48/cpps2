@@ -23,13 +23,20 @@
                 </el-table-column>
                 <el-table-column prop="totalSolved" :sortable="true" label="Total Solved" width="130" />
                 <el-table-column prop="rating" :sortable="true" label="Rating" width="100" />
+                <el-table-column label="Actions" width="80">
+                    <template slot-scope="scope">
+                        <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.row.username)">
+                            <fa-icon class="vertical-middle" name="trash" />
+                    </el-button>
+                    </template>
+                </el-table-column>
             </el-table>
         </el-card>
     </div>
 </template>
 
 <script>
-import { addNewStudentToClassroom } from '@/store/actions'
+import { addNewStudentToClassroom, removeStudentFromClasssroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
 export default {
     props: ['classroomId'],
@@ -70,6 +77,13 @@ export default {
             await this.$store.dispatch(addNewStudentToClassroom, {
                 classroomId: this.classroomId,
                 studentUsername: this.newStudentUsername,
+            })
+        },
+
+        async handleDeleteItem(studentUsername) {
+            await this.$store.dispatch(removeStudentFromClasssroom, {
+                classroomId: this.classroomId,
+                studentUsername,
             })
         },
     },
