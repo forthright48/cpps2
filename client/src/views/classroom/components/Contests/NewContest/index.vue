@@ -59,6 +59,11 @@ export default {
                 name: this.form.name,
                 link: this.form.link,
             })
+            this.$message({
+                message: 'Contest created',
+                type: 'success',
+            })
+            this.$emit('done')
         },
 
         async createStandings() {

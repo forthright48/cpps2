@@ -22,6 +22,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="totalSolved" :sortable="true" label="Total Solved" width="130" />
+                <el-table-column prop="rating" :sortable="true" label="Rating" width="100" />
             </el-table>
         </el-card>
     </div>
@@ -52,6 +53,7 @@ export default {
                     _id: this.classroom.students[userId]._id,
                     username: this.classroom.students[userId].username,
                     totalSolved: this.classroom.students[userId].totalSolved,
+                    rating: 1500,
                 }
                 data.push(student)
             }
