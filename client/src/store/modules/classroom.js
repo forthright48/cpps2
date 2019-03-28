@@ -26,6 +26,7 @@ export default {
             classroom.students = normalizeVuexArray(classroom.students, '_id')
             for (const userId in classroom.students) {
                 classroom.students[userId].totalSolved = 0
+                classroom.students[userId].currentRating = 1500
             }
             context.commit('SET_CLASSROOM', classroom)
 
@@ -33,6 +34,14 @@ export default {
             const leaderboard = response.data
             for (const student of leaderboard) {
                 classroom.students[student._id].totalSolved = student.totalSolved
+            }
+            context.commit('SET_CLASSROOM', classroom)
+
+            response = await Api.getRatings(classroomId)
+            const ratings = response.data
+            for (const student of ratings) {
+                if (!(student.userId in classroom.students)) continue
+                classroom.students[student.userId].currentRating = student.currentRating === -1 ? 1500 : student.currentRating
             }
             context.commit('SET_CLASSROOM', classroom)
         },
@@ -55,7 +64,15 @@ export default {
         },
 
         async addNewContestToClassroom(context, { classroomId, name, link }) {
-            await Api.addNewContestToClassroom(classroomId, name, link)
+            return await Api.addNewContestToClassroom(classroomId, name, link)
+        },
+
+        async addNewStandingsToContest(context, { classroomId, contestId, standings }) {
+            return await Api.addNewStandingsToContest(classroomId, contestId, standings)
+        },
+
+        async updateRatingsByContest(context, { contestId }) {
+            return await Api.updateRatingsByContest(contestId)
         },
     },
 }

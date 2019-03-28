@@ -21,4 +21,6 @@ module.exports = {
     addProblemListToClassroom: 'addProblemListToClassroom',
     removeProblemListFromClassroom: 'removeProblemListFromClassroom',
     addNewContestToClassroom: 'addNewContestToClassroom',
+    addNewStandingsToContest: 'addNewStandingsToContest',
+    updateRatingsByContest: 'updateRatingsByContest',
 }

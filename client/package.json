@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "axios": "0.17.1",
+    "codeforces-rating-system": "^1.4.0",
     "element-ui": "2.3.4",
     "js-cookie": "2.2.0",
     "lodash": "^4.17.11",

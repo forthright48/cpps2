@@ -1,6 +1,12 @@
 import request from '@/utils/request'
 
 export default {
+    getRatings(classroomId) {
+        return request({
+            url: `/api/v1/ratings?classroomId=${classroomId}`,
+        })
+    },
+
     getClassroom(classroomId) {
         return request({
             url: `/api/v1/classrooms/${classroomId}`,
@@ -29,6 +35,28 @@ export default {
                 classroomId,
                 name,
                 link,
+            },
+        })
+    },
+
+    addNewStandingsToContest(classroomId, contestId, standings) {
+        return request({
+            method: 'post',
+            url: `/api/v1/standings`,
+            data: {
+                classroomId,
+                contestId,
+                standings,
+            },
+        })
+    },
+
+    updateRatingsByContest(contestId) {
+        return request({
+            method: 'put',
+            url: `/api/v1/ratings`,
+            data: {
+                contestId,
             },
         })
     },

@@ -8,7 +8,7 @@
                 <el-input v-model="form.link"></el-input>
             </el-form-item>
             <el-form-item label="Rank">
-                <RankList :initialRank="classroom.students" @change="handleRankChange" />
+                <RankList :initialRatings="classroom.students" @change="handleRankChange" />
             </el-form-item>
             <br />
             <br />
@@ -22,9 +22,11 @@
 
 <script>
 
-import { addNewContestToClassroom } from '@/store/actions'
+import { addNewContestToClassroom, addNewStandingsToContest, updateRatingsByContest, fetchClassroom } from '@/store/actions'
+import Api from '@/api/classroom'
 import RankList from './RankList'
 import { mapGetters } from 'vuex'
+import { normalizeVuexArray } from '@/utils'
 
 export default {
     components: {
@@ -41,7 +43,6 @@ export default {
                 name: '',
                 link: '',
             },
-
             ranks: [],
         }
     },
@@ -52,13 +53,29 @@ export default {
         ]),
     },
 
+    mounted() {
+    },
+
     methods: {
         async createConstest() {
-            await this.$store.dispatch(addNewContestToClassroom, {
+            const response = await this.$store.dispatch(addNewContestToClassroom, {
                 classroomId: this.classroomId,
                 name: this.form.name,
                 link: this.form.link,
             })
+            const contestId = response.data._id
+            await this.$store.dispatch(addNewStandingsToContest, {
+                classroomId: this.classroomId,
+                contestId,
+                standings: JSON.stringify(this.ranks),
+            })
+
+            await this.$store.dispatch(updateRatingsByContest, {
+                contestId,
+            })
+
+            await this.$store.dispatch(fetchClassroom, this.classroomId)
+
             this.$message({
                 message: 'Contest created',
                 type: 'success',
@@ -66,32 +83,8 @@ export default {
             this.$emit('done')
         },
 
-        async createStandings() {
-            const standings = this.getStandings()
-            console.log('Stadings = ', JSON.stringify(standings))
-
-            // await this.$store.dispatch
-        },
-
-        getStandings() {
-            const standings = []
-            for (const student of this.ranks) {
-                console.log('student = ', student)
-                const studentStatus = {
-                    position: student.index,
-                    username: student.username,
-                    userId: student._id,
-                    previousRating: 1500,
-                    newRating: 1500,
-                }
-                standings.push(studentStatus)
-            }
-
-            return standings
-        },
-
         handleRankChange(newRank) {
-            console.log('Root component ', newRank)
+            console.log('New rank = ', newRank)
             this.ranks = newRank
         },
         cancel() {

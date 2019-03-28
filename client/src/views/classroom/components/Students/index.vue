@@ -21,13 +21,13 @@
                         <span>{{scope.row.username}}</span>
                     </template>
                 </el-table-column>
+                <el-table-column prop="currentRating" :sortable="true" label="Rating" width="100" />
                 <el-table-column prop="totalSolved" :sortable="true" label="Total Solved" width="130" />
-                <el-table-column prop="rating" :sortable="true" label="Rating" width="100" />
                 <el-table-column label="Actions" width="80">
                     <template slot-scope="scope">
                         <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.row.username)">
                             <fa-icon class="vertical-middle" name="trash" />
-                    </el-button>
+                        </el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -56,13 +56,20 @@ export default {
             const data = []
             for (const userId in this.classroom.students) {
                 const student = {
-                    index: data.length + 1,
                     _id: this.classroom.students[userId]._id,
                     username: this.classroom.students[userId].username,
                     totalSolved: this.classroom.students[userId].totalSolved,
-                    rating: 1500,
+                    currentRating: this.classroom.students[userId].currentRating,
                 }
                 data.push(student)
+            }
+
+            data.sort((a, b) => {
+                return b.currentRating - a.currentRating
+            })
+
+            for (let i = 0; i < data.length; i++) {
+                data[i].index = i + 1
             }
 
             return data
