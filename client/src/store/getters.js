@@ -12,6 +12,7 @@ const getters = {
     user: state => state.user,
     profile: state => state.profile,
     coach_classrooms: state => state.classrooms.Coach.classrooms,
+    student_classrooms: state => state.classrooms.Student.classrooms,
     classroom: state => state.classroom.classroom,
     contests: state => state.classroom.contests,
     problemLists: state => state.problemLists.problemLists,

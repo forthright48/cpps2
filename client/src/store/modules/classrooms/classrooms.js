@@ -5,8 +5,8 @@ const state = {
 }
 
 const actions = {
-    async fetchClassrooms(context) {
-        const response = await this.Api.getClassrooms()
+    async fetchClassrooms(context, userId) {
+        const response = await this.Api.getClassrooms(userId)
         context.commit('SET_CLASSROOMS', response.data)
     },
 }

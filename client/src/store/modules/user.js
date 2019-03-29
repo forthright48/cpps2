@@ -4,6 +4,7 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
     state: {
         token: getToken(),
+        _id: '',
         username: '',
         email: '',
         roles: [],
@@ -12,6 +13,9 @@ const user = {
     mutations: {
         SET_TOKEN: (state, token) => {
             state.token = token
+        },
+        SET_ID: (state, _id) => {
+            state._id = _id
         },
         SET_USERNAME: (state, username) => {
             state.username = username
@@ -60,6 +64,7 @@ const user = {
                     } else {
                         reject('getInfo: roles must be a non-null array !')
                     }
+                    commit('SET_ID', data.userId)
                     commit('SET_USERNAME', data.username)
                     commit('SET_EMAIL', data.email)
                     resolve(response)

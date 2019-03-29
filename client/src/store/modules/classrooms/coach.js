@@ -1,5 +1,5 @@
-import Main from './main'
-import Api from '@/api/classrooms'
+import Classrooms from './classrooms'
+import Api from '@/api/classrooms/coach'
 
 const actions = {
     async createNewClassroom(context, name) {
@@ -8,7 +8,7 @@ const actions = {
     },
 }
 
-class Coach extends Main {
+class Coach extends Classrooms {
     constructor(Api) {
         super(Api)
         super.addActions(actions)

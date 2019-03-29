@@ -40,6 +40,10 @@ export default class Model {
     }
 
     addMutations(mutations) {
+        // Remove the given reference from mutations
+        mutations = {
+            ...mutations,
+        }
         this.mutations = {
             ...this.mutations,
             ...mutations,
@@ -47,6 +51,10 @@ export default class Model {
     }
 
     addActions(actions) {
+        // Remove the given reference from actions
+        actions = {
+            ...actions,
+        }
         for (const idx in actions) {
             actions[idx] = actions[idx].bind(this)
         }
