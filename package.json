@@ -5,7 +5,8 @@
   "main": "server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server/index.js"
+    "dev": "nodemon server/index.js",
+    "production": "node server/index.js"
   },
   "author": "Mohammad Samiul Islam <forthright48@gmail.com>",
   "license": "MIT",

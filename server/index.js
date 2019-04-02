@@ -1,3 +1,14 @@
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled Exception. Stack Trace:\n', error.stack);
+  process.exit(2);
+});
+
+process.on('uncaughtException', function(error) {
+  console.error('Uncaught Exception. Stack Trace:\n', error.stack);
+  process.exit(2);
+});
+
+
 // Setup environment variables
 const dotenv = require('dotenv');
 const result = dotenv.config();
@@ -55,21 +66,8 @@ app.use('/api/', function(err, req, res, next) {
   });
 });
 
-process.on('unhandledRejection', (error) => {
-  logger.error({
-    severe: true,
-    error: error.stack,
-  });
-  process.exit(1);
-});
+app.use(express.static('client/dist'));
 
-process.on('uncaughtException', function(error) {
-  logger.error({
-    severe: true,
-    error: error.stack,
-  });
-  process.exit(1);
-});
 
 if (require.main === module) {
   server.listen(app.get('port'), function() {
