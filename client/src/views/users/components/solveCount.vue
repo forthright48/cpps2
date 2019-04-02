@@ -46,12 +46,16 @@ export default {
         ]),
         getSolveCount() {
             return Object.keys(this.ojInfo).map((ojname, ind) => {
+                let solveCount = 0
+                if (this.profile.ojStats[ojname]) {
+                    solveCount = this.profile.ojStats[ojname].solveCount
+                }
                 return {
                     index: ind + 1,
                     ojname,
                     ojDisplayName: this.ojInfo[ojname].displayName,
                     userID: this.profile.ojStats[ojname],
-                    solveCount: this.profile.ojStats[ojname].solveCount,
+                    solveCount,
                 }
             })
         },

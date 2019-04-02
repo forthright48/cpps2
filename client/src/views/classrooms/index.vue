@@ -5,7 +5,7 @@
             <el-col :span="11">
                 <el-card class="box-card">
                     <div slot="header">
-                        <h3>My Classrooms</h3>
+                        <h3>Classrooms (Owner)</h3>
                     </div>
                     <br />
                     <CoachClassrooms />
@@ -15,7 +15,7 @@
             <el-col :span="11">
                 <el-card class="box-card">
                     <div slot="header">
-                        <h3>My Classrooms</h3>
+                        <h3>Classrooms</h3>
                     </div>
                     <br />
                     <StudentClassrooms />
