@@ -66,6 +66,8 @@ app.use('/api/', function(err, req, res, next) {
   });
 });
 
+app.use(express.static('client/dist'));
+
 
 if (require.main === module) {
   server.listen(app.get('port'), function() {
