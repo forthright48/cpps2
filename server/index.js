@@ -60,6 +60,7 @@ process.on('unhandledRejection', (error) => {
     severe: true,
     error: error.stack,
   });
+  console.error('Unhandled Exception. Stack Trace: ', error.stack);
   process.exit(1);
 });
 
@@ -68,6 +69,7 @@ process.on('uncaughtException', function(error) {
     severe: true,
     error: error.stack,
   });
+  console.error('Uncaught Exception. Stack Trace: ', error.stack);
   process.exit(1);
 });
 
