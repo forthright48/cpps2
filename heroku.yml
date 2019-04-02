@@ -1,6 +1,6 @@
 setup:
     addons:
-        - plan: mongolab:sandbox
+        - plan: mongolab
 
 
 build:
