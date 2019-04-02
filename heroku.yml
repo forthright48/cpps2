@@ -2,5 +2,11 @@ build:
     docker:
         web: Dockerfile
 
+release:
+    image: web
+    command:
+        - yarn install
+        - cp .env.example .env
+
 run:
     web: npm run production
