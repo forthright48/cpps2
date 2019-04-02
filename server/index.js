@@ -1,10 +1,10 @@
 process.on('unhandledRejection', (error) => {
-  console.error("Unhandled Exception. Stack Trace:\n", error.stack);
+  console.error('Unhandled Exception. Stack Trace:\n', error.stack);
   process.exit(2);
 });
 
 process.on('uncaughtException', function(error) {
-  console.error("Uncaught Exception. Stack Trace:\n", error.stack);
+  console.error('Uncaught Exception. Stack Trace:\n', error.stack);
   process.exit(2);
 });
 
@@ -65,7 +65,6 @@ app.use('/api/', function(err, req, res, next) {
     error: process.env.NODE_ENV === 'dev'? err : undefined,
   });
 });
-
 
 
 if (require.main === module) {
