@@ -3,4 +3,4 @@ build:
         web: Dockerfile
 
 run:
-    web: npm run production & node server/node_modules/queue/worker.js & wait -n
+    web: node server/node_modules/queue/worker.js & npm run production
