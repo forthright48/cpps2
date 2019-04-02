@@ -5,3 +5,5 @@ COPY . /app/
 
 WORKDIR /app
 RUN yarn install
+RUN touch .env
+RUN cp server/secret.js.example server/secret.js
