@@ -4,7 +4,7 @@
     breadcrumb
     el-dropdown.avatar-container(trigger="click")
       .avatar-wrapper
-        img.user-avatar(src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80")
+        img.user-avatar(:src="avatar")
         i.el-icon-caret-bottom
       el-dropdown-menu.user-dropdown(slot="dropdown")
         router-link.inlineBlock(to="/")
@@ -17,6 +17,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import md5 from 'md5'
 
 export default {
     components: {
@@ -26,8 +27,14 @@ export default {
     computed: {
         ...mapGetters([
             'sidebar',
-            'avatar',
+            'email',
         ]),
+        emailHash: function() {
+            return md5(this.email)
+        },
+        avatar: function() {
+            return `https://www.gravatar.com/avatar/${this.emailHash}?s=40&d=mp`
+        },
     },
     methods: {
         toggleSideBar() {
