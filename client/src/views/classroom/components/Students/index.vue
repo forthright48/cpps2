@@ -18,7 +18,9 @@
                 <el-table-column prop="index" label="#" width="40" />
                 <el-table-column label="Students">
                     <template slot-scope="scope">
-                        <span>{{scope.row.username}}</span>
+                        <span>
+                            <router-link :to="`/user/profile/${scope.row.username}`">{{scope.row.username}}</router-link>
+                        </span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="currentRating" :sortable="true" label="Rating" width="100" />

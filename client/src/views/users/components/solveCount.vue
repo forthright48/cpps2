@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <center>
-            <h1 style="display:inline-block;">Solve Count</h1>
-            <el-button class="ml-2" type="primary" @click="syncSolveCount">Sync</el-button>
-        </center>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span>Solve Count</span>
+            <el-button v-if="hasAccessToUpdateOjUsername" style="float: right;" type="primary" @click="syncSolveCount">Sync</el-button>
+        </div>
         <el-table :data="getSolveCount">
             <el-table-column prop="index" label="#" />
             <el-table-column prop="ojDisplayName" label="OJ" />
@@ -12,12 +12,13 @@
                     <template v-if="scope.row.userID && scope.row.userID.userIds.length > 0">
                         <span>
                             {{scope.row.userID.userIds[0]}}
-                            <span @click="unsetOjUsername(scope.row.ojname, scope.row.userID.userIds[0])">
-                            <fa-icon class="vertical-middle" name="trash" style="color: red; cursor: pointer;" /></span>
+                            <span v-if="hasAccessToUpdateOjUsername" @click="unsetOjUsername(scope.row.ojname, scope.row.userID.userIds[0])">
+                                <fa-icon class="vertical-middle" name="trash" style="color: red; cursor: pointer;" />
+                            </span>
                         </span>
                     </template>
                     <template v-else>
-                        <el-button type="primary" @click="addOjUsername(scope.row.ojname)">Add UserID</el-button>
+                        <el-button v-if="hasAccessToUpdateOjUsername" type="primary" size="mini" @click="addOjUsername(scope.row.ojname)">Add UserID</el-button>
                     </template>
                 </template>
             </el-table-column>
@@ -27,7 +28,7 @@
                 </template>
             </el-table-column>
         </el-table>
-    </div>
+    </el-card>
 </template>
 
 
@@ -40,6 +41,7 @@ export default {
     props: ['username'],
     computed: {
         ...mapGetters([
+            'user',
             'ojInfo',
             'profile',
         ]),
@@ -57,6 +59,10 @@ export default {
                     solveCount,
                 }
             })
+        },
+
+        hasAccessToUpdateOjUsername() {
+            return this.profile.username == this.user.username
         },
     },
     async created() {

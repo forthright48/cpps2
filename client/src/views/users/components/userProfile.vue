@@ -1,17 +1,19 @@
 <template>
-    <div>
-        <h1 class="text-center">User Profile</h1>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span>Profile</span>
+        </div>
         <el-table :data="getUserFields" align="center">
           <el-table-column>
               <template slot-scope="scope">
-                     <fa-icon class="vertical-middle" :name="scope.row.icon" />
+                     <fa-icon :name="scope.row.icon" />
                     <span class="ml-2">{{scope.row.feature}}</span>
               </template>
           </el-table-column>
           <el-table-column align="center">
               <template slot-scope="scope">
                   <template v-if="scope.row.feature=='Password'">
-                      <el-button size="mini" type="primary" round>Update Password</el-button>
+                      <el-button size="mini" type="primary">Update Password</el-button>
                   </template>
                   <template v-else>
                       <span> {{scope.row.value}}</span>
@@ -19,7 +21,7 @@
               </template>
           </el-table-column>
         </el-table>
-    </div>
+    </el-card>
 </template>
 
 

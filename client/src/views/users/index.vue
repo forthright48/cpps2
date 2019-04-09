@@ -5,6 +5,7 @@
                 <UserProfile v-if="!loading" />
             </el-col>
         </el-row>
+        <br />
         <el-row>
             <el-col>
                 <SolveCount v-if="!loading" :username="username" />
