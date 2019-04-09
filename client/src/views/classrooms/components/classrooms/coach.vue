@@ -52,7 +52,6 @@ export default {
     },
 
     async created() {
-        console.log('actions: ', 'Coach/fetchClassrooms')
         await this.$store.dispatch('Coach/fetchClassrooms', this.user._id)
     },
 

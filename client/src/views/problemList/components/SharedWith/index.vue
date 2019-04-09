@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { fetchClassrooms, addProblemListToClassroom, removeProblemListFromClassroom } from '@/store/actions'
+import { addProblemListToClassroom, removeProblemListFromClassroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
 import { findById } from '@/utils'
 
@@ -58,9 +58,9 @@ export default {
         },
     },
 
-    async created() {
-        await this.$store.dispatch(fetchClassrooms)
-    },
+    // async created() {
+    //     await this.$store.dispatch(fetchClassrooms)
+    // },
 
     methods: {
         async addToClassroom() {

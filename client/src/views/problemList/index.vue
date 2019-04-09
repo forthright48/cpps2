@@ -15,7 +15,7 @@
 <script>
 import Problems from './components/Problems'
 import SharedWith from './components/SharedWith'
-import { fetchClassrooms, addProblemListToClassroom } from '@/store/actions'
+import { addProblemListToClassroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -34,14 +34,15 @@ export default {
     },
 
     computed: {
-        ...mapGetters([
-            'classrooms',
-            'problemList',
-        ]),
+        ...mapGetters({
+            user: 'user',
+            classrooms: 'coach_classrooms',
+            problemList: 'problemList',
+        }),
     },
 
     async created() {
-        await this.$store.dispatch(fetchClassrooms)
+        await this.$store.dispatch('Coach/fetchClassrooms', this.user._id)
     },
 
     methods: {
