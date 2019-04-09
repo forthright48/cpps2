@@ -1,7 +1,7 @@
 <template lang="pug">
   .login-container
     el-form.login-form(autoComplete="on" :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left")
-      h3.title CPPS Login
+      h3.title Login
 
       el-form-item(prop="username")
         span.svg-container.svg-container_login

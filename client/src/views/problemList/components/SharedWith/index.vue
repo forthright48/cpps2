@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { fetchClassrooms, addProblemListToClassroom, removeProblemListFromClassroom, fetchProblemList } from '@/store/actions'
+import { fetchClassrooms, addProblemListToClassroom, removeProblemListFromClassroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
 import { findById } from '@/utils'
 

@@ -31,66 +31,46 @@ export const constantRouterMap = [
         component: Layout,
         redirect: '/dashboard',
         name: 'Dashboard',
-        hidden: true,
+        meta: { title: 'Home', icon: 'home' },
         children: [{
             path: 'dashboard',
             component: () => import('@/views/dashboard/index'),
+            hidden: true,
         }],
     },
-    {
-        path: '/example',
-        component: Layout,
-        redirect: '/example/table',
-        name: 'Example',
-        meta: { title: 'Example', icon: 'example' },
-        children: [
-            {
-                path: 'table',
-                name: 'Table',
-                component: () => import('@/views/table/index'),
-                meta: { title: 'Table', icon: 'table' },
-            },
-            {
-                path: 'tree',
-                name: 'Tree',
-                component: () => import('@/views/tree/index'),
-                meta: { title: 'Tree', icon: 'tree' },
-            },
-        ],
-    },
-    {
-        path: '/form',
-        component: Layout,
-        children: [
-            {
-                path: 'index',
-                name: 'Form',
-                component: () => import('@/views/form/index'),
-                meta: { title: 'Form', icon: 'form' },
-            },
-        ],
-    },
-    {
-        path: '/gateway',
-        component: Layout,
-        children: [
-            {
-                path: `folder/000000000000000000000000`,
-                name: 'gateway-root',
-                component: () => import('@/views/gateway/index'),
-                meta: { title: 'Gateway', icon: 'example' },
-                props: { folderId: `000000000000000000000000` },
-            },
-            {
-                path: 'folder/:folderId',
-                name: 'gateway',
-                component: () => import('@/views/gateway/index'),
-                meta: { title: 'Gateway', icon: 'example' },
-                props: true,
-                hidden: true,
-            },
-        ],
-    },
+    // {
+    //     path: '/example',
+    //     component: Layout,
+    //     redirect: '/example/table',
+    //     name: 'Example',
+    //     meta: { title: 'Example', icon: 'example' },
+    //     children: [
+    //         {
+    //             path: 'table',
+    //             name: 'Table',
+    //             component: () => import('@/views/table/index'),
+    //             meta: { title: 'Table', icon: 'table' },
+    //         },
+    //         {
+    //             path: 'tree',
+    //             name: 'Tree',
+    //             component: () => import('@/views/tree/index'),
+    //             meta: { title: 'Tree', icon: 'tree' },
+    //         },
+    //     ],
+    // },
+    // {
+    //     path: '/form',
+    //     component: Layout,
+    //     children: [
+    //         {
+    //             path: 'index',
+    //             name: 'Form',
+    //             component: () => import('@/views/form/index'),
+    //             meta: { title: 'Form', icon: 'form' },
+    //         },
+    //     ],
+    // },
     {
         path: '/user',
         component: Layout,
@@ -105,6 +85,27 @@ export const constantRouterMap = [
         ],
     },
     {
+        path: '/gateway',
+        component: Layout,
+        children: [
+            {
+                path: `folder/000000000000000000000000`,
+                name: 'gateway-root',
+                component: () => import('@/views/gateway/index'),
+                meta: { title: 'Gateway', icon: 'tree' },
+                props: { folderId: `000000000000000000000000` },
+            },
+            {
+                path: 'folder/:folderId',
+                name: 'gateway',
+                component: () => import('@/views/gateway/index'),
+                meta: { title: 'Gateway', icon: 'tree' },
+                props: true,
+                hidden: true,
+            },
+        ],
+    },
+    {
         path: '/classrooms',
         component: Layout,
         children: [
@@ -112,7 +113,7 @@ export const constantRouterMap = [
                 path: '',
                 name: 'classrooms',
                 component: () => import('@/views/classrooms/index'),
-                meta: { title: 'Classrooms', icon: 'user' },
+                meta: { title: 'Classrooms', icon: 'group' },
                 props: true,
             },
             {
@@ -133,14 +134,14 @@ export const constantRouterMap = [
                 path: '',
                 name: 'problemLists',
                 component: () => import('@/views/problemLists/index'),
-                meta: { title: 'Problem Lists', icon: 'user' },
+                meta: { title: 'Problem Lists', icon: 'list' },
                 props: true,
             },
             {
                 path: ':problemListId',
                 name: 'problemList',
                 component: () => import('@/views/problemList/index'),
-                meta: { title: 'Problem List', icon: 'user' },
+                meta: { title: 'Problem List', icon: 'list' },
                 props: true,
                 hidden: true,
             },

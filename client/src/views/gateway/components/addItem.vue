@@ -1,5 +1,5 @@
 <template>
-    <el-form inline=true :model="addItem">
+    <el-form :inline="true" :model="addItem">
         <el-form-item label="Type">
             <el-select v-model="addItem.type">
                 <el-option label="Problem" value="problem" />

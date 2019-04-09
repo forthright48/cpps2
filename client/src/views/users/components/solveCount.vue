@@ -23,7 +23,7 @@
                 </template>
             </el-table-column>
             <el-table-column label="Total Solve">
-                <template scope="scope">
+                <template slot-scope="scope">
                     {{scope.row.solveCount}}
                 </template>
             </el-table-column>
