@@ -5,14 +5,11 @@
             <Leaderboard :classroomId="classroomId" />
         </el-row> -->
 
-        <el-row>
-            <el-col :span="10">
+        <el-row :gutter="20">
+            <el-col :span="12">
                 <Students :classroomId="classroomId" />
             </el-col>
-            <el-col :span="1">
-                &nbsp;
-            </el-col>
-            <el-col :span="10">
+            <el-col :span="12">
                 <Contests :classroomId="classroomId" />
             </el-col>
         </el-row>

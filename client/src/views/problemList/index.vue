@@ -1,14 +1,11 @@
 <template>
     <div class="app-container">
         <h1>{{problemList.title}}</h1>
-        <el-row>
-            <el-col :span="14">
+        <el-row :gutter="20">
+            <el-col :span="15">
                 <Problems :problemListId="problemListId" />
             </el-col>
-            <el-col :span="1">
-                &nbsp;
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="9">
                 <SharedWith :problemListId="problemListId" />
             </el-col>
         </el-row>

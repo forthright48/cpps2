@@ -12,9 +12,8 @@
                     <template v-if="scope.row.userID && scope.row.userID.userIds.length > 0">
                         <span>
                             {{scope.row.userID.userIds[0]}}
-                            <span style="cursor: pointer;" @click="unsetOjUsername(scope.row.ojname, scope.row.userID.userIds[0])">
-                                <b>x</b>
-                            </span>
+                            <span @click="unsetOjUsername(scope.row.ojname, scope.row.userID.userIds[0])">
+                            <fa-icon class="vertical-middle" name="trash" style="color: red; cursor: pointer;" /></span>
                         </span>
                     </template>
                     <template v-else>

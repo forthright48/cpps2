@@ -1,8 +1,8 @@
 <template>
     <div class="app-container">
 
-        <el-row>
-            <el-col :span="11">
+        <el-row :gutter="20">
+            <el-col :span="12">
                 <el-card class="box-card">
                     <div slot="header">
                         <h3>Classrooms (Owner)</h3>
@@ -11,8 +11,7 @@
                     <CoachClassrooms />
                 </el-card>
             </el-col>
-            <el-col :span="1">&nbsp;</el-col>
-            <el-col :span="11">
+            <el-col :span="12">
                 <el-card class="box-card">
                     <div slot="header">
                         <h3>Classrooms</h3>
