@@ -23,10 +23,8 @@
 <script>
 
 import { addNewContestToClassroom, addNewStandingsToContest, updateRatingsByContest, fetchClassroom } from '@/store/actions'
-import Api from '@/api/classroom'
 import RankList from './RankList'
 import { mapGetters } from 'vuex'
-import { normalizeVuexArray } from '@/utils'
 
 export default {
     components: {

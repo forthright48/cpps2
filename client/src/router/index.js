@@ -71,27 +71,6 @@ export const constantRouterMap = [
     //     ],
     // },
     {
-        path: '/gateway',
-        component: Layout,
-        children: [
-            {
-                path: `folder/000000000000000000000000`,
-                name: 'gateway-root',
-                component: () => import('@/views/gateway/index'),
-                meta: { title: 'Gateway', icon: 'example' },
-                props: { folderId: `000000000000000000000000` },
-            },
-            {
-                path: 'folder/:folderId',
-                name: 'gateway',
-                component: () => import('@/views/gateway/index'),
-                meta: { title: 'Gateway', icon: 'example' },
-                props: true,
-                hidden: true,
-            },
-        ],
-    },
-    {
         path: '/user',
         component: Layout,
         children: [
@@ -105,6 +84,27 @@ export const constantRouterMap = [
         ],
     },
     {
+        path: '/gateway',
+        component: Layout,
+        children: [
+            {
+                path: `folder/000000000000000000000000`,
+                name: 'gateway-root',
+                component: () => import('@/views/gateway/index'),
+                meta: { title: 'Gateway', icon: 'tree' },
+                props: { folderId: `000000000000000000000000` },
+            },
+            {
+                path: 'folder/:folderId',
+                name: 'gateway',
+                component: () => import('@/views/gateway/index'),
+                meta: { title: 'Gateway', icon: 'tree' },
+                props: true,
+                hidden: true,
+            },
+        ],
+    },
+    {
         path: '/classrooms',
         component: Layout,
         children: [
@@ -112,7 +112,7 @@ export const constantRouterMap = [
                 path: '',
                 name: 'classrooms',
                 component: () => import('@/views/classrooms/index'),
-                meta: { title: 'Classrooms', icon: 'user' },
+                meta: { title: 'Classrooms', icon: 'group' },
                 props: true,
             },
             {
@@ -133,14 +133,14 @@ export const constantRouterMap = [
                 path: '',
                 name: 'problemLists',
                 component: () => import('@/views/problemLists/index'),
-                meta: { title: 'Problem Lists', icon: 'user' },
+                meta: { title: 'Problem Lists', icon: 'list' },
                 props: true,
             },
             {
                 path: ':problemListId',
                 name: 'problemList',
                 component: () => import('@/views/problemList/index'),
-                meta: { title: 'Problem List', icon: 'user' },
+                meta: { title: 'Problem List', icon: 'list' },
                 props: true,
                 hidden: true,
             },
