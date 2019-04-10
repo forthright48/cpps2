@@ -1,8 +1,7 @@
 <template>
     <div class="app-container">
-
         <el-row :gutter="20">
-            <el-col :span="12">
+            <el-col v-if="isAdmin" :span="12">
                 <el-card class="box-card">
                     <div slot="header">
                         <h3>Classrooms (Owner)</h3>
@@ -11,7 +10,7 @@
                     <CoachClassrooms />
                 </el-card>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="12 * (1 + !isAdmin)"> <!-- Sorry for that -->
                 <el-card class="box-card">
                     <div slot="header">
                         <h3>Classrooms</h3>
@@ -30,11 +29,18 @@
 
 import StudentClassrooms from './components/classrooms/student'
 import CoachClassrooms from './components/classrooms/coach'
+import { mapGetters } from 'vuex'
 
 export default {
     components: {
         CoachClassrooms,
         StudentClassrooms,
+    },
+
+    computed: {
+        ...mapGetters([
+            'isAdmin',
+        ]),
     },
 
 }
