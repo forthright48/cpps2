@@ -28,4 +28,16 @@ export default {
             method: 'put',
         })
     },
+
+    updatePassword(username, currentPassword, newPassword, newPasswordRepeat) {
+        return request({
+            url: `/api/v1/users/${username}/change-password`,
+            method: 'put',
+            data: {
+                currentPassword,
+                newPassword,
+                repeatPassword: newPasswordRepeat,
+            },
+        })
+    },
 }
