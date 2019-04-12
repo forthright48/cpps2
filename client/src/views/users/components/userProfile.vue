@@ -24,9 +24,9 @@
         <el-dialog
         title="Change your password"
         :visible.sync="passwordWindow">
-            <el-input type="password" v-bind="currentPassword" placeholder="Type your current password"></el-input>
-            <el-input type="password" v-bind="newPassword" placeholder="Type your new password" style="margin-top: 20px;"></el-input>
-            <el-input type="password" v-bind="newPasswordRepeat" placeholder="Type your new password (again)" style="margin-top: 20px;"></el-input>
+            <el-input type="password" v-model="currentPassword" placeholder="Type your current password"></el-input>
+            <el-input type="password" v-model="newPassword" placeholder="Type your new password" style="margin-top: 20px;"></el-input>
+            <el-input type="password" v-model="newPasswordRepeat" placeholder="Type your new password (again)" style="margin-top: 20px;"></el-input>
             <span slot="footer">
                 <el-button @click="passwordWindow=false">Cancel</el-button>
                 <el-button type="primary" @click="updatePassword">Confirm</el-button>
