@@ -62,7 +62,7 @@ export default {
         },
 
         hasAccessToUpdateOjUsername() {
-            return this.profile.username == this.user.username
+            return this.profile.username === this.user.username
         },
     },
     async created() {

@@ -33,6 +33,7 @@ export default {
             response = await Api.getLeaderboard(classroomId)
             const leaderboard = response.data
             for (const student of leaderboard) {
+                classroom.students[student._id].ojStats = student
                 classroom.students[student._id].totalSolved = student.totalSolved
             }
             context.commit('SET_CLASSROOM', classroom)
