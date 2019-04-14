@@ -2,7 +2,7 @@
     <div>
         <el-card class="box-card">
             <div slot="header">
-                <h3>Problem Lists</h3>
+                <span>Problem Lists</span>
             </div>
             <el-table :data="getProblemLists" border>
                 <el-table-column prop="index" label="#" width="40" />

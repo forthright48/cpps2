@@ -4,13 +4,13 @@
             <h2>Shared to these classrooms</h2>
         </div>
         <el-form :inline="true">
-            <el-form-item label="Classroom">
-                <el-select v-model="targetClassroom" :filterable="true">
+            <el-form-item>
+                <el-select v-model="targetClassroom" placeholder="Share to a Classroom" :filterable="true">
                     <el-option v-for="classroom in classrooms" :key="classroom._id" :label="classroom.name" :value="classroom._id" />
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" @click="addToClassroom" :loading="submitting">Add</el-button>
+                <el-button type="primary" icon="el-icon-share" size="medium" @click="addToClassroom" :loading="submitting"></el-button>
             </el-form-item>
         </el-form>
         <el-table :data="sharedWith" border>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { fetchClassrooms, addProblemListToClassroom, removeProblemListFromClassroom } from '@/store/actions'
+import { addProblemListToClassroom, removeProblemListFromClassroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
 import { findById } from '@/utils'
 
@@ -58,9 +58,9 @@ export default {
         },
     },
 
-    async created() {
-        await this.$store.dispatch(fetchClassrooms)
-    },
+    // async created() {
+    //     await this.$store.dispatch(fetchClassrooms)
+    // },
 
     methods: {
         async addToClassroom() {

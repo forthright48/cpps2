@@ -4,7 +4,17 @@
             <el-col>
                 <UserProfile v-if="!loading" />
             </el-col>
+
         </el-row>
+        <br />
+        <el-row>
+            <el-col>
+                <el-card>
+                    <SolveChart />
+                </el-card>
+            </el-col>
+        </el-row>
+        <br />
         <el-row>
             <el-col>
                 <SolveCount v-if="!loading" :username="username" />
@@ -14,12 +24,12 @@
 </template>
 
 <script>
-import { UserProfile, SolveCount } from './components'
+import { UserProfile, SolveCount, SolveChart } from './components'
 import { fetchProfile } from '@/store/actions'
 import { mapGetters } from 'vuex'
 
 export default {
-    components: { UserProfile, SolveCount },
+    components: { UserProfile, SolveCount, SolveChart },
     props: ['username'],
     data() {
         return {

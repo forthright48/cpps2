@@ -1,12 +1,12 @@
 <template>
     <el-form :inline="true" :model="addItem">
-        <el-form-item label="Platform">
-            <el-select v-model="addItem.platform" :filterable="true">
+        <el-form-item>
+            <el-select v-model="addItem.platform" :filterable="true" placeholder="Platform">
                 <el-option v-for="oj in ojInfo" :key="oj.name" :label="`${oj.displayName} (${oj.name})`" :value="oj.name" />
             </el-select>
         </el-form-item>
-        <el-form-item label="Problem Id">
-            <el-input v-model="addItem.pid" placeholder="PID" @keyup.enter.native="showPreview" />
+        <el-form-item>
+            <el-input v-model="addItem.pid" placeholder="Problem ID" @keyup.enter.native="showPreview" />
         </el-form-item>
         <el-form-item>
             <el-button type="primary" @click="showPreview" :loading="loading">Add new problem</el-button>

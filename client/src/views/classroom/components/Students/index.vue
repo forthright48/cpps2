@@ -1,10 +1,10 @@
 <template>
     <div>
         <el-card class="box-card">
-            <div slot="header">
-                <h3>Students</h3>
+            <div slot="header" class="clearfix">
+                <span>Students</span>
             </div>
-            <el-row>
+            <el-row v-if="canEdit">
                 <el-col :span="20">
                     <el-input v-model="newStudentUsername" placeholder="Student ID" />
                 </el-col>
@@ -18,12 +18,14 @@
                 <el-table-column prop="index" label="#" width="40" />
                 <el-table-column label="Students">
                     <template slot-scope="scope">
-                        <span>{{scope.row.username}}</span>
+                        <span>
+                            <router-link :to="`/user/profile/${scope.row.username}`">{{scope.row.username}}</router-link>
+                        </span>
                     </template>
                 </el-table-column>
                 <el-table-column prop="currentRating" :sortable="true" label="Rating" width="100" />
                 <el-table-column prop="totalSolved" :sortable="true" label="Total Solved" width="130" />
-                <el-table-column label="Actions" width="80">
+                <el-table-column label="Actions" width="80" v-if="canEdit">
                     <template slot-scope="scope">
                         <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.row.username)">
                             <fa-icon class="vertical-middle" name="trash" />
@@ -49,8 +51,13 @@ export default {
 
     computed: {
         ...mapGetters([
+            'user',
             'classroom',
         ]),
+
+        canEdit() {
+            return this.user._id === this.classroom.coach._id
+        },
 
         getStudents() {
             const data = []

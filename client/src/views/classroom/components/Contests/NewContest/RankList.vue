@@ -2,10 +2,10 @@
     <div>
         <draggable v-model="students" @change="handleChange">
             <div v-for="student in students" :key="student._id" class="list-item">
-                <el-card class="box-card">
+                <el-card class="box-card" body-style="padding: 5px 10px">
                 <el-row>
-                    <el-col :span="4" class="highlight-lg">{{student.position}}</el-col>
-                    <el-col :span="7" class="highlight-lg">{{student.username}}</el-col>
+                    <el-col :span="2" class="highlight-md">{{student.position}}</el-col>
+                    <el-col :span="6" class="highlight-md">{{student.username}}</el-col>
                     <el-col :span="4" class="highlight-md">
                         <span class="current-rating">
                             <del>
@@ -16,7 +16,7 @@
                     <el-col :span="2">
                         <fa-icon name="arrow-right" />
                     </el-col>
-                    <el-col :span="6" class="highlight-md">
+                    <el-col :span="9" class="highlight-md">
                         <span class="new-rating">
                             {{student.newRating}} &nbsp;
                             <span style="font-size:14px">&Delta; {{student.delta}}</span>
@@ -94,7 +94,7 @@ export default {
     font-size: 30px;
 }
 .highlight-md {
-    font-size: 20px;
+    font-size: 16px;
 }
 .list-item {
     margin-top: 10px;

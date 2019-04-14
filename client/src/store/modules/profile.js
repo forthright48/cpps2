@@ -50,6 +50,10 @@ const profile = {
             }
         },
 
+        async updatePassword(context, { username, currentPassword, newPassword, newPasswordRepeat }) {
+            await Api.updatePassword(username, currentPassword, newPassword, newPasswordRepeat)
+        },
+
     },
 }
 

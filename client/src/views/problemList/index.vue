@@ -1,14 +1,11 @@
 <template>
     <div class="app-container">
         <h1>{{problemList.title}}</h1>
-        <el-row>
-            <el-col :span="14">
+        <el-row :gutter="20">
+            <el-col :span="15">
                 <Problems :problemListId="problemListId" />
             </el-col>
-            <el-col :span="1">
-                &nbsp;
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="9">
                 <SharedWith :problemListId="problemListId" />
             </el-col>
         </el-row>
@@ -18,7 +15,7 @@
 <script>
 import Problems from './components/Problems'
 import SharedWith from './components/SharedWith'
-import { fetchClassrooms, addProblemListToClassroom } from '@/store/actions'
+import { addProblemListToClassroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -37,14 +34,15 @@ export default {
     },
 
     computed: {
-        ...mapGetters([
-            'classrooms',
-            'problemList',
-        ]),
+        ...mapGetters({
+            user: 'user',
+            classrooms: 'coach_classrooms',
+            problemList: 'problemList',
+        }),
     },
 
     async created() {
-        await this.$store.dispatch(fetchClassrooms)
+        await this.$store.dispatch('Coach/fetchClassrooms', this.user._id)
     },
 
     methods: {
