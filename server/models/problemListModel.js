@@ -30,7 +30,7 @@ const schema = new mongoose.Schema({
 
 schema.plugin(timestamps);
 
-module.exports = mongoose.model('ProblemList', schema, 'problemLists');
+module.exports = mongoose.model('ProblemList', schema, 'problemlists');
 
 /*
  * Implementation

@@ -31,7 +31,7 @@ const schema = new mongoose.Schema({
 schema.index({platform: 1, problemId: 1}, {unique: true});
 schema.plugin(timestamps);
 
-module.exports = mongoose.model('ProblemBank', schema, 'problemBanks');
+module.exports = mongoose.model('ProblemBank', schema, 'problembanks');
 
 /*
  * Implementation
