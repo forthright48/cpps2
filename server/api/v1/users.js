@@ -252,6 +252,13 @@ async function changePassword(req, res, next) {
   try {
     const {currentPassword, newPassword, repeatPassword} = req.body;
 
+    if (newPassword.length < 6 || newPassword.length > 256) {
+      return next({
+        status: 400,
+        message: 'New password has to have length between 6 to 256',
+      });
+    }
+
     if (newPassword !== repeatPassword) {
       return next({
         status: 400,
