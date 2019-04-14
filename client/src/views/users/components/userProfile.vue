@@ -82,7 +82,6 @@ export default {
 
     methods: {
         async updatePassword() {
-            return
             await this.$store.dispatch('updatePassword', {
                 username: this.username,
                 currentPassword: this.currentPassword,

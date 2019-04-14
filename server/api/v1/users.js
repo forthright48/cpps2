@@ -14,6 +14,7 @@ router.post('/users/logout', logout);
 router.get('/users/:username', getUser);
 router.put('/users/:username/change-password', changePassword);
 
+router.get('/users/:username/root-stats', rootStats);
 router.put('/users/:username/sync-solve-count', syncSolveCount);
 router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
 router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
@@ -251,6 +252,13 @@ async function changePassword(req, res, next) {
   try {
     const {currentPassword, newPassword, repeatPassword} = req.body;
 
+    if (newPassword.length < 6 || newPassword.length > 256) {
+      return next({
+        status: 400,
+        message: 'New password has to have length between 6 to 256',
+      });
+    }
+
     if (newPassword !== repeatPassword) {
       return next({
         status: 400,
@@ -292,3 +300,59 @@ async function changePassword(req, res, next) {
     return next(err);
   }
 }
+
+
+async function rootStats(req, res, next) {
+  const {username} = req.params;
+  const parentId = '0'.repeat(24);
+
+  try {
+    const root = {
+      _id: parentId,
+    };
+    if (!root) throw new Error(`No parent with id ${parentId}`);
+
+    await setFolderStat(root, username);
+
+    // Grab children under root
+    const childrenModel = await Gate.find({parentId})
+      .select('_id title').lean().exec();
+
+    const childrenWithStat = await Promise.all(childrenModel
+      .map(async (child)=>{
+        await setFolderStat(child, username);
+        return child;
+      }));
+
+    return res.json({
+      status: 200,
+      data: {
+        root,
+        children: childrenWithStat,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function setFolderStat(folder, username) {
+  try {
+    const totalProblems = await Gate.count({
+      ancestor: folder._id,
+      type: 'problem',
+    }).exec();
+
+    const userSolved = await Gate.count({
+      ancestor: folder._id,
+      type: 'problem',
+      doneList: username,
+    });
+
+    folder.total = totalProblems;
+    folder.user = userSolved;
+  } catch (err) {
+    throw err;
+  }
+}
+
