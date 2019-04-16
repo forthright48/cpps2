@@ -13,8 +13,11 @@
 
 <script>
 import { GChart } from 'vue-google-charts'
+import Api from '@/api/user'
 
 export default {
+    props: ['username'],
+
     components: {
         GChart,
     },
@@ -24,14 +27,14 @@ export default {
             chartsLib: null,
             // Array will be automatically processed with visualization.arrayToDataTable function
             chartData: [
-                ['ID', 'X', 'Y', 'Temperature'],
-                ['', 80, 167, 120],
-                ['', 79, 136, 130],
-                ['', 78, 184, 50],
-                ['', 72, 278, 230],
-                ['', 81, 200, 210],
-                ['', 72, 170, 100],
-                ['', 68, 477, 80],
+                // ['ID', 'X', 'Y', 'Temperature'],
+                // ['', 80, 167, 120],
+                // ['', 79, 136, 130],
+                // ['', 78, 184, 50],
+                // ['', 72, 278, 230],
+                // ['', 81, 200, 210],
+                // ['', 72, 170, 100],
+                // ['', 68, 477, 80],
             ],
 
             stats: [
@@ -53,6 +56,7 @@ export default {
     },
 
     computed: {
+
         chartOptions() {
             if (!this.chartsLib) {
                 return null
@@ -70,7 +74,10 @@ export default {
         },
     },
 
-    mounted() {
+    async mounted() {
+        const response = await Api.getStats(this.username)
+        console.log('root stats = ', response)
+        this.stats = response.data.children
         this.chartData = this.getChartData(this.stats)
     },
 

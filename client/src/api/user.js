@@ -40,4 +40,11 @@ export default {
             },
         })
     },
+
+    getStats(username) {
+        return request({
+            url: `/api/v1/users/${username}/root-stats`,
+            method: 'get',
+        })
+    },
 }

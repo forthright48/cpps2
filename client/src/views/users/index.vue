@@ -10,7 +10,7 @@
         <el-row>
             <el-col>
                 <el-card>
-                    <SolveChart />
+                    <SolveChart :username="username" />
                 </el-card>
             </el-col>
         </el-row>
