@@ -68,7 +68,7 @@ export default {
                 },
                 bars: 'horizontal', // Required for Material Bar Charts.
                 hAxis: { format: 'decimal' },
-                height: 900,
+                // height: 900,
                 colors: ['#03A9F4', '#FF5252', '#7570b3'],
             })
         },

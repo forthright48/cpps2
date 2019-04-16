@@ -10,7 +10,7 @@
         <el-row>
             <el-col>
                 <el-card>
-                    <SolveChart :username="username" />
+                    <SolveChart v-if="!loading" :username="username" />
                 </el-card>
             </el-col>
         </el-row>
