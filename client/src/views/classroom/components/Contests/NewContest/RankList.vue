@@ -5,7 +5,11 @@
                 <el-card class="box-card" body-style="padding: 5px 10px">
                 <el-row>
                     <el-col :span="2" class="highlight-md">{{student.position}}</el-col>
-                    <el-col :span="6" class="highlight-md">{{student.username}}</el-col>
+                    <el-col :span="6" class="highlight-md">
+                        <span :class="getRankName(student.currentRating)" class="rank">
+                            <b>{{student.username}}</b>
+                        </span>
+                    </el-col>
                     <el-col :span="4" class="highlight-md">
                         <span class="current-rating">
                             <del>
@@ -33,6 +37,7 @@
 <script>
 import draggable from 'vuedraggable'
 import { getNewRatings } from 'codeforces-rating-system'
+import { getRankName } from '@/utils/rank'
 
 export default {
     components: {
@@ -46,6 +51,7 @@ export default {
     data() {
         return {
             students: [],
+            getRankName: getRankName,
         }
     },
 

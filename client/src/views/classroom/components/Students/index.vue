@@ -18,8 +18,10 @@
                 <el-table-column prop="index" label="#" width="40" />
                 <el-table-column label="Students">
                     <template slot-scope="scope">
-                        <span>
-                            <router-link :to="`/user/profile/${scope.row.username}`">{{scope.row.username}}</router-link>
+                        <span :class="getRankName(scope.row.currentRating)" class="rank">
+                            <router-link :to="`/user/profile/${scope.row.username}`">
+                                <b>{{scope.row.username}}</b>
+                            </router-link>
                         </span>
                     </template>
                 </el-table-column>
@@ -40,12 +42,15 @@
 <script>
 import { addNewStudentToClassroom, removeStudentFromClasssroom } from '@/store/actions'
 import { mapGetters } from 'vuex'
+import { getRankName } from '@/utils/rank'
+
 export default {
     props: ['classroomId'],
 
     data() {
         return {
             newStudentUsername: '',
+            getRankName: getRankName,
         }
     },
 

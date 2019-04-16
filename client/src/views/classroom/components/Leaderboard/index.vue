@@ -10,8 +10,10 @@
                 <el-table-column prop="index" label="#" width="40" />
                 <el-table-column label="Students">
                     <template slot-scope="scope">
-                        <span>
-                            <router-link :to="`/user/profile/${scope.row.username}`">{{scope.row.username}}</router-link>
+                        <span :class="getRankName(scope.row.currentRating)">
+                            <router-link :to="`/user/profile/${scope.row.username}`">
+                                <b>{{scope.row.username}}</b>
+                            </router-link>
                         </span>
                     </template>
                 </el-table-column>
@@ -24,8 +26,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getRankName } from '@/utils/rank'
 export default {
     props: ['students'],
+
+    data() {
+        return {
+            getRankName: getRankName,
+        }
+    },
 
     computed: {
         ...mapGetters([
@@ -41,6 +50,7 @@ export default {
                     username: this.students[userId].username,
                     totalSolved: this.students[userId].totalSolved,
                     ojStats: this.students[userId].ojStats,
+                    currentRating: this.students[userId].currentRating,
                 }
                 data.push(student)
             }
