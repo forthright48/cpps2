@@ -1,13 +1,13 @@
 const express = require('express');
-const {isRoot} = require('middlewares/userGroup');
+const {isAdmin} = require('middlewares/userGroup');
 const Contest = require('../../models/contestModel');
 const Standing = require('../../models/standingModel');
 
 const router = express.Router();
 
 router.get('/standings', getStandings);
-router.post('/standings', isRoot, insertStandings);
-router.delete('/standings', isRoot, deleteStandings);
+router.post('/standings', isAdmin, insertStandings);
+router.delete('/standings', isAdmin, deleteStandings);
 router.post('/standings/create-ranklist', getRawRanklist);
 
 module.exports = {
