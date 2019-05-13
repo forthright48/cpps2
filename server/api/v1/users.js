@@ -10,8 +10,8 @@ const ojnamesOnly = ojnames.ojnamesOnly;
 const logger = require('logger');
 const queue = require('queue');
 
+router.get('/user', getInfo);
 router.post('/logout', logout);
-router.get('/users', getInfo);
 router.get('/users/:username', getUser);
 router.put('/users/:username/change-password', changePassword);
 

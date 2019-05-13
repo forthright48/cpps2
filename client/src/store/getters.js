@@ -5,6 +5,7 @@ const getters = {
     username: state => state.user.username,
     roles: state => state.user.roles,
     isAdmin: state => state.user.roles.indexOf('admin') !== -1,
+    isCoach: state => state.user.roles.indexOf('coach') !== -1,
     email: state => state.user.email,
     ojInfo: state => state.ojInfo.ojInfo,
     gatewayItems: state => state.gateway.itemList,
