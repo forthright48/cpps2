@@ -12,6 +12,7 @@ const getters = {
     gatewayRoot: state => state.gateway.root,
     gatewayBreadcrumb: state => state.gateway.gatewayBreadcrumb,
     user: state => state.user,
+    users: state => state.admin.users,
     profile: state => state.profile,
     coach_classrooms: state => state.classrooms.Coach.classrooms,
     student_classrooms: state => state.classrooms.Student.classrooms,
