@@ -9,8 +9,9 @@ const ojnamesOnly = ojnames.ojnamesOnly;
 
 const logger = require('logger');
 const queue = require('queue');
+
+router.post('/logout', logout);
 router.get('/users', getInfo);
-router.post('/users/logout', logout);
 router.get('/users/:username', getUser);
 router.put('/users/:username/change-password', changePassword);
 

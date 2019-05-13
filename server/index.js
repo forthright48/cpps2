@@ -49,6 +49,7 @@ require('./api/v1/problemList.js').addRouter(app);
 require('./api/v1/contests.js').addRouter(app);
 require('./api/v1/standings.js').addRouter(app);
 require('./api/v1/ratings.js').addRouter(app);
+require('./api/v1/admin.js').addRouter(app);
 
 /* Error Handling */
 app.use('/api/', function(err, req, res, next) {
