@@ -25,7 +25,6 @@ export const constantRouterMap = [
     { path: '/login', component: () => import('@/views/auth/login'), hidden: true },
     { path: '/register', component: () => import('@/views/auth/register'), hidden: true },
     { path: '/404', component: () => import('@/views/404'), hidden: true },
-    { path: '/admin', component: () => import('@/views/admin'), hidden: true },
 
     {
         path: '/',
@@ -147,6 +146,17 @@ export const constantRouterMap = [
                 hidden: true,
             },
         ],
+    },
+    {
+        path: '/admin',
+        component: Layout,
+        adminOnly: true,
+        children: [{
+            path: 'admin',
+            name: 'admin',
+            meta: { title: 'Admin', icon: 'lock' },
+            component: () => import('@/views/admin/index'),
+        }],
     },
     { path: '*', redirect: '/404', hidden: true },
 ]

@@ -7,7 +7,7 @@ module.exports = {
     setOjUsername: 'setOjUsername',
     unsetOjUsername: 'unsetOjUsername',
     ClearUserList: 'ClearUserList',
-    FetchUsers: 'FetchUsers',
+    FetchUserList: 'FetchUserList',
     syncSolveCount: 'syncSolveCount',
     fetchClassrooms: 'Coach/fetchClassrooms',
     createNewClassroom: 'createNewClassroom',

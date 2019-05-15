@@ -18,9 +18,10 @@ const user = {
         ClearUserList({ commit, state }) {
             commit('CLEAR_USER_LIST')
         },
-        FetchUsers({ commit, state }) {
+        FetchUserList({ commit, state }, listName) {
             return new Promise((resolve, reject) => {
-                admin.getUsers().then(({ users: usersToAdd }) => {
+                const skip = state.users.length
+                admin[`get${listName}`](skip).then(({ users: usersToAdd }) => {
                     commit('ADD_TO_LIST', usersToAdd)
                 }).catch(error => {
                     reject(error)

@@ -1,15 +1,10 @@
 <template>
     <div>
         <el-card class="box-card">
-            <el-table :data="users" border>
-                <el-table-column prop="displayIndex" label="#" width="40" />
-                <el-table-column label="UserName" :sortable="true">
-                    <template slot-scope="scope">
-                        <template>
-                            {{scope.row.email}}
-                        </template>
-                    </template>
-                </el-table-column>
+            <el-table :data="users" border height="450">
+                <el-table-column type="index" label="#" width="40"/>
+                <el-table-column label="Username" property="username" :sortable="true"/>>
+                <el-table-column label="Email" property="email" :sortable="true"/>>
             </el-table>
         </el-card>
     </div>

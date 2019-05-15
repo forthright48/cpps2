@@ -1,7 +1,7 @@
 <template>
   <div class="menu-wrapper">
     <template v-for="item in routes">
-      <template v-if="!item.hidden && item.children">
+      <template v-if="isOkayForSidebar(item)">
         <router-link v-if="hasNoShowingChildren(item.children)" :to="item.path" :key="item.name">
           <el-menu-item :index="item.path" :class="{'submenu-title-noDropdown':!isNest}">
             <svg-icon v-if="item.meta && item.meta.icon" :icon-class="item.meta.icon"></svg-icon>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
     name: 'SidebarItem',
     props: {
@@ -52,6 +53,11 @@ export default {
             type: Boolean,
             default: false,
         },
+    },
+    computed: {
+        ...mapGetters([
+            'isAdmin',
+        ]),
     },
     methods: {
         hasNoShowingChildren(children) {
@@ -72,6 +78,11 @@ export default {
                 return true
             }
             return false
+        },
+        isOkayForSidebar(item) {
+            let isOkay = !item.hidden && item.children
+            isOkay = isOkay && (!item.adminOnly || this.isAdmin)
+            return isOkay
         },
     },
 }
