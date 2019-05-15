@@ -1,6 +1,6 @@
-import admin from '@/api/admin'
+import Admin from '@/api/admin'
 
-const user = {
+const admin = {
     state: {
         users: [],
     },
@@ -21,7 +21,7 @@ const user = {
         FetchUserList({ commit, state }, listName) {
             return new Promise((resolve, reject) => {
                 const skip = state.users.length
-                admin[`get${listName}`](skip).then(({ users: usersToAdd }) => {
+                Admin.getUserList(listName, skip).then(({ users: usersToAdd }) => {
                     commit('ADD_TO_LIST', usersToAdd)
                 }).catch(error => {
                     reject(error)
@@ -31,4 +31,4 @@ const user = {
     },
 }
 
-export default user
+export default admin
