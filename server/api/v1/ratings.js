@@ -1,5 +1,5 @@
 const express = require('express');
-const {isRoot} = require('middlewares/userGroup');
+const {isAdmin} = require('middlewares/userGroup');
 const Classroom = require('../../models/classroomModel');
 const Rating = require('../../models/ratingModel');
 const Standing = require('../../models/standingModel');
@@ -7,7 +7,7 @@ const Standing = require('../../models/standingModel');
 const router = express.Router();
 
 router.get('/ratings', getRatings);
-router.put('/ratings', isRoot, applyRating);
+router.put('/ratings', isAdmin, applyRating);
 
 module.exports = {
   addRouter(app) {

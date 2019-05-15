@@ -147,6 +147,17 @@ export const constantRouterMap = [
             },
         ],
     },
+    {
+        path: '/admin',
+        component: Layout,
+        adminOnly: true,
+        children: [{
+            path: 'admin',
+            name: 'admin',
+            meta: { title: 'Admin', icon: 'lock' },
+            component: () => import('@/views/admin/index'),
+        }],
+    },
     { path: '*', redirect: '/404', hidden: true },
 ]
 

@@ -85,7 +85,7 @@ async function main() {
       username,
       email,
       password: pass,
-      roles: ['root', 'user'],
+      roles: ['admin', 'user'],
       emailVerified: true,
     });
     await user.save();

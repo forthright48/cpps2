@@ -25,7 +25,7 @@ export function register(username, email, password) {
 
 export function getInfo(token) {
     return request({
-        url: '/api/v1/users',
+        url: '/api/v1/user',
         method: 'get',
         params: { info: token },
     })
@@ -33,7 +33,7 @@ export function getInfo(token) {
 
 export function logout() {
     return request({
-        url: '/api/v1/users/logout',
+        url: '/api/v1/logout',
         method: 'post',
     })
 }
