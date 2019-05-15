@@ -97,8 +97,8 @@ schema.pre('save', function(next, req) {
     return next();
   }
 
-  // Need root priviledge
-  if (req.session.roles.includes('root') === false) {
+  // Need admin priviledge
+  if (req.session.roles.includes('admin') === false) {
     return next();
   }
 

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import app from './modules/app'
 import user from './modules/user'
+import admin from './modules/admin'
 import ojInfo from './modules/ojInfo'
 import gateway from './modules/gateway'
 import profile from './modules/profile'
@@ -17,6 +18,7 @@ const store = new Vuex.Store({
     modules: {
         app,
         user,
+        admin,
         ojInfo,
         gateway,
         profile,

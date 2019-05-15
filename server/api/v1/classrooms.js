@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const User = require('../../models/userModel');
 const ProblemList = require('../../models/problemListModel');
 const Classroom = require('../../models/classroomModel');
-const {isAdmin} = require('middlewares/userGroup');
+const {isCoach} = require('middlewares/userGroup');
 const {isEmpty} = require('lodash');
 
 
@@ -11,7 +11,7 @@ const router = express.Router();
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
 router.get('/classrooms', getClassrooms);
-router.post('/classrooms', isAdmin, insertClassroom);
+router.post('/classrooms', isCoach, insertClassroom);
 
 router.get('/classrooms/:classId', getClassroom);
 router.patch('/classrooms/:classId', updateClassroom);
