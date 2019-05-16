@@ -15,10 +15,9 @@ router.beforeEach((to, from, next) => {
         } else {
             const promises = [
                 store.dispatch('GetStatus'),
-                store.dispatch('GetInfo'),
             ]
             if (store.getters.roles.length === 0) {
-                promises.push()
+                promises.push(store.dispatch('GetInfo'))
             }
             Promise.all(promises).then(res => {
                 next()
