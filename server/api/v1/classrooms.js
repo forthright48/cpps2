@@ -14,14 +14,14 @@ router.get('/classrooms', getClassrooms);
 router.post('/classrooms', isCoach, insertClassroom);
 
 router.get('/classrooms/:classId', getClassroom);
-router.patch('/classrooms/:classId', updateClassroom);
-router.delete('/classrooms/:classId', deleteClassroom);
+router.patch('/classrooms/:classId', isCoach, updateClassroom);
+router.delete('/classrooms/:classId', isCoach, deleteClassroom);
 
 router.get('/classrooms/:classId/leaderboard', getLeaderboard);
 router.get('/classrooms/:classId/who-solved-it', solveCountInClassroom);
 
-router.put('/classrooms/:classId/students', addStudent);
-router.delete('/classrooms/:classId/students', deleteStudent);
+router.put('/classrooms/:classId/students', isCoach, addStudent);
+router.delete('/classrooms/:classId/students', isCoach, deleteStudent);
 
 router.get('/classrooms/:classId/problemlists', getProblemLists);
 

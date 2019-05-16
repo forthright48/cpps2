@@ -12,6 +12,7 @@
 <script>
 import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
+import store from '@/store'
 
 export default {
     name: 'layout',
@@ -19,6 +20,16 @@ export default {
         Navbar,
         Sidebar,
         AppMain,
+    },
+    beforeRouteEnter(to, from, next) {
+        if (to.path === '/admin') {
+            if (!store.getters.isAdmin) {
+                next({ path: '/' })
+            } else {
+                next()
+            }
+        }
+        next()
     },
     mixins: [ResizeMixin],
     computed: {
