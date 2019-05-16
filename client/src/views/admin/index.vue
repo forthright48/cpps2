@@ -69,6 +69,7 @@
 import UserList from './components/UserList'
 import { ClearUserList, FetchUserList } from '@/store/actions'
 import { mapGetters } from 'vuex'
+import { isEmpty } from 'lodash'
 
 export default {
     components: {
@@ -131,7 +132,9 @@ export default {
         async attributeSearched() {
             await this.$store.dispatch(ClearUserList)
             const filter = {
-                [this.selectedSearchAttribute.value]: this.searchString,
+                [this.selectedSearchAttribute.value]: isEmpty(this.searchString)
+                    ? undefined
+                    : this.searchString,
             }
             await this.$store.dispatch(FetchUserList, {
                 filter,
