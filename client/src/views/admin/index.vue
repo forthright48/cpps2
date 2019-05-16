@@ -1,31 +1,54 @@
 <template>
     <div v-if="isAdmin" class="app-container">
-        <el-row type="flex" align="middle">
-            <el-col :span="15" :offset="1">
+        <el-row type="flex" align="middle" :gutter="20">
+            <el-col :span="7" :offset="1">
                 <h1>Users</h1>
             </el-col>
-            <el-col :span="4">
-                <el-dropdown trigger="click" @command="categorySwitched">
-                    <span class="el-dropdown-link">
-                        {{ selectedCategory }}
-                        <i class="el-icon-arrow-down el-icon--right"></i>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item
-                            v-for="(category, index) in categories"
-                            :key="index"
-                            :command="category"
-                        >
-                            {{ category }}
-                        </el-dropdown-item>
-                    </el-dropdown-menu>
-                </el-dropdown>
+            <el-col :span="3">
+                <el-select
+                    v-model="selectedSearchAttribute"
+                >
+                    <el-option
+                        v-for="attribute in searchAttributes"
+                        :key="attribute.value"
+                        value-key="value"
+                        :label="attribute.name"
+                        :value="attribute"
+                    >
+                    </el-option>
+                </el-select>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="7">
+                <el-input
+                    v-model="searchString"
+                    :placeholder="`Enter ${selectedSearchAttribute.name}`"
+                >
+                    <el-button
+                        slot="append"
+                        icon="el-icon-search"
+                        @click="attributeSearched"
+                    ></el-button>
+                </el-input>
+            </el-col>
+            <el-col :span="3">
+                <el-select
+                    v-model="selectedCategory"
+                    @change="categorySwitched"
+                >
+                    <el-option
+                        v-for="(category, index) in categories"
+                        :key="index"
+                        :label="category"
+                        :value="category"
+                    >
+                    </el-option>
+                </el-select>
+            </el-col>
+            <el-col :span="3">
                 <el-button type="primary" @click="fetchMoreItems">More</el-button>
             </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <el-row>
             <el-col>
                 <UserList/>
             </el-col>
@@ -60,10 +83,23 @@ export default {
             'Coaches',
             'Users',
         ]
+        const searchAttributes = [
+            {
+                name: 'Username',
+                value: 'username',
+            },
+            {
+                name: 'Email',
+                value: 'email',
+            },
+        ]
         return {
-            loading: false,
             categories,
+            searchAttributes,
             selectedCategory: categories[0],
+            selectedSearchAttribute: searchAttributes[0],
+            searchString: '',
+            loading: false,
         }
     },
 
@@ -82,12 +118,25 @@ export default {
 
     methods: {
         async categorySwitched(newCategory) {
-            this.selectedCategory = newCategory
             await this.$store.dispatch(ClearUserList)
-            await this.$store.dispatch(FetchUserList, this.selectedCategory)
+            await this.$store.dispatch(FetchUserList, {
+                listName: this.selectedCategory,
+            })
         },
         async fetchMoreItems() {
-            await this.$store.dispatch(FetchUserList, this.selectedCategory)
+            await this.$store.dispatch(FetchUserList, {
+                listName: this.selectedCategory,
+            })
+        },
+        async attributeSearched() {
+            await this.$store.dispatch(ClearUserList)
+            const filter = {
+                [this.selectedSearchAttribute.value]: this.searchString,
+            }
+            await this.$store.dispatch(FetchUserList, {
+                filter,
+                listName: this.selectedCategory,
+            })
         },
     },
 }
