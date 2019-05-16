@@ -10,6 +10,7 @@ const ojnamesOnly = ojnames.ojnamesOnly;
 const logger = require('logger');
 const queue = require('queue');
 
+router.get('/status', getStatus);
 router.get('/user', getInfo);
 router.post('/logout', logout);
 router.get('/users/:username', getUser);
@@ -25,6 +26,12 @@ module.exports = {
     app.use('/api/v1', router);
   },
 };
+
+function getStatus(req, res, next) {
+  return res.status(200).json({
+    status: 200,
+  });
+}
 
 function getInfo(req, res, next) {
   // verify token here

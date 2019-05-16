@@ -22,13 +22,13 @@ const admin = {
             listName = 'Admins',
             filter = {},
         }) {
-            return new Promise((resolve, reject) => {
+            return new Promise((resolve) => {
                 const skip = state.users.length
                 Admin.getUserList(listName, skip, filter).then(({ users: usersToAdd }) => {
                     commit('ADD_TO_LIST', usersToAdd)
                     resolve()
-                }).catch(error => {
-                    reject(error)
+                }).catch(() => {
+                    resolve()
                 })
             })
         },

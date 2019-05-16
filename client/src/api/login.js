@@ -23,6 +23,13 @@ export function register(username, email, password) {
     })
 }
 
+export function getStatus() {
+    return request({
+        url: '/api/v1/status',
+        method: 'get',
+    })
+}
+
 export function getInfo(token) {
     return request({
         url: '/api/v1/user',
