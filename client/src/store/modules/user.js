@@ -1,4 +1,4 @@
-import { login, logout, getInfo, register } from '@/api/login'
+import { login, logout, getInfo, getStatus, register } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -74,16 +74,30 @@ const user = {
             })
         },
 
+        GetStatus({ commit, state }) {
+            return new Promise((resolve, reject) => {
+                getStatus().then(response => {
+                    if (parseInt(response.status) === 200) {
+                        resolve(response.status)
+                    } else {
+                        reject('Invalid Token')
+                    }
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
+
         // 登出
         LogOut({ commit, state }) {
             return new Promise((resolve, reject) => {
+                commit('SET_TOKEN', '')
+                commit('SET_ROLES', [])
+                removeToken()
                 logout(state.token).then(() => {
-                    commit('SET_TOKEN', '')
-                    commit('SET_ROLES', [])
-                    removeToken()
                     resolve()
-                }).catch(error => {
-                    reject(error)
+                }).catch(() => {
+                    resolve()
                 })
             })
         },

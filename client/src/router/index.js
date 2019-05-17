@@ -22,9 +22,24 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-    { path: '/login', component: () => import('@/views/auth/login'), hidden: true },
-    { path: '/register', component: () => import('@/views/auth/register'), hidden: true },
-    { path: '/404', component: () => import('@/views/404'), hidden: true },
+    {
+        path: '/login',
+        component: () => import('@/views/auth/login'),
+        hidden: true,
+        meta: { title: 'Login' },
+    },
+    {
+        path: '/register',
+        component: () => import('@/views/auth/register'),
+        hidden: true,
+        meta: { title: 'Register' },
+    },
+    {
+        path: '/404',
+        component: () => import('@/views/404'),
+        hidden: true,
+        meta: { title: '404' },
+    },
 
     {
         path: '/',
@@ -161,8 +176,10 @@ export const constantRouterMap = [
     { path: '*', redirect: '/404', hidden: true },
 ]
 
-export default new Router({
+const router = new Router({
     // mode: 'history', //后端支持可开
     scrollBehavior: () => ({ y: 0 }),
     routes: constantRouterMap,
 })
+
+export default router

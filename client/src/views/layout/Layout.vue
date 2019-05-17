@@ -1,17 +1,18 @@
 <template>
-  <div class="app-wrapper" :class="classObj">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
-    <sidebar class="sidebar-container"></sidebar>
-    <div class="main-container">
-      <navbar></navbar>
-      <app-main></app-main>
+    <div class="app-wrapper" :class="classObj">
+        <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
+        <sidebar class="sidebar-container"></sidebar>
+        <div class="main-container">
+            <navbar></navbar>
+            <app-main></app-main>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
+import store from '@/store'
 
 export default {
     name: 'layout',
@@ -19,6 +20,16 @@ export default {
         Navbar,
         Sidebar,
         AppMain,
+    },
+    beforeRouteEnter(to, from, next) {
+        if (to.path === '/admin') {
+            if (!store.getters.isAdmin) {
+                next({ path: '/' })
+            } else {
+                next()
+            }
+        }
+        next()
     },
     mixins: [ResizeMixin],
     computed: {
@@ -45,20 +56,20 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import "src/styles/mixin.scss";
-  .app-wrapper {
-    @include clearfix;
-    position: relative;
-    height: 100%;
-    width: 100%;
-  }
-  .drawer-bg {
-    background: #000;
-    opacity: 0.3;
-    width: 100%;
-    top: 0;
-    height: 100%;
-    position: absolute;
-    z-index: 999;
-  }
+    @import "src/styles/mixin.scss";
+    .app-wrapper {
+        @include clearfix;
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
+    .drawer-bg {
+        background: #000;
+        opacity: 0.3;
+        width: 100%;
+        top: 0;
+        height: 100%;
+        position: absolute;
+        z-index: 999;
+    }
 </style>
