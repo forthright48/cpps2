@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const timestamps = require('mongoose-timestamp');
 const {ojnamesOnly} = require('./ojInfo');
 const validator = require('validator');
-const {isEmpty} = require('lodash');
 
 function removeNullOrBlank(data) {
   if (data === null || data === '') return undefined;
