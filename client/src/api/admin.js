@@ -8,4 +8,18 @@ export default {
             params: { skip },
         })
     },
+    addRole(username, role) {
+        return request({
+            url: `/api/v1/users/${username}/roles`,
+            method: 'put',
+            data: { role },
+        })
+    },
+    removeRole(username, role) {
+        return request({
+            url: `/api/v1/users/${username}/roles`,
+            method: 'delete',
+            data: { role },
+        })
+    },
 }

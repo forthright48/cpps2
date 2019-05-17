@@ -8,6 +8,8 @@ module.exports = {
     unsetOjUsername: 'unsetOjUsername',
     ClearUserList: 'ClearUserList',
     FetchUserList: 'FetchUserList',
+    AddRole: 'AddRole',
+    RemoveRole: 'RemoveRole',
     syncSolveCount: 'syncSolveCount',
     fetchClassrooms: 'Coach/fetchClassrooms',
     createNewClassroom: 'createNewClassroom',
