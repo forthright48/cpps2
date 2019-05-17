@@ -293,6 +293,13 @@ async function deleteClassroom(req, res, next) {
       }
     ).exec();
 
+    /**
+     * TODO: remove related
+     * * contests
+     * * standings
+     * * ratings
+     */
+
     return res.status(200).json({
       status: 200,
     });
@@ -304,11 +311,24 @@ async function deleteClassroom(req, res, next) {
 async function getProblemLists(req, res, next) {
   try {
     const {classId} = req.params;
+    const {userId} = req.session;
 
     if (!classId || !isObjectId(classId)) {
       return next({
         status: 401,
         message: `classId:${classId} is not a valid objectId`,
+      });
+    }
+
+    const classroom = await Classroom.findOne({
+      _id: classId,
+      $or: [{coach: userId}, {students: userId}],
+    }).exec();
+
+    if (!classroom) {
+      return next({
+        status: 404,
+        message: `classId:${classId} not found`,
       });
     }
 
