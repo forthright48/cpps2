@@ -2,7 +2,7 @@
     <div>
         <el-row>
             <el-table :data="getClassrooms" border>
-                <el-table-column prop="index" label="#" />
+                <el-table-column prop="index" label="#" width="40"/>
                 <el-table-column label="Classroom name">
                     <template slot-scope="scope">
                         <router-link :to="`/classrooms/${scope.row._id}`">{{scope.row.name}}</router-link>

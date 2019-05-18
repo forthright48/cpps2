@@ -76,7 +76,6 @@ export default {
 
     async mounted() {
         const response = await Api.getStats(this.username)
-        console.log('root stats = ', response)
         this.stats = response.data.children
         this.chartData = this.getChartData(this.stats)
     },

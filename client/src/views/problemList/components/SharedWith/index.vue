@@ -68,10 +68,6 @@ export default {
     // },
 
     methods: {
-        getClassroomLink(classroom) {
-
-        },
-
         async addToClassroom() {
             if (!this.targetClassroom) return
             this.submitting = true
