@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-row>
-            <el-table :data="getClassrooms">
+            <el-table :data="getClassrooms" border>
                 <el-table-column prop="index" label="#" />
                 <el-table-column label="Classroom name">
                     <template slot-scope="scope">
@@ -42,7 +42,6 @@ export default {
     },
 
     async created() {
-        console.log('actions: ', 'Student/fetchClassrooms')
         await this.$store.dispatch('Student/fetchClassrooms', this.user._id)
     },
 }

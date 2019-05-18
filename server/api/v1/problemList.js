@@ -113,6 +113,10 @@ async function getProblemList(req, res, next) {
       _id: problemListId,
     }).exec();
 
+    /**
+     * TODO: Change this to allow access to students as well
+     */
+
     if (problemList.createdBy.toString() !== req.session.userId) {
       return next({
         status: 401,

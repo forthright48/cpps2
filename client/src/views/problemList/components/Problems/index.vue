@@ -8,21 +8,27 @@
 
             <el-table :data="getProblems" border>
                 <el-table-column prop="displayIndex" label="#" width="40" />
+                <el-table-column label="Platform" width="100">
+                    <template slot-scope="scope">
+                        {{ getDisplayNameForOJ(scope.row.platform) }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="problemId" label="Problem ID" width="100" />
                 <el-table-column label="Title" :sortable="true">
                     <template slot-scope="scope">
                         <fa-icon class="vertical-middle" :name="scope.row.titleIcon" />
                         <template>
                             <a class="ml-2 vertical-middle" :href="scope.row.displayLink" target="_blank">
-                                {{scope.row.displayTitle}}
+                                {{scope.row.title}}
                             </a>
                         </template>
                     </template>
                 </el-table-column>
 
 
-                <el-table-column label="Admin" align="center" width="140">
+                <el-table-column v-if="user._id===problemList.createdBy" label="Admin" align="center" width="140">
                     <template slot-scope="scope">
-                        <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.row._id)">
+                        <el-button size="mini" round type="danger" @click="removeProblem(scope.row._id)">
                             <fa-icon class="vertical-middle" name="trash" />
                         </el-button>
                     </template>
@@ -52,17 +58,20 @@ export default {
 
     computed: {
         ...mapGetters([
+            'user',
+            'ojInfo',
             'problemList',
         ]),
 
         getProblems() {
             return this.problemList.problems.map((item, idx) => {
                 return {
-                    _id: item._id,
+                    platform: item.platform,
                     displayIndex: idx + 1,
-                    displayTitle: `${item.platform} ${item.problemId} - ${item.title}`,
+                    displayTitle: `${item.problemId} - ${item.title}`,
                     titleIcon: 'link',
                     displayLink: item.link,
+                    ...item,
                 }
             })
         },
@@ -73,11 +82,15 @@ export default {
     },
 
     methods: {
-        async handleDeleteItem(problemId) {
+        async removeProblem(problemId) {
             await this.$store.dispatch(removeProblemFromProblemList, {
                 problemListId: this.problemListId,
                 problemId,
             })
+        },
+
+        getDisplayNameForOJ(ojName) {
+            return (this.ojInfo && this.ojInfo[ojName]) ? this.ojInfo[ojName].displayName : ''
         },
     },
 }

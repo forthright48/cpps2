@@ -2,10 +2,10 @@
     <div class="app-container">
         <h1>{{problemList.title}}</h1>
         <el-row :gutter="20">
-            <el-col :span="15">
+            <el-col :span="14">
                 <Problems :problemListId="problemListId" />
             </el-col>
-            <el-col :span="9">
+            <el-col :span="10">
                 <SharedWith :problemListId="problemListId" />
             </el-col>
         </el-row>
@@ -13,6 +13,9 @@
 </template>
 
 <script>
+/**
+ * TODO: Stop showing shared-with info to students
+ */
 import Problems from './components/Problems'
 import SharedWith from './components/SharedWith'
 import { addProblemListToClassroom } from '@/store/actions'

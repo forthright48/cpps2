@@ -11,7 +11,7 @@
                     <Students :classroomId="classroomId" />
                 </el-col>
                 <el-col :span="12">
-                    <Contests :classroomId="classroomId" />
+                    <ProblemLists :classroomId="classroomId" />
                 </el-col>
             </el-row>
             <br />
@@ -20,8 +20,9 @@
                 <Leaderboard :students="classroom.students" />
             </el-row>
             <br />
+            
             <el-row>
-                <ProblemLists :classroomId="classroomId" />
+                <Contests :classroomId="classroomId" />
             </el-row>
         </div>
     </div>

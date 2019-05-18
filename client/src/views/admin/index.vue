@@ -22,6 +22,7 @@
                 <el-input
                     v-model="searchString"
                     :placeholder="`Enter ${selectedSearchAttribute.name}`"
+                     @keyup.enter.native="attributeSearched"
                 >
                     <el-button
                         slot="append"

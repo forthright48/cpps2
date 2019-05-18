@@ -10,15 +10,19 @@
                 </el-select>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="el-icon-share" size="medium" @click="addToClassroom" :loading="submitting"></el-button>
+                <el-button type="primary" icon="el-icon-share" @click="addToClassroom" :loading="submitting"></el-button>
             </el-form-item>
         </el-form>
         <el-table :data="sharedWith" border>
             <el-table-column prop="displayIndex" label="#" width="40" />
-            <el-table-column prop="classroom.name" label="Classroom Name" class="ml-2" />
-            <el-table-column label="Admin" align="center" width="100">
+            <el-table-column label="Classroom Name" class="ml-2">
                 <template slot-scope="scope">
-                    <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.row.classroom._id)">
+                    <router-link :to="`/classrooms/${scope.row.classroom._id}`">{{scope.row.classroom.name}}</router-link>
+                </template>
+            </el-table-column>
+            <el-table-column v-if="user._id===problemList.createdBy" label="Admin" align="center" width="100">
+                <template slot-scope="scope">
+                    <el-button size="mini" round type="danger" @click="removeFromClassroom(scope.row.classroom._id)">
                         <fa-icon class="vertical-middle" name="trash" />
                     </el-button>
                 </template>
@@ -44,6 +48,7 @@ export default {
 
     computed: {
         ...mapGetters({
+            user: 'user',
             classrooms: 'coach_classrooms',
             problemList: 'problemList',
         }),
@@ -63,7 +68,12 @@ export default {
     // },
 
     methods: {
+        getClassroomLink(classroom) {
+
+        },
+
         async addToClassroom() {
+            if (!this.targetClassroom) return
             this.submitting = true
             try {
                 await this.$store.dispatch(addProblemListToClassroom, this.targetClassroom)
@@ -72,7 +82,7 @@ export default {
             }
         },
 
-        async handleDeleteItem(classroomId) {
+        async removeFromClassroom(classroomId) {
             await this.$store.dispatch(removeProblemListFromClassroom, {
                 classroomId,
                 problemListId: this.problemListId,
