@@ -22,10 +22,17 @@ export default {
     components: { SidebarItem },
     computed: {
         ...mapGetters([
+            'user',
             'sidebar',
         ]),
         routes() {
-            return this.$router.options.routes
+            const routes = this.$router.options.routes
+            return routes.map(e => {
+                if (e.path === '/user') {
+                    e.children[0].path = `profile/${this.user.username}`
+                }
+                return e
+            })
         },
         isCollapse() {
             return !this.sidebar.opened

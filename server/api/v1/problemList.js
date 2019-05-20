@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const {isEmpty, pick} = require('lodash');
+const {isCoach} = require('middlewares/userGroup');
 const ProblemList = require('../../models/problemListModel');
 
 const router = express.Router();
@@ -15,11 +16,8 @@ router.post('/problemlists', insertProblemList);
 router.put('/problemlists/:problemListId/problems', addProblemToList);
 router.delete('/problemlists/:problemListId/problems', deleteProblemFromList);
 
-router.put('/problemlists/:problemListId/shared-with', shareWithClassroom);
-router.delete(
-  '/problemlists/:problemListId/shared-with',
-  removeShareWithAClassroom
-);
+router.put('/problemlists/:problemListId/shared-with', isCoach, shareWithClassroom);
+router.delete('/problemlists/:problemListId/shared-with', isCoach, removeShareWithAClassroom);
 
 module.exports = {
   addRouter(app) {

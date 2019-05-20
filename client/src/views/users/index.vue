@@ -49,9 +49,6 @@ export default {
     },
     methods: {
         async initiateUser() {
-            if (this.username === ':username') {
-                return this.$router.push(`/user/profile/${this.user.username}`)
-            }
             try {
                 await this.$store.dispatch(fetchProfile, this.username)
             } finally {
