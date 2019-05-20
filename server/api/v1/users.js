@@ -10,7 +10,7 @@ const ojnamesOnly = ojnames.ojnamesOnly;
 const logger = require('logger');
 const queue = require('queue');
 const {isEmpty} = require('lodash');
-const {isAdmin} = require('../../node_modules/middlewares/userGroup');
+const {isAdmin} = require('middlewares/userGroup');
 
 router.get('/status', getStatus);
 router.get('/user', getInfo);
@@ -372,7 +372,7 @@ async function removeRole(req, res, next) {
 
 async function rootStats(req, res, next) {
   const {username} = req.params;
-  const parentId = '0'.repeat(24);
+  const parentId = '000000000000000000000000';
 
   try {
     const root = {

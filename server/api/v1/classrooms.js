@@ -6,7 +6,6 @@ const Classroom = require('../../models/classroomModel');
 const {isCoach} = require('middlewares/userGroup');
 const {isEmpty} = require('lodash');
 
-
 const router = express.Router();
 const isObjectId = mongoose.Types.ObjectId.isValid;
 
@@ -14,16 +13,16 @@ router.get('/classrooms', getClassrooms);
 router.post('/classrooms', isCoach, insertClassroom);
 
 router.get('/classrooms/:classId', getClassroom);
-router.patch('/classrooms/:classId', isCoach, updateClassroom);
-router.delete('/classrooms/:classId', isCoach, deleteClassroom);
-
-router.get('/classrooms/:classId/leaderboard', getLeaderboard);
-router.get('/classrooms/:classId/who-solved-it', solveCountInClassroom);
 
 router.put('/classrooms/:classId/students', isCoach, addStudent);
 router.delete('/classrooms/:classId/students', isCoach, deleteStudent);
 
+router.patch('/classrooms/:classId', isCoach, updateClassroom);
+router.delete('/classrooms/:classId', isCoach, deleteClassroom);
+
 router.get('/classrooms/:classId/problemlists', getProblemLists);
+router.get('/classrooms/:classId/who-solved-it', solveCountInClassroom);
+router.get('/classrooms/:classId/leaderboard', getLeaderboard);
 
 module.exports = {
   addRouter(app) {
@@ -315,7 +314,7 @@ async function getProblemLists(req, res, next) {
 
     if (!classId || !isObjectId(classId)) {
       return next({
-        status: 401,
+        status: 400,
         message: `classId:${classId} is not a valid objectId`,
       });
     }
@@ -356,6 +355,13 @@ async function solveCountInClassroom(req, res, next) {
 
     const studentList = await Classroom.findById(classId).populate('students').exec();
     const problemList = await ProblemList.findById(problemListId).exec();
+
+    if (!studentList || !problemList) {
+      return next({
+        status: 404,
+        message: 'Classroom or ProblemList not found',
+      });
+    }
 
     if (studentList.coach.toString() !== problemList.createdBy.toString()) {
       return next({
@@ -407,10 +413,21 @@ async function solveCountInClassroom(req, res, next) {
 
 async function getLeaderboard(req, res, next) {
   const {classId} = req.params;
+  const userId = req.session.userId;
   try {
-    const studentList = await Classroom.findById(classId)
+    const studentList = await Classroom.findOne({
+      _id: classId,
+      $or: [{coach: userId}, {students: userId}],
+    })
       .select('students')
       .exec();
+
+    if (!studentList) {
+      return next({
+        status: 404,
+        message: 'Classroom or ProblemList not found',
+      });
+    }
     const studentsIdList = studentList.students;
 
     const userData = await User.aggregate([

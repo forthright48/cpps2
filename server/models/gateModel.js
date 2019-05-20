@@ -84,7 +84,7 @@ const schema = new mongoose.Schema({
 });
 
 schema.statics.getRoot = function() {
-  return '0'.repeat(24);
+  return '000000000000000000000000';
 };
 
 /**
