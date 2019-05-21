@@ -42,7 +42,7 @@ export default {
     },
 
     async created() {
-        await this.$store.dispatch('Student/fetchClassrooms', this.user._id)
+        await this.$store.dispatch('Student/fetchClassrooms')
     },
 }
 </script>

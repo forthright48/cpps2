@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const {isEmpty, pick} = require('lodash');
 const {isCoach} = require('middlewares/userGroup');
+const Classroom = require('../../models/classroomModel');
 const ProblemList = require('../../models/problemListModel');
 
 const router = express.Router();
@@ -27,15 +28,8 @@ module.exports = {
 
 async function getProblemLists(req, res, next) {
   try {
-    const {userId, username} = req.session;
-    const {createdBy = userId} = req.query;
-
-    if (userId !== createdBy) {
-      return next({
-        status: 401,
-        message: `You ${username}:${userId} cannot view list of ${createdBy}`,
-      });
-    }
+    const {userId} = req.session;
+    const createdBy = userId;
 
     const problemLists = await ProblemList.find({createdBy}).exec();
     return res.status(200).json({
@@ -51,6 +45,12 @@ async function insertProblemList(req, res, next) {
   try {
     const {userId} = req.session;
     const {title} = req.body;
+    if (!title) {
+      return next({
+        status: 400,
+        message: `Title cannot be empty`,
+      });
+    }
 
     const problemList = new ProblemList({
       title,
@@ -72,6 +72,12 @@ async function updateProblemList(req, res, next) {
   try {
     const {problemListId} = req.params;
     const {userId} = req.session;
+    if (!problemListId) {
+      return next({
+        status: 400,
+        message: `problemListId cannot be empty`,
+      });
+    }
 
     if (req.body.title && isEmpty(req.body.title)) {
       delete req.body.title;
@@ -85,7 +91,12 @@ async function updateProblemList(req, res, next) {
       },
     ).exec();
 
-    console.log(newProblemList);
+    if (!newProblemList) {
+      return next({
+        status: 404,
+        message: `ProblemList not found`,
+      });
+    }
 
     return res.status(200).json({
       status: 200,
@@ -99,10 +110,11 @@ async function updateProblemList(req, res, next) {
 async function getProblemList(req, res, next) {
   try {
     const {problemListId} = req.params;
+    const {userId} = req.session;
 
     if (!problemListId) {
       return next({
-        status: 401,
+        status: 400,
         message: `ProblemListId cannot be blank`,
       });
     }
@@ -111,15 +123,33 @@ async function getProblemList(req, res, next) {
       _id: problemListId,
     }).exec();
 
-    /**
-     * TODO: Change this to allow access to students as well
-     */
+    if (!problemList) {
+      return next({
+        status: 404,
+        message: `ProblemListId not found`,
+      });
+    }
 
     if (problemList.createdBy.toString() !== req.session.userId) {
-      return next({
-        status: 401,
-        message: `You do not have permission to view this list. Reason - You did not create this list.`,
+      const classrooms = await Classroom.find(
+        {students: userId},
+      ).exec();
+      const classIds = classrooms.map((e) => {
+        return e._id.toString();
       });
+      const sharedWith = problemList.sharedWith.map((e) => {
+        return e.toString();
+      });
+      let validClassIds = classIds.filter((e) => {
+        return sharedWith.includes(e);
+      });
+
+      if (!validClassIds.length) {
+        return next({
+          status: 401,
+          message: `You do not have permission to view this list.`,
+        });
+      }
     }
 
     return res.status(200).json({
@@ -134,6 +164,7 @@ async function getProblemList(req, res, next) {
 async function deleteProblemList(req, res, next) {
   try {
     const {problemListId} = req.params;
+    const {userId} = req.session;
 
     if (!problemListId) {
       return next({
@@ -142,10 +173,20 @@ async function deleteProblemList(req, res, next) {
       });
     }
 
-    await ProblemList.findByIdAndRemove(problemListId).exec();
+    const problemList = await ProblemList.findOneAndDelete({
+      _id: problemListId,
+      createdBy: userId,
+    }).exec();
 
-    return res.status(201).json({
-      status: 201,
+    if (!problemList) {
+      return next({
+        status: 404,
+        message: `ProblemList not found`,
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
     });
   } catch (err) {
     return next(err);
@@ -162,6 +203,26 @@ async function addProblemToList(req, res, next) {
         status: 401,
         message: `Some parameters are blank`,
       });
+    }
+
+    const problemList = await ProblemList.findOne({
+      _id: problemListId,
+      createdBy: req.session.userId,
+    }).exec();
+
+    if (!problemList) {
+      return next({
+        status: 404,
+        message: `Problem List not found`,
+      });
+    }
+
+    for (const problem of problemList.problems) {
+      if (problem.platform === platform && problem.problemId === problemId) {
+        return res.status(200).json({
+          status: 200,
+        });
+      }
     }
 
     const updatedList = await ProblemList.findOneAndUpdate(
@@ -184,13 +245,6 @@ async function addProblemToList(req, res, next) {
       }
     );
 
-    if (!updatedList) {
-      return next({
-        status: 401,
-        message: `Problem List not found`,
-      });
-    }
-
     return res.status(201).json({
       status: 201,
       data: updatedList.problems[updatedList.problems.length - 1],
@@ -212,7 +266,7 @@ async function deleteProblemFromList(req, res, next) {
       });
     }
 
-    await ProblemList.findOneAndUpdate(
+    const problemList = await ProblemList.findOneAndUpdate(
       {
         _id: problemListId,
         createdBy: req.session.userId,
@@ -228,6 +282,13 @@ async function deleteProblemFromList(req, res, next) {
         new: true,
       }
     );
+
+    if (!problemList) {
+      return next({
+        status: 404,
+        message: `Problem List not found`,
+      });
+    }
 
     return res.status(201).json({
       status: 201,
@@ -257,7 +318,19 @@ async function shareWithClassroom(req, res, next) {
       });
     }
 
-    await ProblemList.findOneAndUpdate(
+    const classroom = await Classroom.findOne({
+      _id: classId,
+      coach: userId,
+    }).exec();
+
+    if (!classroom) {
+      return next({
+        status: 404,
+        message: `Classroom not found`,
+      });
+    }
+
+    const problemList = await ProblemList.findOneAndUpdate(
       {
         _id: problemListId,
         createdBy: userId,
@@ -268,6 +341,13 @@ async function shareWithClassroom(req, res, next) {
         },
       }
     );
+
+    if (!problemList) {
+      return next({
+        status: 404,
+        message: `Problem List not found`,
+      });
+    }
 
     return res.status(201).json({
       status: 201,
@@ -297,7 +377,19 @@ async function removeShareWithAClassroom(req, res, next) {
       });
     }
 
-    await ProblemList.findOneAndUpdate(
+    const classroom = await Classroom.findOne({
+      _id: classId,
+      coach: userId,
+    }).exec();
+
+    if (!classroom) {
+      return next({
+        status: 404,
+        message: `Classroom not found`,
+      });
+    }
+
+    const problemList = await ProblemList.findOneAndUpdate(
       {
         _id: problemListId,
         createdBy: userId,
@@ -308,6 +400,13 @@ async function removeShareWithAClassroom(req, res, next) {
         },
       }
     );
+
+    if (!problemList) {
+      return next({
+        status: 404,
+        message: `Problem List not found`,
+      });
+    }
 
     return res.status(200).json({
       status: 200,

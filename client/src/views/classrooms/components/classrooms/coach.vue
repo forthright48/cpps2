@@ -52,7 +52,7 @@ export default {
     },
 
     async created() {
-        await this.$store.dispatch('Coach/fetchClassrooms', this.user._id)
+        await this.$store.dispatch('Coach/fetchClassrooms')
     },
 
     methods: {

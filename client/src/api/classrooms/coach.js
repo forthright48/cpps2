@@ -1,9 +1,9 @@
 import request from '@/utils/request'
 
 export default {
-    getClassrooms(userId) {
+    getClassrooms() {
         return request({
-            url: `/api/v1/classrooms?coach=${userId}`,
+            url: `/api/v1/classrooms?coach=true`,
         })
     },
 

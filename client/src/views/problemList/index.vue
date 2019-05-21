@@ -2,10 +2,10 @@
     <div class="app-container">
         <h1>{{problemList.title}}</h1>
         <el-row :gutter="20">
-            <el-col :span="14">
+            <el-col :span="isOwnClassroom ? 14 : 24">
                 <Problems :problemListId="problemListId" />
             </el-col>
-            <el-col :span="10">
+            <el-col v-if="isOwnClassroom" :span="10">
                 <SharedWith :problemListId="problemListId" />
             </el-col>
         </el-row>
@@ -13,9 +13,6 @@
 </template>
 
 <script>
-/**
- * TODO: Stop showing shared-with info to students
- */
 import Problems from './components/Problems'
 import SharedWith from './components/SharedWith'
 import { addProblemListToClassroom } from '@/store/actions'
@@ -39,13 +36,15 @@ export default {
     computed: {
         ...mapGetters({
             user: 'user',
-            classrooms: 'coach_classrooms',
             problemList: 'problemList',
         }),
+        isOwnClassroom() {
+            return this.user._id === this.problemList.createdBy
+        },
     },
 
     async created() {
-        await this.$store.dispatch('Coach/fetchClassrooms', this.user._id)
+        await this.$store.dispatch('Coach/fetchClassrooms')
     },
 
     methods: {

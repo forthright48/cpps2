@@ -63,10 +63,6 @@ export default {
         },
     },
 
-    // async created() {
-    //     await this.$store.dispatch(fetchClassrooms)
-    // },
-
     methods: {
         async addToClassroom() {
             if (!this.targetClassroom) return

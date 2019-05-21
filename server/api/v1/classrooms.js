@@ -4,7 +4,6 @@ const User = require('../../models/userModel');
 const ProblemList = require('../../models/problemListModel');
 const Classroom = require('../../models/classroomModel');
 const {isCoach} = require('middlewares/userGroup');
-const {isEmpty} = require('lodash');
 
 const router = express.Router();
 const isObjectId = mongoose.Types.ObjectId.isValid;
@@ -36,39 +35,17 @@ module.exports = {
 async function getClassrooms(req, res, next) {
   try {
     let {
-      coach,
-      student,
+      coach = false,
+      student = false,
     } = req.query;
 
+    const {userId} = req.session;
     const populate = ['coach students', 'username'];
-
-    if (isEmpty(coach)) {
-      if (isEmpty(student)) {
-        coach = req.session.userId;
-      } else {
-        if (student !== req.session.userId) {
-          return next({
-            status: 400,
-            message: `You ${
-              req.session.userId
-            } are not allowed to view classrooms of ${student}`,
-          });
-        }
-      }
-    }
-
-    if (!isEmpty(coach) && coach !== req.session.userId) {
-      return next({
-        status: 400,
-        message: `You ${
-          req.session.userId
-        } are not allowed to view classrooms of ${coach}`,
-      });
-    }
-
     const options = [];
-    if (coach) options.push({coach});
-    if (student) options.push({students: student});
+
+    if (!coach && !student) coach = true;
+    if (coach) options.push({coach: userId});
+    if (student) options.push({students: userId});
 
     const classrooms = await Classroom.find({
       $or: options,

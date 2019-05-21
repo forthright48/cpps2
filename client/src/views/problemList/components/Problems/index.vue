@@ -4,7 +4,7 @@
             <div slot="header">
                 <h2>Problems</h2>
             </div>
-            <AddProblem />
+            <AddProblem v-if="isOwnClassroom"/>
 
             <el-table :data="getProblems" border>
                 <el-table-column prop="displayIndex" label="#" width="40" />
@@ -62,6 +62,10 @@ export default {
             'ojInfo',
             'problemList',
         ]),
+
+        isOwnClassroom() {
+            return this.user._id === this.problemList.createdBy
+        },
 
         getProblems() {
             return this.problemList.problems.map((item, idx) => {

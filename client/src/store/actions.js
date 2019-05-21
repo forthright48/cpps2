@@ -11,7 +11,6 @@ module.exports = {
     AddRole: 'AddRole',
     RemoveRole: 'RemoveRole',
     syncSolveCount: 'syncSolveCount',
-    fetchClassrooms: 'Coach/fetchClassrooms',
     createNewClassroom: 'createNewClassroom',
     fetchClassroom: 'fetchClassroom',
     fetchContests: 'fetchContests',
