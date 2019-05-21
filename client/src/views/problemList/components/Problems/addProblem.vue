@@ -81,10 +81,6 @@ export default {
 
                 const problemInfo = await getProblemInfo(platform, pid)
 
-                /**
-                 * TODO: check for existing problem. avoid duplicate
-                 */
-
                 this.addItem.title = problemInfo.data.title
                 this.addItem.link = problemInfo.data.link
                 this.addItem.displayName = this.ojInfo[platform].displayName
