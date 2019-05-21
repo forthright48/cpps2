@@ -1,5 +1,5 @@
 const express = require('express');
-const {isAdmin} = require('middlewares/userGroup');
+const {isCoach} = require('middlewares/userGroup');
 const Contest = require('../../models/contestModel');
 const Standing = require('../../models/standingModel');
 const Classroom = require('../../models/classroomModel');
@@ -8,9 +8,9 @@ const {isEmpty, pick} = require('lodash');
 const router = express.Router();
 
 router.get('/contests', getContests);
-router.post('/contests', isAdmin, insertContest);
-router.put('/contests/:contestId', isAdmin, updateContest);
-router.delete('/contests/:contestId', isAdmin, deleteContest);
+router.post('/contests', isCoach, insertContest);
+router.put('/contests/:contestId', isCoach, updateContest);
+router.delete('/contests/:contestId', isCoach, deleteContest);
 
 module.exports = {
   addRouter(app) {

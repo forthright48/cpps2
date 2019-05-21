@@ -82,7 +82,6 @@ export default {
         },
 
         handleRankChange(newRank) {
-            console.log('New rank = ', newRank)
             this.ranks = newRank
         },
         cancel() {

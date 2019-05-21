@@ -74,8 +74,9 @@ export default {
 
                 const format = ojInfo[platform].format
                 const regex = new RegExp(format, 'g')
+                if (!pid) return
                 if (regex.test(pid) === false) {
-                    return this.$alert(`Problem Id did not match regex ${format}`, 'Validation Error in Problem Id field')
+                    return this.$alert(`Problem Id is not valid`, 'Validation Error in Problem Id field')
                 }
 
                 const problemInfo = await getProblemInfo(platform, pid)

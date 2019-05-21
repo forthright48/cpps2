@@ -12,9 +12,9 @@
                     </template>
                 </el-table-column>
 
-                <el-table-column label="Admin" align="center" width="140">
+                <el-table-column  v-if="canEdit" label="Admin" align="center" width="140">
                     <template slot-scope="scope">
-                        <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.row._id)">
+                        <el-button size="mini" round type="danger" @click="removeProblemList(scope.row._id)">
                             <fa-icon class="vertical-middle" name="trash" />
                         </el-button>
                     </template>
@@ -26,6 +26,7 @@
 
 <script>
 import request from '@/utils/request'
+import { mapGetters } from 'vuex'
 import { removeProblemListFromClassroom } from '@/store/actions'
 export default {
     props: [
@@ -39,6 +40,13 @@ export default {
     },
 
     computed: {
+        ...mapGetters([
+            'user',
+            'classroom',
+        ]),
+        canEdit() {
+            return this.user._id === this.classroom.coach._id
+        },
         getProblemLists() {
             return this.problemLists.map((problemList, idx) => {
                 return {
@@ -63,7 +71,7 @@ export default {
             this.problemLists = response.data
         },
 
-        async handleDeleteItem(problemListId) {
+        async removeProblemList(problemListId) {
             // XXX(hasib): Not a very good idea to use actions related to problemlists from here.
             await this.$store.dispatch(removeProblemListFromClassroom, {
                 classroomId: this.classroomId,

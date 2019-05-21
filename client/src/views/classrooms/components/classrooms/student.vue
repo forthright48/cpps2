@@ -1,8 +1,8 @@
 <template>
     <div>
         <el-row>
-            <el-table :data="getClassrooms">
-                <el-table-column prop="index" label="#" />
+            <el-table :data="getClassrooms" border>
+                <el-table-column prop="index" label="#" width="40"/>
                 <el-table-column label="Classroom name">
                     <template slot-scope="scope">
                         <router-link :to="`/classrooms/${scope.row._id}`">{{scope.row.name}}</router-link>
@@ -42,8 +42,7 @@ export default {
     },
 
     async created() {
-        console.log('actions: ', 'Student/fetchClassrooms')
-        await this.$store.dispatch('Student/fetchClassrooms', this.user._id)
+        await this.$store.dispatch('Student/fetchClassrooms')
     },
 }
 </script>

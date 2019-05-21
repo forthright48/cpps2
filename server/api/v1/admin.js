@@ -5,13 +5,13 @@ const {isAdmin} = require('middlewares/userGroup');
 
 const User = require('../../models/userModel');
 
-router.get('/admin/users', getUsers);
-router.get('/admin/admins', getAdmins);
-router.get('/admin/coaches', getCoaches);
+router.get('/admin/users', isAdmin, getUsers);
+router.get('/admin/admins', isAdmin, getAdmins);
+router.get('/admin/coaches', isAdmin, getCoaches);
 
 module.exports = {
   addRouter(app) {
-    app.use('/api/v1', isAdmin, router);
+    app.use('/api/v1', router);
   },
 };
 

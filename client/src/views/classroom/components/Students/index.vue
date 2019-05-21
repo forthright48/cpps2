@@ -4,16 +4,20 @@
             <div slot="header" class="clearfix">
                 <span>Students</span>
             </div>
-            <el-row v-if="canEdit">
+            <el-row v-if="canEdit" :gutter="5">
                 <el-col :span="20">
-                    <el-input v-model="newStudentUsername" placeholder="Student ID" />
+                    <el-input v-model="newStudentUsername" placeholder="Student Username"/>
                 </el-col>
                 <el-col :span="4">
-                    <el-button type="primary" @click="addNewStudent">Create</el-button>
+                    <el-button
+                        type="primary"
+                        @click="addNewStudent"
+                        style="min-width:100%"
+                    >Add</el-button>
                 </el-col>
             </el-row>
-            <br />
-            <br />
+            <br/>
+
             <el-table :data="getStudents" border>
                 <el-table-column prop="index" label="#" width="40" />
                 <el-table-column label="Students">
@@ -29,7 +33,7 @@
                 <el-table-column prop="totalSolved" :sortable="true" label="Total Solved" width="130" />
                 <el-table-column label="Actions" width="80" v-if="canEdit">
                     <template slot-scope="scope">
-                        <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.row.username)">
+                        <el-button size="mini" round type="danger" @click="removeStudent(scope.row.username)">
                             <fa-icon class="vertical-middle" name="trash" />
                         </el-button>
                     </template>
@@ -93,13 +97,14 @@ export default {
 
     methods: {
         async addNewStudent() {
+            if (!this.newStudentUsername) return
             await this.$store.dispatch(addNewStudentToClassroom, {
                 classroomId: this.classroomId,
                 studentUsername: this.newStudentUsername,
             })
         },
 
-        async handleDeleteItem(studentUsername) {
+        async removeStudent(studentUsername) {
             await this.$store.dispatch(removeStudentFromClasssroom, {
                 classroomId: this.classroomId,
                 studentUsername,

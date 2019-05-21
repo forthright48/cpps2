@@ -4,8 +4,6 @@ const User = require('../../models/userModel');
 const ProblemList = require('../../models/problemListModel');
 const Classroom = require('../../models/classroomModel');
 const {isCoach} = require('middlewares/userGroup');
-const {isEmpty} = require('lodash');
-
 
 const router = express.Router();
 const isObjectId = mongoose.Types.ObjectId.isValid;
@@ -14,16 +12,17 @@ router.get('/classrooms', getClassrooms);
 router.post('/classrooms', isCoach, insertClassroom);
 
 router.get('/classrooms/:classId', getClassroom);
-router.patch('/classrooms/:classId', updateClassroom);
-router.delete('/classrooms/:classId', deleteClassroom);
 
-router.get('/classrooms/:classId/leaderboard', getLeaderboard);
-router.get('/classrooms/:classId/who-solved-it', solveCountInClassroom);
+router.put('/classrooms/:classId/students', isCoach, addStudent);
+router.delete('/classrooms/:classId/students', isCoach, deleteStudent);
 
-router.put('/classrooms/:classId/students', addStudent);
-router.delete('/classrooms/:classId/students', deleteStudent);
+router.patch('/classrooms/:classId', isCoach, updateClassroom);
+// router.delete('/classrooms/:classId', isCoach, deleteClassroom);
+// hidden till implemented properly
 
 router.get('/classrooms/:classId/problemlists', getProblemLists);
+router.get('/classrooms/:classId/who-solved-it', solveCountInClassroom);
+router.get('/classrooms/:classId/leaderboard', getLeaderboard);
 
 module.exports = {
   addRouter(app) {
@@ -37,39 +36,17 @@ module.exports = {
 async function getClassrooms(req, res, next) {
   try {
     let {
-      coach,
-      student,
+      coach = false,
+      student = false,
     } = req.query;
 
+    const {userId} = req.session;
     const populate = ['coach students', 'username'];
-
-    if (isEmpty(coach)) {
-      if (isEmpty(student)) {
-        coach = req.session.userId;
-      } else {
-        if (student !== req.session.userId) {
-          return next({
-            status: 400,
-            message: `You ${
-              req.session.userId
-            } are not allowed to view classrooms of ${student}`,
-          });
-        }
-      }
-    }
-
-    if (!isEmpty(coach) && coach !== req.session.userId) {
-      return next({
-        status: 400,
-        message: `You ${
-          req.session.userId
-        } are not allowed to view classrooms of ${coach}`,
-      });
-    }
-
     const options = [];
-    if (coach) options.push({coach});
-    if (student) options.push({students: student});
+
+    if (!coach && !student) coach = true;
+    if (coach) options.push({coach: userId});
+    if (student) options.push({students: userId});
 
     const classrooms = await Classroom.find({
       $or: options,
@@ -263,6 +240,11 @@ async function updateClassroom(req, res, next) {
   }
 }
 
+/*
+    * TODO: remove related
+    * * contests
+    * * standings
+    * * ratings
 async function deleteClassroom(req, res, next) {
   try {
     const {classId} = req.params;
@@ -300,15 +282,29 @@ async function deleteClassroom(req, res, next) {
     next(err);
   }
 }
+*/
 
 async function getProblemLists(req, res, next) {
   try {
     const {classId} = req.params;
+    const {userId} = req.session;
 
     if (!classId || !isObjectId(classId)) {
       return next({
-        status: 401,
+        status: 400,
         message: `classId:${classId} is not a valid objectId`,
+      });
+    }
+
+    const classroom = await Classroom.findOne({
+      _id: classId,
+      $or: [{coach: userId}, {students: userId}],
+    }).exec();
+
+    if (!classroom) {
+      return next({
+        status: 404,
+        message: `classId:${classId} not found`,
       });
     }
 
@@ -336,6 +332,13 @@ async function solveCountInClassroom(req, res, next) {
 
     const studentList = await Classroom.findById(classId).populate('students').exec();
     const problemList = await ProblemList.findById(problemListId).exec();
+
+    if (!studentList || !problemList) {
+      return next({
+        status: 404,
+        message: 'Classroom or ProblemList not found',
+      });
+    }
 
     if (studentList.coach.toString() !== problemList.createdBy.toString()) {
       return next({
@@ -387,10 +390,21 @@ async function solveCountInClassroom(req, res, next) {
 
 async function getLeaderboard(req, res, next) {
   const {classId} = req.params;
+  const userId = req.session.userId;
   try {
-    const studentList = await Classroom.findById(classId)
+    const studentList = await Classroom.findOne({
+      _id: classId,
+      $or: [{coach: userId}, {students: userId}],
+    })
       .select('students')
       .exec();
+
+    if (!studentList) {
+      return next({
+        status: 404,
+        message: 'Classroom or ProblemList not found',
+      });
+    }
     const studentsIdList = studentList.students;
 
     const userData = await User.aggregate([
