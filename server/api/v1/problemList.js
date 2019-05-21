@@ -130,6 +130,8 @@ async function getProblemList(req, res, next) {
       });
     }
 
+    let isCreator = true;
+
     if (problemList.createdBy.toString() !== req.session.userId) {
       const classrooms = await Classroom.find(
         {students: userId},
@@ -150,6 +152,12 @@ async function getProblemList(req, res, next) {
           message: `You do not have permission to view this list.`,
         });
       }
+
+      isCreator = false;
+    }
+
+    if (!isCreator) {
+      problemList.sharedWith = [];
     }
 
     return res.status(200).json({
