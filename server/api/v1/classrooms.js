@@ -17,7 +17,8 @@ router.put('/classrooms/:classId/students', isCoach, addStudent);
 router.delete('/classrooms/:classId/students', isCoach, deleteStudent);
 
 router.patch('/classrooms/:classId', isCoach, updateClassroom);
-router.delete('/classrooms/:classId', isCoach, deleteClassroom);
+// router.delete('/classrooms/:classId', isCoach, deleteClassroom);
+// hidden till implemented properly
 
 router.get('/classrooms/:classId/problemlists', getProblemLists);
 router.get('/classrooms/:classId/who-solved-it', solveCountInClassroom);
@@ -239,6 +240,11 @@ async function updateClassroom(req, res, next) {
   }
 }
 
+/*
+    * TODO: remove related
+    * * contests
+    * * standings
+    * * ratings
 async function deleteClassroom(req, res, next) {
   try {
     const {classId} = req.params;
@@ -269,13 +275,6 @@ async function deleteClassroom(req, res, next) {
       }
     ).exec();
 
-    /**
-     * TODO: remove related
-     * * contests
-     * * standings
-     * * ratings
-     */
-
     return res.status(200).json({
       status: 200,
     });
@@ -283,6 +282,7 @@ async function deleteClassroom(req, res, next) {
     next(err);
   }
 }
+*/
 
 async function getProblemLists(req, res, next) {
   try {
