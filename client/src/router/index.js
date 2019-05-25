@@ -163,11 +163,31 @@ export const constantRouterMap = [
         ],
     },
     {
+        path: '/faq',
+        component: Layout,
+        children: [{
+            path: '',
+            name: 'faq',
+            meta: { title: 'FAQ', icon: 'info' },
+            component: () => import('@/views/faq/index'),
+        }],
+    },
+    {
+        path: '/bugs',
+        component: Layout,
+        children: [{
+            path: '',
+            name: 'bugs',
+            meta: { title: 'Bugs & Hugs', icon: 'bug' },
+            component: () => import('@/views/faq/bugs'),
+        }],
+    },
+    {
         path: '/admin',
         component: Layout,
         adminOnly: true,
         children: [{
-            path: 'admin',
+            path: '',
             name: 'admin',
             meta: { title: 'Admin', icon: 'lock' },
             component: () => import('@/views/admin/index'),
