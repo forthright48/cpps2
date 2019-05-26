@@ -9,7 +9,7 @@ const data = {
     displayName: 'AtCoder',
     format: '^[a-z0-9_]+_[a-z]$',
     usernamePattern: normal,
-    profileLink: 'http://kenkoooo.com/atcoder/?user=$$$$$',
+    profileLink: 'https://atcoder.jp/users/$$$$$',
   },
   cc: {
     name: 'cc',

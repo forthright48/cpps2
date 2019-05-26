@@ -1,7 +1,7 @@
 <template>
     <el-card class="box-card">
         <div slot="header" class="clearfix">
-            <span>Solve Count</span>
+            <span>Solve Count: {{ totalSolve }}</span>
             <el-button v-if="hasAccessToUpdateOjUsername" style="float: right;" type="primary" @click="syncSolveCount">Sync</el-button>
         </div>
         <el-table :data="getSolveCount">
@@ -11,7 +11,9 @@
                 <template slot-scope="scope">
                     <template v-if="scope.row.userID && scope.row.userID.userIds.length > 0">
                         <span>
-                            {{scope.row.userID.userIds[0]}}
+                            <a :href="scope.row.linkToOjProfile" target="_blank">
+                                {{scope.row.userID.userIds[0]}}
+                            </a>
                             <span v-if="hasAccessToUpdateOjUsername" @click="unsetOjUsername(scope.row.ojname, scope.row.userID.userIds[0])">
                                 <fa-icon class="vertical-middle" name="trash" style="color: red; cursor: pointer;" />
                             </span>
@@ -35,6 +37,7 @@
 <script>
 import { Message } from 'element-ui'
 import { mapGetters } from 'vuex'
+import { sum } from 'lodash'
 import { GetOjInfo, setOjUsername, unsetOjUsername, syncSolveCount } from '@/store/actions'
 
 export default {
@@ -56,9 +59,14 @@ export default {
                     ojname,
                     ojDisplayName: this.ojInfo[ojname].displayName,
                     userID: this.profile.ojStats[ojname],
+                    linkToOjProfile: this.ojInfo[ojname].profileLink
+                        .replace('$$$$$', this.profile.ojStats[ojname].userIds[0]),
                     solveCount,
                 }
             })
+        },
+        totalSolve() {
+            return sum(this.getSolveCount.map(e => e.solveCount))
         },
 
         hasAccessToUpdateOjUsername() {

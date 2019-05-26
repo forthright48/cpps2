@@ -37,7 +37,7 @@
                     <span class="ml-1">{{scope.row.stat}}</span>
                 </template>
             </el-table-column>
-            <el-table-column label="Admin" align="center" width="140">
+            <el-table-column v-if="isAdmin" label="Admin" align="center" width="140">
                 <template slot-scope="scope">
                     <el-button size="mini" round type="danger" @click="handleDeleteItem(scope.$index, scope.row)">
                         <fa-icon class="vertical-middle" name="trash" />
@@ -69,6 +69,7 @@ export default {
             'token',
             'gatewayItems',
             'gatewayRoot',
+            'isAdmin',
         ]),
         gatewayItemsArray() {
             return Object.values(this.gatewayItems).map((item, index) => {
@@ -105,9 +106,12 @@ export default {
             }
         },
         async handleDeleteItem(index, row) {
+            const okToDelete = confirm(`Do you want to delete content ${row.name || row.title}?`)
             try {
-                this.loading = true
-                await this.$store.dispatch(GatewayDeleteItem, row._id)
+                if (okToDelete) {
+                    this.loading = true
+                    await this.$store.dispatch(GatewayDeleteItem, row._id)
+                }
             } finally {
                 this.loading = false
             }
