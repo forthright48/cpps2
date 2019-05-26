@@ -20,6 +20,7 @@ const express = require('express');
 const config = require('config');
 const logger = require('logger');
 const morgan = require('morgan');
+const {isEmpty} = require('lodash');
 
 const app = express();
 const server = require('http').createServer(app);
@@ -39,6 +40,19 @@ app.use(morgan('dev'));
 /* API Public*/
 
 require('./api/public/auth.js').addRouter(app);
+
+function isLoggedIn(req, res, next) {
+  const s = req.session;
+  if (isEmpty(s.username)) {
+    return res.status(401).json({
+      status: 401,
+      message: 'You have been logged out',
+    });
+  };
+  return next();
+}
+
+app.use('/api/v1', isLoggedIn);
 
 require('./api/v1/users.js').addRouter(app);
 require('./api/v1/ojInfo.js').addRouter(app);

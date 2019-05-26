@@ -4,8 +4,6 @@
             <div slot="header" class="clearfix">
                 <span>Leaderboard</span>
             </div>
-            <br />
-            <br />
             <el-table :data="getStudents" border>
                 <el-table-column prop="index" label="#" width="40" />
                 <el-table-column label="Students">

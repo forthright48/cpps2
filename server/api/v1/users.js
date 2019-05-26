@@ -9,13 +9,18 @@ const ojnamesOnly = ojnames.ojnamesOnly;
 
 const logger = require('logger');
 const queue = require('queue');
+const {isEmpty} = require('lodash');
+const {isAdmin} = require('middlewares/userGroup');
 
+router.get('/status', getStatus);
 router.get('/user', getInfo);
 router.post('/logout', logout);
 router.get('/users/:username', getUser);
 router.put('/users/:username/change-password', changePassword);
 
 router.get('/users/:username/root-stats', rootStats);
+router.put('/users/:username/roles', isAdmin, addRole);
+router.delete('/users/:username/roles', isAdmin, removeRole);
 router.put('/users/:username/sync-solve-count', syncSolveCount);
 router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
 router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
@@ -25,6 +30,12 @@ module.exports = {
     app.use('/api/v1', router);
   },
 };
+
+function getStatus(req, res, next) {
+  return res.status(200).json({
+    status: 200,
+  });
+}
 
 function getInfo(req, res, next) {
   // verify token here
@@ -302,10 +313,66 @@ async function changePassword(req, res, next) {
   }
 }
 
+async function modifyRole(addRole, req, res, next) {
+  try {
+    const configurableRoles = ['admin', 'coach'];
+    const opName = addRole ? 'addToSet' : 'pull';
+    const username = req.params.username;
+    const {role} = req.body;
+
+    if (isEmpty(role) || !configurableRoles.includes(role)) {
+      return res.status(400).json({
+        status: 400,
+        message: 'userId cannot be empty',
+      });
+    }
+
+    if (username === req.session.username && role === 'admin') {
+      return res.status(400).json({
+        status: 400,
+        message: 'cannot add or remove your own admin access',
+      });
+    }
+
+    const user = await User.findOneAndUpdate(
+      {
+        username: username,
+      },
+      {
+        [`$${opName}`]: {
+          roles: role,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    if (!user) {
+      return res.status(404).json({
+        status: 404,
+        message: 'user not found',
+      });
+    }
+    return res.status(200).json({
+      user,
+      status: 200,
+    });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+async function addRole(req, res, next) {
+  return modifyRole(true, req, res, next);
+}
+
+async function removeRole(req, res, next) {
+  return modifyRole(false, req, res, next);
+}
 
 async function rootStats(req, res, next) {
   const {username} = req.params;
-  const parentId = '0'.repeat(24);
+  const parentId = '000000000000000000000000';
 
   try {
     const root = {

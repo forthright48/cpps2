@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const timestamps = require('mongoose-timestamp');
 const {ojnamesOnly} = require('./ojInfo');
 const validator = require('validator');
-const {isEmpty} = require('lodash');
 
 function removeNullOrBlank(data) {
   if (data === null || data === '') return undefined;
@@ -85,7 +84,7 @@ const schema = new mongoose.Schema({
 });
 
 schema.statics.getRoot = function() {
-  return '0'.repeat(24);
+  return '000000000000000000000000';
 };
 
 /**

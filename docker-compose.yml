@@ -6,7 +6,7 @@ services:
         restart: unless-stopped
         ports:
             - "${PORT}:${PORT}"
-            - "3050:3050"
+            # - "3050:3050"
         volumes:
             - .:/var/www/nsups/cpps
         working_dir: /var/www/nsups/cpps
@@ -14,6 +14,7 @@ services:
         depends_on:
             - mongodb
             - redisdb
+            - worker
 
     worker:
         image: coffeemate/nodejs
@@ -22,6 +23,9 @@ services:
             - .:/var/www/nsups/cpps
         working_dir: /var/www/nsups/cpps
         command: node server/node_modules/queue/worker.js
+        depends_on:
+            - mongodb
+            - redisdb
 
     mongodb:
         image: mongo:3.4

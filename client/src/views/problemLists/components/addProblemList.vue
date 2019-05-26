@@ -23,6 +23,7 @@ export default {
 
     methods: {
         async addNewList() {
+            if (!this.newListName) return
             this.loading = true
             try {
                 await this.$store.dispatch(createNewProblemList, this.newListName)

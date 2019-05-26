@@ -22,9 +22,24 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-    { path: '/login', component: () => import('@/views/auth/login'), hidden: true },
-    { path: '/register', component: () => import('@/views/auth/register'), hidden: true },
-    { path: '/404', component: () => import('@/views/404'), hidden: true },
+    {
+        path: '/login',
+        component: () => import('@/views/auth/login'),
+        hidden: true,
+        meta: { title: 'Login' },
+    },
+    {
+        path: '/register',
+        component: () => import('@/views/auth/register'),
+        hidden: true,
+        meta: { title: 'Register' },
+    },
+    {
+        path: '/404',
+        component: () => import('@/views/404'),
+        hidden: true,
+        meta: { title: '404' },
+    },
 
     {
         path: '/',
@@ -148,11 +163,31 @@ export const constantRouterMap = [
         ],
     },
     {
+        path: '/faq',
+        component: Layout,
+        children: [{
+            path: '',
+            name: 'faq',
+            meta: { title: 'FAQ', icon: 'info' },
+            component: () => import('@/views/faq/index'),
+        }],
+    },
+    {
+        path: '/bugs',
+        component: Layout,
+        children: [{
+            path: '',
+            name: 'bugs',
+            meta: { title: 'Bugs & Hugs', icon: 'bug' },
+            component: () => import('@/views/faq/bugs'),
+        }],
+    },
+    {
         path: '/admin',
         component: Layout,
         adminOnly: true,
         children: [{
-            path: 'admin',
+            path: '',
             name: 'admin',
             meta: { title: 'Admin', icon: 'lock' },
             component: () => import('@/views/admin/index'),
@@ -161,8 +196,10 @@ export const constantRouterMap = [
     { path: '*', redirect: '/404', hidden: true },
 ]
 
-export default new Router({
+const router = new Router({
     // mode: 'history', //后端支持可开
     scrollBehavior: () => ({ y: 0 }),
     routes: constantRouterMap,
 })
+
+export default router

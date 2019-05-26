@@ -3,7 +3,7 @@
         <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span>Contests</span>
-                <el-button v-if="!showNewContestForm" style="float: right;" size="mini" type="primary" @click="handleContestFormSwitch">Add contest</el-button>
+                <el-button v-if="!showNewContestForm && canEdit" style="float: right;" type="primary" @click="handleContestFormSwitch">Add contest</el-button>
                 <!-- <el-row>
                     <el-col :span="19">
                         <h3>Contests</h3>
@@ -23,6 +23,7 @@
 
 <script>
 import NewContest from './NewContest'
+import { mapGetters } from 'vuex'
 import Contests from './Contests'
 
 export default {
@@ -34,6 +35,16 @@ export default {
     props: [
         'classroomId',
     ],
+
+    computed: {
+        ...mapGetters([
+            'user',
+            'classroom',
+        ]),
+        canEdit() {
+            return this.user._id === this.classroom.coach._id
+        },
+    },
 
     data() {
         return {
