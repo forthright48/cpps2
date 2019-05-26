@@ -9,15 +9,15 @@
         <br />
         <el-row>
             <el-col>
-                <el-card>
-                    <SolveChart v-if="!loading" :username="username" />
-                </el-card>
+                <SolveCount v-if="!loading" :username="username" />
             </el-col>
         </el-row>
         <br />
         <el-row>
             <el-col>
-                <SolveCount v-if="!loading" :username="username" />
+                <el-card>
+                    <SolveChart v-if="!loading" :username="username" />
+                </el-card>
             </el-col>
         </el-row>
     </div>

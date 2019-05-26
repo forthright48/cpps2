@@ -6,7 +6,7 @@ services:
         restart: unless-stopped
         ports:
             - "${PORT}:${PORT}"
-            - "3050:3050"
+            # - "3050:3050"
         volumes:
             - .:/var/www/nsups/cpps
         working_dir: /var/www/nsups/cpps

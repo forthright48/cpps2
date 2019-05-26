@@ -11,7 +11,7 @@
         </el-col>
         </el-row>
 
-        <AddItem class="text-center" :folderId="folderId" />
+        <AddItem v-if="isAdmin" class="text-center" :folderId="folderId" />
 
         <el-table :data="gatewayItemsArray" v-loading="loading" border>
             <el-table-column prop="displayIndex" label="#" width="40" />
