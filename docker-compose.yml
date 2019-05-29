@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 
 services:
     web:
@@ -15,6 +15,7 @@ services:
             - mongodb
             - redisdb
             - worker
+        network_mode: "host"
 
     worker:
         image: coffeemate/nodejs
@@ -26,15 +27,32 @@ services:
         depends_on:
             - mongodb
             - redisdb
+        network_mode: "host"
 
     mongodb:
         image: mongo:3.4
         restart: unless-stopped
         ports:
             - "27018:27017"
+        volumes:
+            - type: "volume"
+              source: ../data/mongodb_backup
+              target: /root/volumes/cpps
+              consistency: "consistent"
+            
+            - type: "volume"
+              source: ../data/mongodb_data
+              target: /data/db
+              consistency: "consistent"
 
     redisdb:
         image: redis
         restart: unless-stopped
         ports:
             - "6378:6379"
+        volumes:
+            - type: "volume"
+              source: ../data/redisdb_data
+              target: /data
+              consistency: "consistent"
+
