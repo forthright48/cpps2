@@ -21,7 +21,7 @@ router.put('/users/:username/change-password', changePassword);
 router.get('/users/:username/root-stats', rootStats);
 router.put('/users/:username/roles', isAdmin, addRole);
 router.delete('/users/:username/roles', isAdmin, removeRole);
-router.put('/users/:username/sync-solve-count', syncSolveCount);
+// router.put('/users/:username/sync-solve-count', syncSolveCount);
 router.put('/users/:username/unset-oj-username/:ojname', unsetOjUsername);
 router.put('/users/:username/set-oj-username/:ojname/:userId', setOjUsername);
 
