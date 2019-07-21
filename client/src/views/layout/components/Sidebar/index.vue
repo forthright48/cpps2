@@ -19,17 +19,24 @@ import { mapGetters } from 'vuex'
 import SidebarItem from './SidebarItem'
 
 export default {
-  components: { SidebarItem },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-    ]),
-    routes() {
-      return this.$router.options.routes
+    components: { SidebarItem },
+    computed: {
+        ...mapGetters([
+            'user',
+            'sidebar',
+        ]),
+        routes() {
+            const routes = this.$router.options.routes
+            return routes.map(e => {
+                if (e.path === '/user') {
+                    e.children[0].path = `profile/${this.user.username}`
+                }
+                return e
+            })
+        },
+        isCollapse() {
+            return !this.sidebar.opened
+        },
     },
-    isCollapse() {
-      return !this.sidebar.opened
-    },
-  },
 }
 </script>

@@ -1,0 +1,16 @@
+{
+    "extends": "standard",
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "plugins": [
+        "standard",
+        "promise"
+    ],
+    "rules": {
+      "comma-dangle": ["error", "always-multiline"],
+      "semi": ["error", "always"],
+      "space-before-function-paren": "off"
+    }
+}

@@ -4,7 +4,7 @@
     breadcrumb
     el-dropdown.avatar-container(trigger="click")
       .avatar-wrapper
-        img.user-avatar(src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80")
+        img.user-avatar(:src="avatar")
         i.el-icon-caret-bottom
       el-dropdown-menu.user-dropdown(slot="dropdown")
         router-link.inlineBlock(to="/")
@@ -17,28 +17,35 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import md5 from 'md5'
 
 export default {
-  components: {
-    Breadcrumb,
-    Hamburger,
-  },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar',
-    ]),
-  },
-  methods: {
-    toggleSideBar() {
-      this.$store.dispatch('ToggleSideBar')
+    components: {
+        Breadcrumb,
+        Hamburger,
     },
-    logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
-      })
+    computed: {
+        ...mapGetters([
+            'sidebar',
+            'email',
+        ]),
+        emailHash: function() {
+            return md5(this.email)
+        },
+        avatar: function() {
+            return `https://www.gravatar.com/avatar/${this.emailHash}?s=40&d=mp`
+        },
     },
-  },
+    methods: {
+        toggleSideBar() {
+            this.$store.dispatch('ToggleSideBar')
+        },
+        logout() {
+            this.$store.dispatch('LogOut').then(() => {
+                location.reload() // 为了重新实例化vue-router对象 避免bug
+            })
+        },
+    },
 }
 </script>
 

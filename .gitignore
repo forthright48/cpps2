@@ -1,6 +1,30 @@
+# Node Module Files
 node_modules/*
-.eslintrc
-server/secret.js
-logs/
+
+# Environment secrets
 .env
+
+# ignore secrets
+secret.js
+
+# Generated frontend code
+public/
+
+# Log files
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Lock files
+package-lock.json
+
+# NPM cache directory
+.npm
+
+# MacBook Disk storage
+.DS_Store
+
+# Backup files
 backup/

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const timestamps = require('mongoose-timestamp');
 const {ojnamesOnly} = require('./ojInfo');
 const validator = require('validator');
 
@@ -22,10 +23,12 @@ const schema = new mongoose.Schema({
     set: removeNullOrBlank,
   },
   // For subtree query
-  ancestor: [{
-    type: mongoose.Schema.ObjectId,
-    ref: 'Gate',
-  }],
+  ancestor: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Gate',
+    },
+  ],
   // To reorder items inside same folder
   ind: {
     type: Number,
@@ -62,10 +65,12 @@ const schema = new mongoose.Schema({
     validate: validator.isURL,
   },
   // Stores the userID who solved the problem
-  doneList: [{
-    type: String,
-    ref: 'User',
-  }],
+  doneList: [
+    {
+      type: String,
+      ref: 'User',
+    },
+  ],
   createdBy: {
     type: String,
     ref: 'User',
@@ -76,12 +81,10 @@ const schema = new mongoose.Schema({
     ref: 'User',
     // required: true enforced by system
   },
-}, {
-  timestamps: true,
 });
 
 schema.statics.getRoot = function() {
-  return mongoose.Types.ObjectId('000000000000000000000000');
+  return '000000000000000000000000';
 };
 
 /**
@@ -89,19 +92,19 @@ schema.statics.getRoot = function() {
  */
 schema.pre('save', function(next, req) {
   // Need to login first
-  if ( !req.session ) {
+  if (!req.session) {
     return next();
   }
 
-  // Need root priviledge
-  if ( req.session.roles.includes('root') === false ) {
+  // Need admin priviledge
+  if (req.session.roles.includes('admin') === false) {
     return next();
   }
 
   const doc = this; //eslint-disable-line
 
   // Don't update when doneList gets changed
-  if ( doc.isNew === false && doc.isModified('doneList')) {
+  if (doc.isNew === false && doc.isModified('doneList')) {
     return next();
   }
 
@@ -111,5 +114,6 @@ schema.pre('save', function(next, req) {
 });
 
 schema.index({platform: 1, pid: 1}, {unique: true, sparse: true});
+schema.plugin(timestamps);
 
-mongoose.model('Gate', schema);
+module.exports = mongoose.model('Gate', schema, 'gates');

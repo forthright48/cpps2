@@ -6,6 +6,13 @@
  * 3. Create admin
  */
 
+ // Setup environment variables
+const dotenv = require('dotenv');
+const result = dotenv.config();
+if (result.error) {
+  throw result.error;
+}
+
 const mongoose = require('mongoose');
 const dburl = require('../secret.js').dburl;
 const readline = require('readline');
@@ -74,10 +81,11 @@ async function main() {
 
     const pass = await User.createHash(password);
     const user = new User({
-      _id: username,
+      // _id: username,
+      username,
       email,
       password: pass,
-      roles: ['root', 'user'],
+      roles: ['admin', 'user'],
       emailVerified: true,
     });
     await user.save();

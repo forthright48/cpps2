@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const timestamps = require('mongoose-timestamp');
 
 const schema = new mongoose.Schema({
   title: {
@@ -28,8 +29,9 @@ const schema = new mongoose.Schema({
 });
 
 schema.index({platform: 1, problemId: 1}, {unique: true});
+schema.plugin(timestamps);
 
-mongoose.model('ProblemBank', schema);
+module.exports = mongoose.model('ProblemBank', schema, 'problembanks');
 
 /*
  * Implementation

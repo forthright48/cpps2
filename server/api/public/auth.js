@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const User = require('mongoose').model('User');
+const User = require('../../models/userModel');
 // const recaptcha = require('express-recaptcha');
 // const allowSignUp = require('middlewares').allowSignUp;
 // const mailer = require('mailer').mailer;
@@ -39,7 +39,7 @@ async function postLogin(req, res, next) {
 
   try {
     const user = await User.findOne({
-        _id: username,
+        username,
       }).exec();
 
     if (!user) {
@@ -55,7 +55,8 @@ async function postLogin(req, res, next) {
       if (!user.emailVerified) req.session.emailVerificationValue = user.emailVerificationValue;
       req.session.email = user.email;
       req.session.roles = user.roles;
-      req.session.username = user._id;
+      req.session.username = user.username;
+      req.session.userId = user._id;
 
       return res.status(200).json({
         status: 200,
@@ -112,7 +113,7 @@ async function postRegister(req, res, next) {
 
 
   const user = new User({
-    _id: username,
+    username: username,
     email,
     password,
     emailVerificationValue: _.random(100000, 999999),

@@ -1,45 +1,40 @@
-version: '2'
+version: '3'
 
 services:
-  redis:
-    image: redis
-    networks:
-      - ntw
-    volumes:
-      - redis_db:/data
-  db:
-    image: mongo:3.4
-    networks:
-      - ntw
-    volumes:
-      - db:/root/volumes/cpps_db
-      - db_data:/data/db
-    restart: always
-  app:
-    build: .
-    image: cpps
-    depends_on:
-      - db
-      - redis
-    ports:
-      - "${PORT}:8002"
-      - "3050:3050"
-    networks:
-      - ntw
-    volumes:
-      - app:/home/volumes/cpps_app
-      - logs:/home/src/logs
-      - ./:/root/src/
-    command: tail -f /dev/null
-    environment:
-      - NODE_ENV
+    web:
+        image: coffeemate/nodejs
+        restart: unless-stopped
+        ports:
+            - "${PORT}:${PORT}"
+            # - "3050:3050"
+        volumes:
+            - .:/var/www/nsups/cpps
+        working_dir: /var/www/nsups/cpps
+        command: npm run dev
+        depends_on:
+            - mongodb
+            - redisdb
+            - worker
 
-networks:
-  ntw:
+    worker:
+        image: coffeemate/nodejs
+        restart: unless-stopped
+        volumes:
+            - .:/var/www/nsups/cpps
+        working_dir: /var/www/nsups/cpps
+        command: node server/node_modules/queue/worker.js
+        depends_on:
+            - mongodb
+            - redisdb
 
-volumes:
-  db_data:
-  db:
-  app:
-  logs:
-  redis_db:
+    mongodb:
+        image: mongo:3.4
+        restart: unless-stopped
+        ports:
+            - "27018:27017"
+
+    redisdb:
+        image: redis
+        restart: unless-stopped
+        ports:
+            - "6378:6379"
