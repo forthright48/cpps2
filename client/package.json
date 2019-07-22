@@ -9,18 +9,24 @@
     "start": "npm run dev",
     "build": "node build/build.js",
     "build:report": "npm_config_report=true node build/build.js",
-    "lint": "eslint --ext .js,.vue src",
+    "lint": "eslint --fix --ext .js,.vue src",
     "test": "npm run lint"
   },
   "dependencies": {
     "axios": "0.17.1",
+    "codeforces-rating-system": "^1.4.0",
     "element-ui": "2.3.4",
     "js-cookie": "2.2.0",
+    "lodash": "^4.17.11",
+    "md5": "^2.2.1",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
+    "pluralize": "^7.0.0",
     "vue": "2.5.10",
     "vue-awesome": "^2.3.7",
+    "vue-google-charts": "^0.3.2",
     "vue-router": "3.0.1",
+    "vuedraggable": "^2.20.0",
     "vuex": "3.0.1"
   },
   "devDependencies": {
