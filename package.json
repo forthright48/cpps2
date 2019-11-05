@@ -17,7 +17,7 @@
     "eslint-plugin-html": "^4.0.5",
     "express": "^4.16.3",
     "express-session": "^1.15.6",
-    "mongoose": "^5.1.4",
+    "mongoose": "^5.7.5",
     "morgan": "^1.9.0",
     "nodemailer": "^4.6.5",
     "nodemailer-mailgun-transport": "^1.4.0",
